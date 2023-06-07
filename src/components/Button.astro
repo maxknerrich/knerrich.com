@@ -1,16 +1,26 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
-type Props = HTMLAttributes<'a'>;
+type Props = HTMLAttributes<'a'> & {
+	stretch?: boolean;
+	type?: 'primary' | 'secondary' | 'outln';
+};
 
-const { href, class: className, type = 'primary', ...props } = Astro.props;
+const {
+	href,
+	class: className,
+	type = 'primary',
+	stretch = false,
+	...props
+} = Astro.props;
 ---
 
 <a
 	href={href}
 	class:list={[
-		'button text-lg select-none outline-none min-w-14 h-14 flex p-4 items-center justify-center rounded cursor-pointer',
+		'button text-lg select-none outline-none min-w-14 sm:w-fit h-14 flex p-4 items-center justify-center rounded cursor-pointer',
 		className,
 		type,
+		{ 'w-full': stretch },
 	]}
 	{...props}
 >
@@ -26,7 +36,7 @@ const { href, class: className, type = 'primary', ...props } = Astro.props;
 		outline: 1px solid var(--bg-hover);
 	}
 	a.secondary:focus,
-	a.outline:focus {
+	a.outln:focus {
 		outline: 1px solid var(--color);
 	}
 	a.button:hover {
@@ -42,7 +52,7 @@ const { href, class: className, type = 'primary', ...props } = Astro.props;
 		--bg-hover: #f3f4f6;
 		--bg-color: #e5e7eb;
 	}
-	.outline {
+	.outln {
 		--bg-color: transparent;
 		--color: black;
 		--bg-hover: #e5e7eb;
@@ -53,7 +63,7 @@ const { href, class: className, type = 'primary', ...props } = Astro.props;
 		--bg-hover: #e5e7eb;
 		--color: black;
 	}
-	:global(.dark) .outline {
+	:global(.dark) .outln {
 		--bg-color: transparent;
 		--color: white;
 		--bg-hover: #1f2937;

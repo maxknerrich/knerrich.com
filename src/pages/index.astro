@@ -1,4 +1,5 @@
 ---
+import Button from '../components/Button.astro';
 import Default from '../layouts/Default.astro';
 const today = new Date();
 ---
@@ -20,5 +21,8 @@ const today = new Date();
 				>Literacy Legaltech</a
 			>
 		</p>
+		<Button class="mt-8" stretch={true} href="mailto:max.knerrich@outlook.com">
+			Contact me
+		</Button>
 	</section>
 </Default>

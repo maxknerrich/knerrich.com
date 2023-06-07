@@ -7,4 +7,5 @@ import markdoc from '@astrojs/markdoc';
 export default defineConfig({
 	site: 'https://knerrich.com',
 	integrations: [sitemap(), markdoc(), UnoCSS()],
+	server: { port: 8894 },
 });

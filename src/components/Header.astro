@@ -3,16 +3,22 @@ import HeaderLink from './HeaderLink.astro';
 import { SITE_TITLE } from '../consts';
 ---
 
-<header>
-	<h2>
-		{SITE_TITLE}
-	</h2>
-	<nav>
+<header class="mx-auto p-4 flex justify-between items-center">
+	<a
+		href="/"
+		class="i-custom-logo w-10 h-10 lg:fixed m-6 select-none outline-none dark:color-white"
+		>Max Knerrich</a
+	>
+	<nav class="flex justify-end w-full gap-5">
 		<HeaderLink href="/">Home</HeaderLink>
 		<HeaderLink href="/blog">Blog</HeaderLink>
 		<HeaderLink href="/about">About</HeaderLink>
-		<HeaderLink href="https://twitter.com/astrodotbuild" target="_blank">Twitter</HeaderLink>
-		<HeaderLink href="https://github.com/withastro/astro" target="_blank">GitHub</HeaderLink>
+		<HeaderLink href="https://twitter.com/astrodotbuild" target="_blank">
+			Twitter
+		</HeaderLink>
+		<HeaderLink href="https://github.com/withastro/astro" target="_blank">
+			GitHub
+		</HeaderLink>
 	</nav>
 </header>
 <style>

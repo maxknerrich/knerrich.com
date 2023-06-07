@@ -1,8 +1,5 @@
 ---
-// Import the global.css file here so that it is included on
-// all pages through the use of the <BaseHead /> component.
-import '../styles/global.css';
-
+import '@unocss/reset/tailwind.css';
 export interface Props {
 	title: string;
 	description: string;
@@ -41,3 +38,37 @@ const { title, description, image = '/placeholder-social.jpg' } = Astro.props;
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image, Astro.url)} />
+
+<style>
+	@font-face {
+		font-family: 'PlusJakartaSans';
+		src: url('/fonts/PlusJakartaSans-Medium.ttf') format('truetype');
+		font-weight: 500;
+		font-style: normal;
+		font-display: swap;
+	}
+	@font-face {
+		font-family: 'PlusJakartaSans';
+		src: url('/fonts/PlusJakartaSans-Bold.ttf') format('truetype');
+		font-weight: 700;
+		font-style: normal;
+		font-display: swap;
+	}
+	@font-face {
+		font-family: 'Griffter';
+		src: url('/fonts/GRIFTER-Bold.woff') format('woff');
+		font-weight: 700;
+		font-style: normal;
+		font-display: swap;
+	}
+	html {
+		font-family: PlusJakartaSans, ui-sans-serif, system-ui, -apple-system,
+			BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+			'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+			'Segoe UI Symbol', 'Noto Color Emoji' !important;
+	}
+	:global(.griffter, h1, h2, h3, h4, h5, h6) {
+		font-family: Griffter;
+		font-weight: 700;
+	}
+</style>

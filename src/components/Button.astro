@@ -1,0 +1,59 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+type Props = HTMLAttributes<'a'>;
+
+const { href, class: className, type = 'primary', ...props } = Astro.props;
+---
+
+<a
+	href={href}
+	class:list={[
+		'button text-lg select-none outline-none min-w-14 h-14 flex p-4 items-center justify-center rounded cursor-pointer',
+		className,
+		type,
+	]}
+	{...props}
+>
+	<slot />
+</a>
+
+<style>
+	a.button {
+		background-color: var(--bg-color);
+		color: var(--color);
+	}
+	a.button:hover {
+		background-color: var(--bg-hover);
+	}
+	.primary {
+		--color: white;
+		--bg-hover: #1f2937;
+		--bg-color: black;
+	}
+	.secondary {
+		--color: black;
+		--bg-hover: #f3f4f6;
+		--bg-color: #e5e7eb;
+	}
+	.outline {
+		--bg-color: transparent;
+		--color: black;
+		--bg-hover: #e5e7eb;
+		border: 2px solid var(--color);
+	}
+	:global(.dark) a {
+		--bg-color: white;
+		--bg-hover: #e5e7eb;
+		--color: black;
+	}
+	:global(.dark) .outline {
+		--bg-color: transparent;
+		--color: white;
+		--bg-hover: #1f2937;
+	}
+	:global(.dark) .secondary {
+		--color: white;
+		--bg-hover: #111827;
+		--bg-color: #1f2937;
+	}
+</style>

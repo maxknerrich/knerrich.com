@@ -1,6 +1,7 @@
 ---
 import HeaderLink from './HeaderLink.astro';
 import { SITE_TITLE } from '../consts';
+import Button from './Button.astro';
 ---
 
 <script is:inline>
@@ -44,9 +45,9 @@ function switchTheme() {
 	<div class="flex justify-between items-center gap-8">
 		<a
 			href="/"
-			class="i-custom-logo w-12 h-12 select-none outline-none dark:color-white color-black"
+			class="i-custom-logo min-w-12 h-12 select-none outline-none dark:color-white color-black"
 		></a>
-		<nav class="hidden justify-end w-full gap-5 md:flex">
+		<nav class="hidden justify-end gap-5 md:flex grow">
 			<HeaderLink href="/">Home</HeaderLink>
 			<!-- <HeaderLink href="/blog">Blog</HeaderLink>
 			<HeaderLink href="/about">About</HeaderLink> -->
@@ -54,15 +55,21 @@ function switchTheme() {
 				GitHub
 			</HeaderLink>
 		</nav>
-		<div class="flex">
+		<div class="flex gap-2">
 			<button
-				class="text-lg block select-none outline-none p-4 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-900 rounded-md"
+				class="text-lg select-none outline-none w-14 h-14 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-900 rounded-md"
 				onclick="switchTheme()"
 				><div class="i-untitled-sun dark:i-untitled-moon-01"></div></button
 			>
+			<Button
+				class="md:flex hidden"
+				href="https://docs.google.com/document/d/1wpOBpqVNmpC82xsXmHVcUF8G9eHQ9PHYqcsT5NI0JXo/export?format=pdf"
+			>
+				Download CV
+			</Button>
 			<button
 				id="menu"
-				class="md:hidden text-lg block select-none outline-none p-4 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-900 rounded-md"
+				class="md:hidden text-lg select-none outline-none w-14 h-14 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-900 rounded-md"
 			>
 				<div class="i-untitled-menu-04"></div>
 			</button>

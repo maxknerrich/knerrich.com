@@ -4,16 +4,29 @@ import { SITE_TITLE } from '../consts';
 ---
 
 <script is:inline>
-const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+//check if localStorage has a value for dark mode
+let theme = localStorage.getItem('theme');
+if (theme === 'dark') {
+	document.documentElement.classList.add('dark');
+}
+if (theme === null) {
+	const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+	if (dark) {
+		document.documentElement.classList.add('dark');
+		localStorage.setItem('theme', 'dark');
+	} else {
+		localStorage.setItem('theme', 'light');
+	}
+}
 
-document.documentElement.classList.add(dark ? 'dark' : '');
-localStorage.setItem('dark', dark);
 function switchTheme() {
 	document.documentElement.classList.toggle('dark');
-	localStorage.setItem(
-		'dark',
-		document.documentElement.classList.contains('dark'),
-	);
+	theme = theme === 'dark' ? 'light' : 'dark';
+	if (theme === 'dark') {
+		localStorage.setItem('theme', 'dark');
+	} else {
+		localStorage.setItem('theme', 'light');
+	}
 }
 </script>
 <script>

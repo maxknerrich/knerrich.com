@@ -10,9 +10,11 @@ h6 {
 }
 .prose {
 	font-size: 1.5rem;
-	max-width: 65ch;
+	max-width: calc(65ch + 32px);
 	font-size: 1rem;
 	line-height: 1.75;
+	margin: 0 auto;
+	padding: 1.5rem;
 }
 .prose a {
 	font-weight: inherit;

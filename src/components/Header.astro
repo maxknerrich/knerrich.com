@@ -16,31 +16,57 @@ function switchTheme() {
 	);
 }
 </script>
-<header class="mx-auto p-6 flex justify-between items-center gap-8">
-	<a
-		href="/"
-		class="i-custom-logo min-w-12 h-12 select-none outline-none dark:color-white color-black"
-	></a>
-	<nav class="flex justify-end w-full gap-5">
-		<HeaderLink href="/">Home</HeaderLink>
-		<HeaderLink href="/blog">Blog</HeaderLink>
-		<HeaderLink href="/about">About</HeaderLink>
-		<HeaderLink href="https://github.com/maxknerrich" target="_blank">
+<script>
+	const menuButton = document.getElementById('menu');
+	if (menuButton) {
+		menuButton.addEventListener('click', () => {
+			[...document.querySelectorAll('.navmenu-toggle')].forEach(Element => {
+				Element.classList.toggle('hidden');
+				Element.classList.toggle('flex');
+			});
+		});
+	}
+</script>
+<header class="mx-auto p-6">
+	<div class="flex justify-between items-center gap-8">
+		<a
+			href="/"
+			class="i-custom-logo w-12 h-12 select-none outline-none dark:color-white color-black"
+		></a>
+		<nav class="hidden justify-end w-full gap-5 md:flex">
+			<HeaderLink href="/">Home</HeaderLink>
+			<!-- <HeaderLink href="/blog">Blog</HeaderLink>
+			<HeaderLink href="/about">About</HeaderLink> -->
+			<HeaderLink href="https://github.com/maxknerrich" target="_blank">
+				GitHub
+			</HeaderLink>
+		</nav>
+		<div class="flex">
+			<button
+				class="text-lg block select-none outline-none p-4 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-900 rounded-md"
+				onclick="switchTheme()"
+				><div class="i-untitled-sun dark:i-untitled-moon-01"></div></button
+			>
+			<button
+				id="menu"
+				class="md:hidden text-lg block select-none outline-none p-4 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-900 rounded-md"
+			>
+				<div class="i-untitled-menu-04"></div>
+			</button>
+		</div>
+	</div>
+	<nav
+		class="hidden justify-end w-full gap-5 md:hidden navmenu-toggle flex-col mt-4"
+	>
+		<HeaderLink class="text-lg" href="/">Home</HeaderLink>
+		<!-- <HeaderLink class="text-lg" href="/blog">Blog</HeaderLink>
+		<HeaderLink class="text-lg" href="/about">About</HeaderLink> -->
+		<HeaderLink
+			class="text-lg"
+			href="https://github.com/maxknerrich"
+			target="_blank"
+		>
 			GitHub
 		</HeaderLink>
 	</nav>
-	<button
-		class="text-lg block select-none outline-none p-4 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-900 rounded-md"
-		onclick="switchTheme()"
-		><div class="i-untitled-sun dark:i-untitled-moon-01"></div></button
-	>
-
-	<style>
-		header {
-			margin: 0em 0 2em;
-		}
-		h2 {
-			margin: 0.5em 0;
-		}
-	</style>
 </header>

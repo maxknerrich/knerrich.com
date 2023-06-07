@@ -2,7 +2,7 @@ import { defineConfig, presetMini, presetIcons, presetUno } from 'unocss';
 
 export default defineConfig({
 	presets: [
-		presetMini({ dark: 'media' }),
+		presetMini(),
 		presetUno(),
 		presetIcons({
 			customizations: {

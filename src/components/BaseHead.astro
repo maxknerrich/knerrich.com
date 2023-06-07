@@ -1,5 +1,4 @@
 ---
-import '@unocss/reset/tailwind.css';
 export interface Props {
 	title: string;
 	description: string;
@@ -66,9 +65,5 @@ const { title, description, image = '/placeholder-social.jpg' } = Astro.props;
 			BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
 			'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
 			'Segoe UI Symbol', 'Noto Color Emoji' !important;
-	}
-	:global(.griffter, h1, h2, h3, h4, h5, h6) {
-		font-family: Griffter;
-		font-weight: 700;
 	}
 </style>

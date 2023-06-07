@@ -1,0 +1,47 @@
+.griffter,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: Griffter;
+	font-weight: 700;
+}
+.prose {
+	font-size: 1.5rem;
+	max-width: 65ch;
+	font-size: 1rem;
+	line-height: 1.75;
+}
+.prose a {
+	font-weight: inherit;
+	text-decoration: none;
+	border-bottom: 1px solid rgba(125, 125, 125, 0.3);
+	transition: border 0.3s ease-in-out;
+	position: relative;
+	--hover-color: black;
+}
+.prose a::after {
+	content: '';
+	position: absolute;
+	display: inline-block;
+	height: 2px;
+	background: var(--hover-color);
+	left: 0;
+	right: 0;
+	bottom: -1px;
+	transform: scaleX(0);
+	transform-origin: left center;
+	transition: transform 0.55s cubic-bezier(0.3, 0.76, 0.27, 1);
+}
+.prose a:hover {
+	color: var(--hover-color);
+}
+.prose a:hover::after {
+	transform: scaleX(1);
+}
+
+.dark .prose a {
+	--hover-color: white;
+}

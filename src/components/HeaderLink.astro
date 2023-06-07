@@ -11,6 +11,14 @@ let classes = className;
 if (isActive) classes += ' dark:text-white font-bold';
 ---
 
-<a href={href} class:list={[classes, { active: isActive }]} {...props}>
+<a
+	href={href}
+	class:list={[
+		'dark:hover:text-white hover:text-black hover:font-bold',
+		classes,
+		{ active: isActive },
+	]}
+	{...props}
+>
 	<slot />
 </a>

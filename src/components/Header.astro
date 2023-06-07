@@ -3,29 +3,44 @@ import HeaderLink from './HeaderLink.astro';
 import { SITE_TITLE } from '../consts';
 ---
 
-<header class="mx-auto p-4 flex justify-between items-center">
+<script is:inline>
+const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+document.documentElement.classList.add(dark ? 'dark' : '');
+localStorage.setItem('dark', dark);
+function switchTheme() {
+	document.documentElement.classList.toggle('dark');
+	localStorage.setItem(
+		'dark',
+		document.documentElement.classList.contains('dark'),
+	);
+}
+</script>
+<header class="mx-auto p-6 flex justify-between items-center gap-8">
 	<a
 		href="/"
-		class="i-custom-logo w-10 h-10 lg:fixed m-6 select-none outline-none dark:color-white"
-		>Max Knerrich</a
-	>
+		class="i-custom-logo min-w-12 h-12 select-none outline-none dark:color-white color-black"
+	></a>
 	<nav class="flex justify-end w-full gap-5">
 		<HeaderLink href="/">Home</HeaderLink>
 		<HeaderLink href="/blog">Blog</HeaderLink>
 		<HeaderLink href="/about">About</HeaderLink>
-		<HeaderLink href="https://twitter.com/astrodotbuild" target="_blank">
-			Twitter
-		</HeaderLink>
-		<HeaderLink href="https://github.com/withastro/astro" target="_blank">
+		<HeaderLink href="https://github.com/maxknerrich" target="_blank">
 			GitHub
 		</HeaderLink>
 	</nav>
+	<button
+		class="text-lg block select-none outline-none p-4 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-900 rounded-md"
+		onclick="switchTheme()"
+		><div class="i-untitled-sun dark:i-untitled-moon-01"></div></button
+	>
+
+	<style>
+		header {
+			margin: 0em 0 2em;
+		}
+		h2 {
+			margin: 0.5em 0;
+		}
+	</style>
 </header>
-<style>
-	header {
-		margin: 0em 0 2em;
-	}
-	h2 {
-		margin: 0.5em 0;
-	}
-</style>

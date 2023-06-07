@@ -17,5 +17,29 @@ const blog = defineCollection({
 		heroImage: z.string().optional(),
 	}),
 });
+const projects = defineCollection({
+	// Type-check frontmatter using a schema
+	schema: z.object({
+		title: z.string(),
+		company: z.string().optional(),
+		role: z.string(),
+		tags: z.array(z.string()),
+		description: z.string(),
+		link: z.string().url(),
+		// Transform string to Date object
+		heroImage: z.string().optional(),
+	}),
+});
 
-export const collections = { blog };
+const skills = defineCollection({
+	// Type-check frontmatter using a schema
+	schema: z.object({
+		title: z.string(),
+		description: z.string(),
+		link: z.string().url(),
+		// Transform string to Date object
+		logo: z.string().optional(),
+	}),
+});
+
+export const collections = { blog, projects, skills };

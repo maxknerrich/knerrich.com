@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+
+const skills = await getCollection('skills'); /* .sort(
+	(a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf(),
+); */
+---
+
+<section>
+	{
+		skills.map(skill => (
+			<li>
+				{skill.data.logo && <div class={skill.data.logo} />}
+				<a href={`/blog/${skill.slug}/`}>{skill.data.title}</a>
+			</li>
+		))
+	}
+</section>

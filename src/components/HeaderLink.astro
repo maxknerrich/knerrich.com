@@ -8,7 +8,7 @@ const { href, class: className, ...props } = Astro.props;
 const { pathname } = Astro.url;
 const isActive = href === pathname || href === pathname.replace(/\/$/, '');
 let classes = className;
-if (isActive) classes += ' dark:text-white font-bold';
+if (isActive) classes += ' dark:text-white text-black font-bold';
 ---
 
 <a

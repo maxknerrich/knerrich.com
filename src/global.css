@@ -30,6 +30,10 @@
 	--r-em-color: var(--black);
 	--r-color: var(--gray-600);
 }
+::selection {
+	background: var(--r-bg-color);
+	color: var(--bg-color);
+}
 .griffter,
 h1,
 h2,

@@ -51,11 +51,18 @@ import Button from './Button.astro';
 			href="/"
 			class="i-custom-logo min-w-12 h-12 fixed select-none outline-none dark:color-white color-black left-4 lg:left-8"
 		></a>
-		<nav class="hidden justify-end gap-5 md:flex grow">
+		<nav class="hidden justify-end gap-7 md:flex grow items-center">
 			<HeaderLink href="/">Home</HeaderLink>
 			<HeaderLink href="/#projects">Projects</HeaderLink>
 			<HeaderLink href="https://github.com/maxknerrich" target="_blank">
 				GitHub
+			</HeaderLink>
+			<HeaderLink
+				href="https://myta.media"
+				target="_blank"
+				class="flex items-center gap-2"
+			>
+				<div class="i-custom-myta"></div> mytamedia
 			</HeaderLink>
 		</nav>
 		<div class="flex gap-2 grow md:grow-0 justify-end">
@@ -82,15 +89,17 @@ import Button from './Button.astro';
 	<nav
 		class="hide flex justify-end w-full gap-5 md:hidden navmenu-toggle flex-col mt-4 fixed -top-8 pt-40 left-0 z-1 p-8"
 	>
-		<HeaderLink class="text-lg" href="/">Home</HeaderLink>
-		<!-- <HeaderLink class="text-lg" href="/blog">Blog</HeaderLink>
-		<HeaderLink class="text-lg" href="/about">About</HeaderLink> -->
-		<HeaderLink
-			class="text-lg"
-			href="https://github.com/maxknerrich"
-			target="_blank"
-		>
+		<HeaderLink href="/">Home</HeaderLink>
+		<HeaderLink href="/#projects">Projects</HeaderLink>
+		<HeaderLink href="https://github.com/maxknerrich" target="_blank">
 			GitHub
+		</HeaderLink>
+		<HeaderLink
+			href="https://myta.media"
+			target="_blank"
+			class="flex items-center gap-2"
+		>
+			<div class="i-custom-myta"></div> mytamedia
 		</HeaderLink>
 	</nav>
 </header>

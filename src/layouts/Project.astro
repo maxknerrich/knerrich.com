@@ -51,8 +51,13 @@ const { title, heroImage, description, role, tags } = Astro.props;
 	article.project :global(main)  :global(section ~ section, h1, h2, h3, h4, h5, h6) {
 		margin-top: 6.5rem;
 	}
-	article.project :global(main)  :global(h1, h2, h3, h4, h5, h6) {
+	article.project :global(main)  :global(h1) {
 		font-size: 2rem;
+		line-height: 130%;
+	}
+	article.project :global(main)  :global(h2) {
+		font-size: 1.5rem;
+		letter-spacing: -0.02em;
 		line-height: 130%;
 	}
 	article.project :global(main)  :global(section) {

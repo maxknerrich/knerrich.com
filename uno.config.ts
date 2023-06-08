@@ -13,6 +13,10 @@ export default defineConfig({
 			// exclude: []
 		},
 	},
+	rules: [
+		['bg', { 'background-color': 'var(--bg-color)' }],
+		['color', { color: 'var(--color)' }],
+	],
 	presets: [
 		presetMini(),
 		presetUno(),

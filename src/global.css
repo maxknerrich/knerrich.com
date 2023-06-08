@@ -1,8 +1,25 @@
 :root {
 	--heading-color: black;
+	--bezier: cubic-bezier(0.3, 0.76, 0.27, 1);
+	--gray-50: #f9fafb;
+	--gray-100: #f3f4f6;
+	--gray-200: #e5e7eb;
+	--gray-300: #d1d5db;
+	--gray-400: #9ca3af;
+	--gray-500: #6b7280;
+	--gray-600: #4b5563;
+	--gray-700: #374151;
+	--gray-800: #1f2937;
+	--gray-900: #111827;
+	--gray-950: #030712;
+	--bg-color: white;
+	--em-color: black;
+	--color: var(--gray-600);
 }
 .dark {
-	--heading-color: white;
+	--bg-color: black;
+	--em-color: white;
+	--color: var(--gray-400);
 }
 .griffter,
 h1,
@@ -13,7 +30,7 @@ h5,
 h6 {
 	font-family: Griffter;
 	font-weight: 700;
-	color: var(--heading-color);
+	color: var(--em-color);
 	letter-spacing: -0.025em;
 }
 .prose {
@@ -23,16 +40,17 @@ h6 {
 	line-height: 1.75;
 	margin: 0 auto;
 	padding-inline: 2rem;
+	--decoration-color: rgba(0, 0, 0, 0.2);
 }
 .prose a:not(.button) {
 	font-weight: inherit;
 	text-decoration: none;
-	border-bottom: 1px solid rgba(125, 125, 125, 0.3);
+	border-bottom: 1px solid var(--decoration-color);
 	transition: border 0.3s ease-in-out;
 	position: relative;
 	--hover-color: black;
 }
-.prose a::after:not(.button) {
+.prose a:not(.button):after {
 	content: '';
 	position: absolute;
 	display: inline-block;
@@ -43,15 +61,16 @@ h6 {
 	bottom: -1px;
 	transform: scaleX(0);
 	transform-origin: left center;
-	transition: transform 0.55s cubic-bezier(0.3, 0.76, 0.27, 1);
+	transition: transform 0.55s var(--bezier);
 }
-.prose a:hover:not(.button) {
+.prose a:not(.button):hover {
 	color: var(--hover-color);
 }
-.prose a:hover::after:not(.button) {
+.prose a:not(.button):hover::after {
 	transform: scaleX(1);
 }
 
 .dark .prose a {
 	--hover-color: white;
+	--decoration-color: rgba(255, 255, 255, 0.2);
 }

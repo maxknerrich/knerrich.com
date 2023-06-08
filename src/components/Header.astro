@@ -35,8 +35,7 @@ function switchTheme() {
 	if (menuButton) {
 		menuButton.addEventListener('click', () => {
 			[...document.querySelectorAll('.navmenu-toggle')].forEach(Element => {
-				Element.classList.toggle('hidden');
-				Element.classList.toggle('flex');
+				Element.classList.toggle('hide');
 			});
 		});
 	}
@@ -77,7 +76,7 @@ function switchTheme() {
 		</div>
 	</div>
 	<nav
-		class="hidden justify-end w-full gap-5 md:hidden navmenu-toggle flex-col mt-4 fixed top-0 pt-24 left-0 bg-black z-1 p-8"
+		class="flex justify-end w-full gap-5 md:hidden navmenu-toggle flex-col mt-4 fixed -top-8 pt-40 left-0 bg z-1 p-8"
 	>
 		<HeaderLink class="text-lg" href="/">Home</HeaderLink>
 		<!-- <HeaderLink class="text-lg" href="/blog">Blog</HeaderLink>
@@ -91,3 +90,32 @@ function switchTheme() {
 		</HeaderLink>
 	</nav>
 </header>
+
+<style>
+	@keyframes hide {
+		0% {
+			visibility: visible;
+		}
+		100% {
+			visibility: hidden;
+		}
+	}
+	nav.navmenu-toggle.hide {
+		transform: translate3d(0, -100%, 0);
+		animation: 0ms hide;
+		animation-delay: 0.3s;
+		animation-fill-mode: forwards;
+	}
+	nav.navmenu-toggle.hide > * {
+		opacity: 0;
+		transition: opacity 0ms;
+	}
+	nav.navmenu-toggle > * {
+		opacity: 1;
+		transition: opacity 0ms 0.1s;
+	}
+	nav.navmenu-toggle {
+		transform: translate3d(0, 0, 0);
+		transition: transform 0.3s var(--bezier);
+	}
+</style>

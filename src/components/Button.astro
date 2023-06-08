@@ -23,54 +23,57 @@ const {
 		{ 'w-full': stretch },
 	]}
 	{...props}
->
-	<slot />
+	><span> <slot /></span>
 </a>
 
 <style>
 	a.button {
-		background-color: var(--bg-color);
-		color: var(--color);
+		background-color: var(--r-bg-color);
+		transition: transform 0.55s var(--bezier);
+		color: var(--r-color);
 	}
 	a.button:focus-visible {
 		outline: 1px solid var(--bg-hover);
 	}
 	a.secondary:focus-visible,
 	a.outln:focus-visible {
-		outline: 1px solid var(--color);
+		outline: 1px solid var(-r-color);
 	}
 	a.button:hover {
 		background-color: var(--bg-hover);
+		transform: scale3d(1.05, 1.05, 1);
+	}
+	a.button > span {
+		transition: transform 0.55s var(--bezier);
+	}
+	a.button:hover > span {
+		transform: scale3d(0.9523809523809524, 0.9523809523809524, 1);
 	}
 	.primary {
-		--color: white;
-		--bg-hover: #1f2937;
-		--bg-color: black;
+		--bg-hover: var(--gray-800);
 	}
 	.secondary {
-		--color: black;
-		--bg-hover: #f3f4f6;
-		--bg-color: #e5e7eb;
+		--r-color: black;
+		--bg-hover: var(--gray-100)
+		--r-bg-color: var(--gray-200);
 	}
 	.outln {
-		--bg-color: transparent;
-		--color: black;
-		--bg-hover: #e5e7eb;
-		border: 1px solid var(--color);
+		--r-bg-color: transparent;
+		--r-color: black;
+		--bg-hover: var(--gray-200);
+		border: 1px solid var(-r-color);
 	}
 	:global(.dark) a {
-		--bg-color: white;
-		--bg-hover: #e5e7eb;
-		--color: black;
+		--bg-hover: var(--gray-200);
 	}
 	:global(.dark) .outln {
-		--bg-color: transparent;
-		--color: white;
-		--bg-hover: #1f2937;
+		--r-bg-color: transparent;
+		--r-color: white;
+		--bg-hover: var(--gray-800);
 	}
 	:global(.dark) .secondary {
-		--color: white;
-		--bg-hover: #111827;
-		--bg-color: #1f2937;
+		--r-color: white;
+		--bg-hover: var(--gray-900);
+		--r-bg-color: var(--gray-800);
 	}
 </style>

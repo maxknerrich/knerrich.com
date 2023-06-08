@@ -15,11 +15,17 @@
 	--bg-color: white;
 	--em-color: black;
 	--color: var(--gray-600);
+	--r-bg-color: black;
+	--r-em-color: white;
+	--r-color: var(--gray-400);
 }
 .dark {
 	--bg-color: black;
 	--em-color: white;
 	--color: var(--gray-400);
+	--r-bg-color: white;
+	--r-em-color: black;
+	--r-color: var(--gray-600);
 }
 .griffter,
 h1,

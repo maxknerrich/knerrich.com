@@ -5,30 +5,30 @@ import Button from './Button.astro';
 ---
 
 <script is:inline>
-//check if localStorage has a value for dark mode
-let theme = localStorage.getItem('theme');
-if (theme === 'dark') {
-	document.documentElement.classList.add('dark');
-}
-if (theme === null) {
-	const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-	if (dark) {
-		document.documentElement.classList.add('dark');
-		localStorage.setItem('theme', 'dark');
-	} else {
-		localStorage.setItem('theme', 'light');
-	}
-}
-
-function switchTheme() {
-	document.documentElement.classList.toggle('dark');
-	theme = theme === 'dark' ? 'light' : 'dark';
+	//check if localStorage has a value for dark mode
+	let theme = localStorage.getItem('theme');
 	if (theme === 'dark') {
-		localStorage.setItem('theme', 'dark');
-	} else {
-		localStorage.setItem('theme', 'light');
+		document.documentElement.classList.add('dark');
 	}
-}
+	if (theme === null) {
+		const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+		if (dark) {
+			document.documentElement.classList.add('dark');
+			localStorage.setItem('theme', 'dark');
+		} else {
+			localStorage.setItem('theme', 'light');
+		}
+	}
+
+	function switchTheme() {
+		document.documentElement.classList.toggle('dark');
+		theme = theme === 'dark' ? 'light' : 'dark';
+		if (theme === 'dark') {
+			localStorage.setItem('theme', 'dark');
+		} else {
+			localStorage.setItem('theme', 'light');
+		}
+	}
 </script>
 <script>
 	const menuButton = document.getElementById('menu');
@@ -37,6 +37,11 @@ function switchTheme() {
 			[...document.querySelectorAll('.navmenu-toggle')].forEach(Element => {
 				Element.classList.toggle('hide');
 			});
+			console.log(menuButton.children[0].classList);
+			menuButton.children[0].classList.toggle('i-untitled-menu-04');
+			menuButton.children[0].classList.toggle('i-untitled-x-close');
+			menuButton.classList.toggle('bg-gray-100');
+			menuButton.classList.toggle('dark:bg-gray-900');
 		});
 	}
 </script>
@@ -76,7 +81,7 @@ function switchTheme() {
 		</div>
 	</div>
 	<nav
-		class="hide flex justify-end w-full gap-5 md:hidden navmenu-toggle flex-col mt-4 fixed -top-8 pt-40 left-0 bg z-1 p-8"
+		class="hide flex justify-end w-full gap-5 md:hidden navmenu-toggle flex-col mt-4 fixed -top-8 pt-40 left-0 z-1 p-8"
 	>
 		<HeaderLink class="text-lg" href="/">Home</HeaderLink>
 		<!-- <HeaderLink class="text-lg" href="/blog">Blog</HeaderLink>
@@ -117,5 +122,12 @@ function switchTheme() {
 	nav.navmenu-toggle {
 		transform: translate3d(0, 0, 0);
 		transition: transform 0.3s var(--bezier);
+		--white: rgba(255, 255, 255, 0.9);
+		backdrop-filter: blur(10px);
+		background-color: var(--white);
+	}
+	:global(.dark) nav.navmenu-toggle {
+		--black: rgba(0, 0, 0, 0.85);
+		background-color: var(--black);
 	}
 </style>

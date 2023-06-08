@@ -13,9 +13,13 @@ export default defineConfig({
 			// exclude: []
 		},
 	},
+	safelist: ['i-untitled-x-close'],
 	rules: [
 		['bg', { 'background-color': 'var(--bg-color)' }],
 		['color', { color: 'var(--color)' }],
+		['r-bg', { '--bg-color': 'var(--r-bg-color)' }],
+		['r-color', { '--color': 'var(--r-color)' }],
+		['r-em', { '--em-color': 'var(--r-em-color)' }],
 	],
 	presets: [
 		presetMini(),

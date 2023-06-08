@@ -41,21 +41,23 @@ const {
 	}
 	a.button:hover {
 		background-color: var(--bg-hover);
-		transform: scale3d(1.05, 1.05, 1);
+		--scale: 1.05;
+		transform: scale3d(var(--scale), var(--scale), 1);
 	}
 	a.button > span {
 		transition: transform 0.55s var(--bezier);
 	}
 	a.button:hover > span {
-		transform: scale3d(0.9523809523809524, 0.9523809523809524, 1);
+		--scale-reverse: calc(1 / var(--scale));
+		transform: scale3d(var(--scale-reverse), var(--scale-reverse), 1);
 	}
 	.primary {
 		--bg-hover: var(--gray-800);
 	}
 	.secondary {
 		--r-color: black;
-		--bg-hover: var(--gray-100)
-		--r-bg-color: var(--gray-200);
+		--bg-hover: var(--gray-200);
+		--r-bg-color: var(--gray-100);
 	}
 	.outln {
 		--r-bg-color: transparent;
@@ -68,11 +70,11 @@ const {
 	}
 	:global(.dark) .outln {
 		--r-bg-color: transparent;
-		--r-color: white;
+		--r-color: var(--white);
 		--bg-hover: var(--gray-800);
 	}
 	:global(.dark) .secondary {
-		--r-color: white;
+		--r-color: var(--white);
 		--bg-hover: var(--gray-900);
 		--r-bg-color: var(--gray-800);
 	}

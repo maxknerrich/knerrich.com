@@ -7,10 +7,11 @@ type Props = CollectionEntry<'projects'> & {
 };
 const { data, slug, aspectRatio, ...props } = Astro.props;
 const image = data.previewImage ? data.previewImage : data.heroImage;
+const href = `/projects/${slug}/`;
 ---
 
 <div class="rounded-md w-full flex gap-6 flex-col project">
-	<a href={`/projects/${slug}/`}>
+	<a href={href}>
 		<Picture aspect={aspectRatio} src={image} alt="Project Hero Image" />
 		<h3 class="text-2xl pt-7">{data.title}</h3>
 		<p class="font-sm color-gray-400 dark:color-gray-500">{data.tags}</p>
@@ -18,7 +19,7 @@ const image = data.previewImage ? data.previewImage : data.heroImage;
 			{data.description}
 		</p>
 	</a>
-	<Button type="outln">View Project</Button>
+	<Button href={href} type="outln">View Project</Button>
 </div>
 
 <style>

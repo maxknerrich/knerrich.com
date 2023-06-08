@@ -10,6 +10,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/image": "^0.17.0",
     "@astrojs/markdoc": "^0.3.2",
     "@astrojs/mdx": "^0.19.7",
     "@astrojs/rss": "^2.4.3",
@@ -21,6 +22,7 @@
     "@iconify-json/logos": "^1.1.31",
     "prettier": "^2.8.8",
     "prettier-plugin-astro": "^0.10.0",
+    "sharp": "^0.32.1",
     "unocss": "^0.53.1"
   }
 }

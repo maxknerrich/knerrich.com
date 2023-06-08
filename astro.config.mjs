@@ -12,4 +12,9 @@ export default defineConfig({
 	server: {
 		port: 8894,
 	},
+	vite: {
+		build: {
+			assetsDir: '_astro',
+		},
+	},
 });

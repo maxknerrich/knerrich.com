@@ -8,9 +8,7 @@ type Props = CollectionEntry<'projects'> & {
 const { data, slug, aspectRatio, ...props } = Astro.props;
 ---
 
-<div
-	class="bg-white dark:bg-gray-900 rounded-md w-full flex gap-6 flex-col project"
->
+<div class="rounded-md w-full flex gap-6 flex-col project">
 	<a href={`/projects/${slug}/`} class="flex gap-6 flex-col">
 		{
 			data.heroImage && (

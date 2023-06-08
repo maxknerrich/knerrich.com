@@ -46,6 +46,12 @@ h6 {
 	color: var(--em-color);
 	letter-spacing: -0.025em;
 }
+.normal {
+	font-family: PLusJakartaSans;
+	font-weight: 500;
+	color: inherit;
+	letter-spacing: unset;
+}
 .prose {
 	font-size: 1.5rem;
 	max-width: calc(65ch + 32px);

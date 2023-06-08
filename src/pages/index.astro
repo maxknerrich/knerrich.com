@@ -1,9 +1,8 @@
 ---
-import Button from '../components/Button.astro';
-import Projects from '../components/Projects.astro';
-import Skills from '../components/Skills.astro';
-import Default from '../layouts/Default.astro';
-const today = new Date();
+import Button from '$components/Button.astro';
+import Projects from '$components/Projects.astro';
+import Skills from '$components/Skills.astro';
+import Default from '$layouts/Default.astro';
 ---
 
 <Default>
@@ -14,13 +13,13 @@ const today = new Date();
 		</h1>
 		<p class="mt-8">UX-Designer and Developer from Stuttgart, Germany</p>
 		<p class="mt-4">
-			Im currently studing Computer Science and Media @ <a
+			Im currently studing Computer Science and Media <a
 				href="https://www.hdm-stuttgart.de"
 				target="_blank"
-				>HDM Stuttgart
-			</a>. Also working as a UX-Designer @
+				>@ HDM Stuttgart.
+			</a> Also working as a UX-Designer
 			<a href="https://www.linkedin.com/company/literacy-gmbh/" target="_blank"
-				>Literacy Legaltech</a
+				>@ Literacy Legaltech</a
 			>
 		</p>
 		<Button class="mt-8" stretch={true} href="mailto:max.knerrich@outlook.com">

@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import Default from '../../layouts/Default.astro';
+import Default from '$layouts/Default.astro';
 
 const posts = await getCollection('projects'); /* .sort(
 	(a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf(),

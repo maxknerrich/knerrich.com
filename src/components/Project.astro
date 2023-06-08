@@ -1,27 +1,22 @@
 ---
-import { Picture } from '@astrojs/image/components';
+import Picture from '$components/Picture.astro';
 import type { CollectionEntry } from 'astro:content';
 import Button from './Button.astro';
 type Props = CollectionEntry<'projects'> & {
 	aspectRatio: number;
 };
 const { data, slug, aspectRatio, ...props } = Astro.props;
+const image = data.previewImage ? data.previewImage : data.heroImage;
 ---
 
 <div class="rounded-md w-full flex gap-6 flex-col project">
-	<a href={`/projects/${slug}/`} class="flex gap-6 flex-col">
-		{
-			data.heroImage && (
-				<Picture
-					widths={[400, 800, 1200]}
-					aspectRatio={aspectRatio}
-					src={data.heroImage}
-					alt="Project Hero Image"
-				/>
-			)
-		}
-		<h3 class="text-2xl">{data.title}</h3>
-		<p class="mt-2">{data.description}</p>
+	<a href={`/projects/${slug}/`}>
+		<Picture aspect={aspectRatio} src={image} alt="Project Hero Image" />
+		<h3 class="text-2xl pt-7">{data.title}</h3>
+		<p class="font-sm color-gray-400 dark:color-gray-500">{data.tags}</p>
+		<p class="mt-2 pt-6 color-gray-800 dark:color-gray-200">
+			{data.description}
+		</p>
 	</a>
 	<Button type="outln">View Project</Button>
 </div>

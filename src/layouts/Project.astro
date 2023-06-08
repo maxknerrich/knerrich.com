@@ -1,14 +1,15 @@
 ---
+import Picture from '$components/Picture.astro';
 import type { CollectionEntry } from 'astro:content';
 
 type Props = CollectionEntry<'projects'>['data'];
 
-const { title, heroImage } = Astro.props;
+const { title, heroImage, description } = Astro.props;
 ---
 
-<article>
-	{heroImage && <img width={720} height={360} src={heroImage} alt="" />}
-	<h1 class="title">{title}</h1>
-	<hr />
+<article class="w-full max-w-[90ch] mx-auto px-4 xl:px-0 lg:py-24 break-words">
+	<h1 class="normal text-xl font-bold">{title}</h1>
+	<p class="griffter text-6xl mt-4 mb-16">{description}</p>
+	<Picture src={heroImage} alt="" aspect={16 / 10} />
 	<slot />
 </article>

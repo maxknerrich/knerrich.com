@@ -22,12 +22,13 @@ const projects = defineCollection({
 	schema: z.object({
 		title: z.string(),
 		company: z.string().optional(),
-		role: z.string(),
+		services: z.array(z.string()),
 		tags: z.array(z.string()),
 		description: z.string(),
 		link: z.string().url(),
 		// Transform string to Date object
-		heroImage: z.string().optional(),
+		heroImage: z.string(),
+		previewImage: z.string().optional(),
 	}),
 });
 

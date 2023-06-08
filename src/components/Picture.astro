@@ -1,0 +1,10 @@
+---
+import { renderPicture } from 'astro-imagetools/api';
+import type { PictureConfigOptions } from 'astro-imagetools';
+
+declare interface Props extends PictureConfigOptions {}
+
+const { link, style, picture } = await renderPicture(Astro.props as Props);
+---
+
+<Fragment set:html={link + style + picture} />

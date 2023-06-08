@@ -25,7 +25,7 @@
 .dark {
 	--bg-color: var(--black);
 	--em-color: var(--white);
-	--color: var(--gray-300);
+	--color: var(--gray-400);
 	--r-bg-color: var(--white);
 	--r-em-color: var(--black);
 	--r-color: var(--gray-600);

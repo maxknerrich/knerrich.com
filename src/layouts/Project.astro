@@ -7,22 +7,12 @@ type Props = CollectionEntry<'projects'>['data'];
 
 const { title, heroImage, description, role, tags } = Astro.props;
 ---
-
-<script>
-	const buttons = document.querySelectorAll('button.goBack');
-
-	buttons.forEach(button => {
-		button.addEventListener('click', () => {
-			window.history.back();
-		});
-	});
-</script>
-<button
-	class="goBack color-black dark:color-white mb-16 flex justify-center items-center gap-2 mx-4 md:lg-8"
+<a href="/#projects"
+	class="block w-fit color-black dark:color-white mb-16 mt-4 flex justify-center items-center gap-2 mx-4 md:lg-8"
 >
 	<div class="i-untitled-arrow-narrow-left"></div>
 	Back
-</button>
+</a>
 <article class="w-full max-w-[90ch] mx-auto px-4 xl:px-0 break-words project">
 	<header class="mb-24">
 		<h1 class="normal text-xl font-bold">{title}</h1>
@@ -48,24 +38,54 @@ const { title, heroImage, description, role, tags } = Astro.props;
 	.goBack:hover div {
 		transform: translateX(-0.15rem);
 	}
-	article.project :global(main)  :global(section ~ section, h1, h2, h3, h4, h5, h6) {
-		margin-top: 6.5rem;
+	article.project {
+		--margin-small: 1.5rem;
+		--margin: 2.5rem;
+		--margin-big: 6.5rem;
 	}
-	article.project :global(main)  :global(h1) {
+	
+	article.project :global(main > section + section), article.project :global(main > h1){
+		margin-top: var(--margin-big);
+	}
+	article.project :global(main h1) {
 		font-size: 2rem;
 		line-height: 130%;
 	}
-	article.project :global(main)  :global(h2) {
+	article.project :global(main h2) {
 		font-size: 1.5rem;
 		letter-spacing: -0.02em;
 		line-height: 130%;
 	}
-	article.project :global(main)  :global(section) {
-		margin-top: 2.5rem;
-		margin-bottom: 2.5rem;
+	article.project :global(main) :global(section) {
+		margin-top: var(--margin);
+		margin-bottom: var(--margin);
 	}
 	article.project :global(main) :global(> *) {
-		margin-top: 1.5rem;
-		margin-bottom: 1.5rem;
+		margin-top: var(--margin-small);
+		margin-bottom: var(--margin-small);
+	}
+	article.project :global(main > p) {
+		max-width: calc(45rem + 32px);
+		margin-left: auto;
+		margin-right: auto;
+		line-height: 1.75;
+		padding-inline: 2rem;
+		--decoration-color: rgba(0, 0, 0, 0.2);
+	}
+	article.project :global(main > h1), article.project :global(main > h2), article.project :global(main > h3), article.project :global(main > h4), article.project :global(main > h5), article.project :global(main > h6) {
+		max-width: calc(45rem + 32px);
+		margin-left: auto;
+		margin-right: auto;
+		padding-inline: 2rem;
+	}
+	@media (min-width: 1024px) {
+		article.project {
+			--margin-small: 2.5rem;
+			--margin: 6.5rem;
+			--margin-big: 6.5rem;
+		}
+		article.project :global(main > section + h1) {
+			--margin-big: 10rem;
+		}
 	}
 </style>

@@ -10,9 +10,8 @@ const tagline = tags.join(', ');
 ---
 
 <script>
-	const buttons = document.querySelectorAll('.button.goBack');
+	const buttons = document.querySelectorAll('button.goBack');
 
-	// Handle clicks on each button.
 	buttons.forEach(button => {
 		button.addEventListener('click', () => {
 			window.history.back();

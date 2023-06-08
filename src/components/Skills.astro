@@ -6,13 +6,23 @@ const skills = await getCollection('skills'); /* .sort(
 ); */
 ---
 
-<section>
-	{
-		skills.map(skill => (
-			<li>
-				{skill.data.logo && <div class={skill.data.logo} />}
-				<a href={`/blog/${skill.slug}/`}>{skill.data.title}</a>
-			</li>
-		))
-	}
+<section class="w-full max-w-[90ch] mx-auto px-4 xl:px-0">
+	<div class="bg-black dark:bg-gray-950 rounded-lg p-7 sm:p-12">
+		<h2 class="text-3xl mb-8 text-white">Skills</h2>
+		<div class="flex justify-between flex-wrap gap-y-8">
+			{
+				skills.map(skill => (
+					<div class="bg-white dark:bg-gray-900 rounded-md p-6 w-full shrink-0 md:w-[calc(50%-1rem)] lg:w-[calc(33%-1rem)]">
+						<div class="flex items-center gap-3">
+							{skill.data.logo && (
+								<div class={skill.data.logo + ' w-10 h-10'} />
+							)}
+							<h3 class="text-xl">{skill.data.title}</h3>
+						</div>
+						<p class="mt-5">{skill.data.description}</p>
+					</div>
+				))
+			}
+		</div>
+	</div>
 </section>

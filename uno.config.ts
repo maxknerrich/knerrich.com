@@ -1,6 +1,18 @@
 import { defineConfig, presetMini, presetIcons, presetUno } from 'unocss';
 
 export default defineConfig({
+	//import all logos from skills
+	content: {
+		pipeline: {
+			include: [
+				// the default
+				/\.(vue|svelte|[jt]sx|mdx?|astro|elm|php|phtml|html)($|\?)/,
+				'src/content/skills/*.mdoc',
+			],
+			// exclude files
+			// exclude: []
+		},
+	},
 	presets: [
 		presetMini(),
 		presetUno(),

@@ -1,3 +1,9 @@
+:root {
+	--heading-color: black;
+}
+.dark {
+	--heading-color: white;
+}
 .griffter,
 h1,
 h2,
@@ -7,6 +13,8 @@ h5,
 h6 {
 	font-family: Griffter;
 	font-weight: 700;
+	color: var(--heading-color);
+	letter-spacing: -0.025em;
 }
 .prose {
 	font-size: 1.5rem;
@@ -14,7 +22,7 @@ h6 {
 	font-size: 1rem;
 	line-height: 1.75;
 	margin: 0 auto;
-	padding-inline: 1.75rem;
+	padding-inline: 2rem;
 }
 .prose a:not(.button) {
 	font-weight: inherit;

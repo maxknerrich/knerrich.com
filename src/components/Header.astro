@@ -41,11 +41,11 @@ function switchTheme() {
 		});
 	}
 </script>
-<header class="mx-auto p-6">
-	<div class="flex justify-between items-center gap-8">
+<header class="mx-auto p-8">
+	<div class="flex justify-between items-center gap-8 relative z-900">
 		<a
 			href="/"
-			class="i-custom-logo min-w-12 h-12 select-none outline-none dark:color-white color-black"
+			class="i-custom-logo min-w-12 h-12 fixed select-none outline-none dark:color-white color-black left-8"
 		></a>
 		<nav class="hidden justify-end gap-5 md:flex grow">
 			<HeaderLink href="/">Home</HeaderLink>
@@ -55,7 +55,7 @@ function switchTheme() {
 				GitHub
 			</HeaderLink>
 		</nav>
-		<div class="flex gap-2">
+		<div class="flex gap-2 grow justify-end mr-16">
 			<Button
 				type="secondary"
 				class="md:flex hidden"
@@ -64,20 +64,20 @@ function switchTheme() {
 				Download CV
 			</Button>
 			<button
-				class="text-lg select-none outline-none w-14 h-14 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-900 rounded-md focus:outline-gray-700"
+				class="text-lg select-none outline-none w-14 h-14 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-900 rounded-md focus-visible:outline-gray-700"
 				onclick="switchTheme()"
 				><div class="i-untitled-sun dark:i-untitled-moon-01"></div></button
 			>
 			<button
 				id="menu"
-				class="md:hidden text-lg select-none outline-none w-14 h-14 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-900 rounded-md focus:outline-gray-700"
+				class="md:hidden text-lg fixed select-none outline-none right-8 w-14 h-14 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-900 rounded-md focus-visible:outline-gray-700"
 			>
 				<div class="i-untitled-menu-04"></div>
 			</button>
 		</div>
 	</div>
 	<nav
-		class="hidden justify-end w-full gap-5 md:hidden navmenu-toggle flex-col mt-4"
+		class="hidden justify-end w-full gap-5 md:hidden navmenu-toggle flex-col mt-4 fixed top-0 pt-24 left-0 bg-black z-1 p-8"
 	>
 		<HeaderLink class="text-lg" href="/">Home</HeaderLink>
 		<!-- <HeaderLink class="text-lg" href="/blog">Blog</HeaderLink>

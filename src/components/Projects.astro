@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+import Project from './Project.astro';
+
+const projects = await getCollection('projects'); /* .sort(
+	(a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf(),
+); */
+let halfwayThrough = Math.ceil(projects.length / 2);
+
+let arrayFirstHalf = projects.slice(0, halfwayThrough);
+let arraySecondHalf = projects.slice(halfwayThrough, projects.length);
+---
+
+<section class="w-full max-w-[90ch] mx-auto px-4 xl:px-0 py-24">
+	<h2 class="text-3xl mb-8">Projects</h2>
+	<div class="flex justify-between flex-wrap">
+		<div
+			class="flex gap-y-20 flex-col flex-shrink-0 md:w-[calc(50%-2rem)] w-full"
+		>
+			{
+				arrayFirstHalf.map((project, index) => {
+					const aspectRatio = index % 2 === 0 ? 4 / 5 : 1;
+					return <Project aspectRatio={aspectRatio} {...project} />;
+				})
+			}
+		</div>
+		<div
+			class="flex gap-y-20 flex-col flex-shrink-0 md:w-[calc(50%-2rem)] w-full"
+		>
+			{
+				arraySecondHalf.map((project, index) => {
+					const aspectRatio = index % 2 === 0 ? 1 : 4 / 5;
+					return <Project aspectRatio={aspectRatio} {...project} />;
+				})
+			}
+		</div>
+	</div>
+</section>

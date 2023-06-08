@@ -29,7 +29,9 @@ const {
 <style>
 	a.button {
 		background-color: var(--r-bg-color);
-		transition: transform 0.55s var(--bezier);
+		transition-property: transform, background-color, color;
+		transition-duration: 0.55s;
+		transition-timing-function: var(--bezier);
 		color: var(--r-color);
 	}
 	a.button:focus-visible {
@@ -60,11 +62,14 @@ const {
 		--bg-hover: var(--gray-200);
 		--r-bg-color: var(--gray-100);
 	}
+	.outln:hover {
+		color: var(--r-em-color);
+	}
 	.outln {
 		--r-bg-color: transparent;
 		--r-color: black;
-		--bg-hover: var(--gray-200);
-		border: 1px solid var(-r-color);
+		--bg-hover: var(--black);
+		border: 1px solid var(--r-color);
 	}
 	:global(.dark) a {
 		--bg-hover: var(--gray-200);

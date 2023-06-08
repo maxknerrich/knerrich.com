@@ -1,15 +1,53 @@
 ---
+import Button from '$components/Button.astro';
 import Picture from '$components/Picture.astro';
 import type { CollectionEntry } from 'astro:content';
 
 type Props = CollectionEntry<'projects'>['data'];
 
-const { title, heroImage, description } = Astro.props;
+const { title, heroImage, description, role, tags } = Astro.props;
+const tagline = tags.join(', ');
 ---
 
-<article class="w-full max-w-[90ch] mx-auto px-4 xl:px-0 lg:py-24 break-words">
-	<h1 class="normal text-xl font-bold">{title}</h1>
-	<p class="griffter text-6xl mt-4 mb-16">{description}</p>
-	<Picture src={heroImage} alt="" aspect={16 / 10} />
+<script>
+	const buttons = document.querySelectorAll('.button.goBack');
+
+	// Handle clicks on each button.
+	buttons.forEach(button => {
+		button.addEventListener('click', () => {
+			window.history.back();
+		});
+	});
+</script>
+<button
+	class="goBack color-black dark:color-white mb-16 flex justify-center items-center gap-2 mx-4 md:lg-8"
+>
+	<div class="i-untitled-arrow-narrow-left"></div>
+	Back
+</button>
+<article class="w-full max-w-[90ch] mx-auto px-4 xl:px-0 break-words">
+	<header class="mb-32">
+		<h1 class="normal text-xl font-bold">{title}</h1>
+		<p class="griffter text-6xl mt-4 mb-16">{description}</p>
+		<div class="flex w-full gap-8 mb-16">
+			<div>
+				<div class="mb-1">Role</div>
+				<span class="font-bold text-lg">{role}</span>
+			</div>
+			<div>
+				<div class="mb-1">Jobs</div>
+				<span class="font-bold text-lg">{tagline}</span>
+			</div>
+		</div>
+		<Picture src={heroImage} alt="" aspect={16 / 10} />
+	</header>
 	<slot />
 </article>
+<style>
+	.goBack div {
+		transition: transform 0.3s var(--bezier);
+	}
+	.goBack:hover div {
+		transform: translateX(-0.15rem);
+	}
+</style>

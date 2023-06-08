@@ -22,7 +22,7 @@ const projects = defineCollection({
 	schema: z.object({
 		title: z.string(),
 		company: z.string().optional(),
-		services: z.array(z.string()),
+		role: z.string(),
 		tags: z.array(z.string()),
 		description: z.string(),
 		link: z.string().url(),

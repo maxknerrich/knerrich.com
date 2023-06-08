@@ -45,16 +45,15 @@ import Button from './Button.astro';
 		});
 	}
 </script>
-<header class="mx-auto p-8">
+<header class="mx-auto p-4 lg:p-8">
 	<div class="flex justify-between items-center gap-8 relative z-900">
 		<a
 			href="/"
-			class="i-custom-logo min-w-12 h-12 fixed select-none outline-none dark:color-white color-black left-8"
+			class="i-custom-logo min-w-12 h-12 fixed select-none outline-none dark:color-white color-black left-4 lg:left-8"
 		></a>
 		<nav class="hidden justify-end gap-5 md:flex grow">
 			<HeaderLink href="/">Home</HeaderLink>
-			<!-- <HeaderLink href="/blog">Blog</HeaderLink>
-			<HeaderLink href="/about">About</HeaderLink> -->
+			<HeaderLink href="/#projects">Projects</HeaderLink>
 			<HeaderLink href="https://github.com/maxknerrich" target="_blank">
 				GitHub
 			</HeaderLink>
@@ -68,13 +67,13 @@ import Button from './Button.astro';
 				Download CV
 			</Button>
 			<button
-				class="text-lg select-none outline-none w-14 h-14 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-900 rounded-md focus-visible:outline-gray-700 mr-16 md:mr-0"
+				class="text-lg select-none outline-none w-14 h-14 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-900 rounded-md focus-visible:outline-gray-700 mr-12 md:mr-0"
 				onclick="switchTheme()"
 				><div class="i-untitled-sun dark:i-untitled-moon-01"></div></button
 			>
 			<button
 				id="menu"
-				class="md:hidden text-lg fixed select-none outline-none right-8 w-14 h-14 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-900 rounded-md focus-visible:outline-gray-700"
+				class="md:hidden text-lg fixed select-none outline-none right-4 w-14 h-14 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-900 rounded-md focus-visible:outline-gray-700"
 			>
 				<div class="i-untitled-menu-04"></div>
 			</button>

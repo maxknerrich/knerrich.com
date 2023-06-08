@@ -2,10 +2,12 @@
 const today = new Date();
 ---
 
-<footer>
+<footer class="flex justify-between prose">
 	&copy; {today.getFullYear()} Max Knerrich. All rights reserved.
-	<a href="impressum">Impressum</a>
-	<a href="datenschutzerkaerung">Datenschutzerkärung</a>
+	<nav class="flex gap-2">
+		<a href="impressum">Impressum</a>
+		<a href="datenschutzerklaerung">Datenschutzerkärung</a>
+	</nav>
 </footer>
 <style>
 	footer {

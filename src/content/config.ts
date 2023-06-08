@@ -23,7 +23,7 @@ const projects = defineCollection({
 		title: z.string(),
 		company: z.string().optional(),
 		role: z.string(),
-		tags: z.array(z.string()),
+		tags: z.string(),
 		description: z.string(),
 		link: z.string().url(),
 		// Transform string to Date object

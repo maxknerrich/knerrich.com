@@ -1,0 +1,18 @@
+---
+const {
+	twoColumn = false,
+} = Astro.props;
+---
+
+{
+	twoColumn && 
+	<div class="flex w-full gap-5">
+			<slot/>
+	</div>
+}
+{
+	!twoColumn && <div class="row">
+		<div class="w-full">
+			<slot/>
+		</div>
+}

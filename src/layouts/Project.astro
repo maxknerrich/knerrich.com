@@ -6,7 +6,6 @@ import type { CollectionEntry } from 'astro:content';
 type Props = CollectionEntry<'projects'>['data'];
 
 const { title, heroImage, description, role, tags } = Astro.props;
-const tagline = tags.join(', ');
 ---
 
 <script>
@@ -24,18 +23,18 @@ const tagline = tags.join(', ');
 	<div class="i-untitled-arrow-narrow-left"></div>
 	Back
 </button>
-<article class="w-full max-w-[90ch] mx-auto px-4 xl:px-0 break-words">
-	<header class="mb-32">
+<article class="w-full max-w-[90ch] mx-auto px-4 xl:px-0 break-words project">
+	<header class="mb-24">
 		<h1 class="normal text-xl font-bold">{title}</h1>
 		<p class="griffter text-6xl mt-4 mb-16">{description}</p>
 		<div class="flex w-full gap-8 mb-16">
-			<div>
+			<div class="min-w-2/5 md:min-w-fit">
 				<div class="mb-1">Role</div>
 				<span class="font-bold text-lg">{role}</span>
 			</div>
 			<div>
 				<div class="mb-1">Jobs</div>
-				<span class="font-bold text-lg">{tagline}</span>
+				<span class="font-bold text-lg">{tags}</span>
 			</div>
 		</div>
 		<Picture src={heroImage} alt="" aspect={16 / 10} />
@@ -48,5 +47,20 @@ const tagline = tags.join(', ');
 	}
 	.goBack:hover div {
 		transform: translateX(-0.15rem);
+	}
+	article.project :global(main)  :global(section ~ section, h1, h2, h3, h4, h5, h6) {
+		margin-top: 6.5rem;
+	}
+	article.project :global(main)  :global(h1, h2, h3, h4, h5, h6) {
+		font-size: 2rem;
+		line-height: 130%;
+	}
+	article.project :global(main)  :global(section) {
+		margin-top: 2.5rem;
+		margin-bottom: 2.5rem;
+	}
+	article.project :global(main) :global(> *) {
+		margin-top: 1.5rem;
+		margin-bottom: 1.5rem;
 	}
 </style>

@@ -18,7 +18,7 @@
     "astro-imagetools": "^0.8.1"
   },
   "devDependencies": {
-    "@iconify-json/logos": "^1.1.31",
+    "@iconify-json/logos": "^1.1.32",
     "prettier": "^2.8.8",
     "prettier-plugin-astro": "^0.10.0",
     "unocss": "^0.53.1"

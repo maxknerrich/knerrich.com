@@ -2,9 +2,7 @@
 import { getCollection } from 'astro:content';
 import Project from './Project.astro';
 
-const projects = await getCollection('projects'); /* .sort(
-	(a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf(),
-); */
+const projects = await getCollection('projects').then((projects) => projects.filter((project) => process.env.NODE_ENV === "development" ? true : !project.data.draft));
 let halfwayThrough = Math.ceil(projects.length / 2);
 
 let arrayFirstHalf = projects.slice(0, halfwayThrough);

@@ -1,9 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-
-const skills = await getCollection('skills'); /* .sort(
-	(a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf(),
-); */
+const skills = await getCollection('skills').then((skills) => skills.filter((skill) => process.env.NODE_ENV === "development" ? true : !skill.data.draft));
 ---
 
 <section class="w-full max-w-[90ch] mx-auto px-4 xl:px-0 lg:py-24">

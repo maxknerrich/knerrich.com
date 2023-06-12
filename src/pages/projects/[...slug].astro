@@ -4,20 +4,20 @@ import Default from '$layouts/Default.astro';
 import Project from '$layouts/Project.astro';
 
 export async function getStaticPaths() {
-	const posts = await getCollection('projects');
-	return posts.map(post => ({
-		params: { slug: post.slug },
-		props: post,
+	const projects = await getCollection('projects');
+	return projects.filter(project => process.env.NODE_ENV === "development" ? true : !project.data.draft).map(project => ({
+		params: { slug: project.slug },
+		props: project,
 	}));
 }
 type Props = CollectionEntry<'projects'>;
 
-const post = Astro.props;
-const { Content } = await post.render();
+const project = Astro.props;
+const { Content } = await project.render();
 ---
 
 <Default>
-	<Project {...post.data}>
+	<Project {...project.data}>
 		<Content />
 	</Project>
 </Default>

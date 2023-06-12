@@ -1,5 +1,6 @@
 {
 	"files.associations": {
 		"*.mdoc": "markdown"
-	}
+	},
+	"prettier.prettierPath": "./node_modules/prettier"
 }

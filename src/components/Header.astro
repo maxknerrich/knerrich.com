@@ -32,27 +32,36 @@ import Button from './Button.astro';
 <script>
 	const menuButton = document.getElementById('menu');
 	const navMenu = document.querySelector('.navmenu-toggle');
+	const body = document.querySelector('body');
 
-	function toggleButton(element: HTMLElement) {
-		element.children[0].classList.toggle('i-untitled-menu-04');
-		element.children[0].classList.toggle('i-untitled-x-close');
-		element.classList.toggle('bg-gray-100');
-		element.classList.toggle('dark:bg-gray-900');
+	let navOpen = false;
+
+	function toggleMenu() {
+		navMenu?.classList.toggle('hide');
+		menuButton?.children[0].classList.toggle('i-untitled-menu-04');
+		menuButton?.children[0].classList.toggle('i-untitled-x-close');
+		menuButton?.classList.toggle('bg-gray-100');
+		menuButton?.classList.toggle('dark:bg-gray-900');
 	}
-
 	if (menuButton && navMenu) {
 		menuButton.addEventListener('click', () => {
-			navMenu.classList.toggle('hide');
-			console.log(menuButton.children[0].classList);
-			toggleButton(menuButton);
+			toggleMenu();
 		});
 		navMenu.childNodes.forEach(Element => {
 			Element.addEventListener('click', () => {
-				toggleButton(menuButton);
-				navMenu.classList.toggle('hide');
+				toggleMenu();
 			});
 		});
 	}
+	document.addEventListener('click', event => {
+		const eventTarget = event.target as HTMLElement;
+		if (
+			eventTarget?.id !== 'menu' &&
+			!eventTarget?.classList.contains('.navmenu-toggle')
+		) {
+			toggleMenu();
+		}
+	});
 </script>
 <header class="mx-auto p-4 lg:p-8">
 	<div class="flex justify-between items-center gap-8 relative z-900">

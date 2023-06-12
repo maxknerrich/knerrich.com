@@ -7,7 +7,7 @@ import { astroImageTools } from 'astro-imagetools';
 //
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://knerrich.com',
+	site: 'https://www.knerrich.com',
 	integrations: [sitemap(), UnoCSS(), astroImageTools, markdoc()],
 	server: {
 		port: 8894,

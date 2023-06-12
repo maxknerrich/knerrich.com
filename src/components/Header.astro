@@ -31,16 +31,26 @@ import Button from './Button.astro';
 </script>
 <script>
 	const menuButton = document.getElementById('menu');
-	if (menuButton) {
+	const navMenu = document.querySelector('.navmenu-toggle');
+
+	function toggleButton(element: HTMLElement) {
+		element.children[0].classList.toggle('i-untitled-menu-04');
+		element.children[0].classList.toggle('i-untitled-x-close');
+		element.classList.toggle('bg-gray-100');
+		element.classList.toggle('dark:bg-gray-900');
+	}
+
+	if (menuButton && navMenu) {
 		menuButton.addEventListener('click', () => {
-			[...document.querySelectorAll('.navmenu-toggle')].forEach(Element => {
-				Element.classList.toggle('hide');
-			});
+			navMenu.classList.toggle('hide');
 			console.log(menuButton.children[0].classList);
-			menuButton.children[0].classList.toggle('i-untitled-menu-04');
-			menuButton.children[0].classList.toggle('i-untitled-x-close');
-			menuButton.classList.toggle('bg-gray-100');
-			menuButton.classList.toggle('dark:bg-gray-900');
+			toggleButton(menuButton);
+		});
+		navMenu.childNodes.forEach(Element => {
+			Element.addEventListener('click', () => {
+				toggleButton(menuButton);
+				navMenu.classList.toggle('hide');
+			});
 		});
 	}
 </script>
@@ -53,15 +63,26 @@ import Button from './Button.astro';
 		<nav class="hidden justify-end gap-7 md:flex grow items-center">
 			<HeaderLink href="/">Home</HeaderLink>
 			<HeaderLink href="/#projects">Projects</HeaderLink>
-			<HeaderLink href="https://github.com/maxknerrich" target="_blank">
-				GitHub
-			</HeaderLink>
 			<HeaderLink
 				href="https://myta.media"
 				target="_blank"
 				class="flex items-center gap-2"
 			>
 				<div class="i-custom-myta"></div> mytamedia
+			</HeaderLink>
+			<HeaderLink
+				href="https://github.com/maxknerrich"
+				target="_blank"
+				class="flex items-center gap-2"
+			>
+				<div class="i-logos:github-icon:?mask"></div>
+			</HeaderLink>
+			<HeaderLink
+				href="https://de.linkedin.com/in/maxknerrich"
+				target="_blank"
+				class="flex items-center gap-2"
+			>
+				<div class="i-logos:linkedin-icon:?mask"></div>
 			</HeaderLink>
 		</nav>
 		<div class="flex gap-2 grow md:grow-0 justify-end">
@@ -86,13 +107,10 @@ import Button from './Button.astro';
 		</div>
 	</div>
 	<nav
-		class="hide flex justify-end w-full gap-5 md:hidden navmenu-toggle flex-col mt-4 fixed -top-8 pt-40 left-0 z-100 p-8"
+		class="hide flex justify-end w-full gap-5 md:hidden navmenu-toggle flex-col mt-4 fixed -top-8 pt-40 left-0 z-100 p-8 text-xl"
 	>
-		<HeaderLink href="/">Home</HeaderLink>
+		<HeaderLink href="/#">Home</HeaderLink>
 		<HeaderLink href="/#projects">Projects</HeaderLink>
-		<HeaderLink href="https://github.com/maxknerrich" target="_blank">
-			GitHub
-		</HeaderLink>
 		<HeaderLink
 			href="https://myta.media"
 			target="_blank"
@@ -100,6 +118,22 @@ import Button from './Button.astro';
 		>
 			<div class="i-custom-myta"></div> mytamedia
 		</HeaderLink>
+		<div class="flex gap-2 mt-4 -ml-4">
+			<HeaderLink
+				href="https://github.com/maxknerrich"
+				target="_blank"
+				class="p-3"
+			>
+				<div class="i-logos:github-icon:?mask"></div>
+			</HeaderLink>
+			<HeaderLink
+				href="https://de.linkedin.com/in/maxknerrich"
+				target="_blank"
+				class="p-3"
+			>
+				<div class="i-logos:linkedin-icon:?mask"></div>
+			</HeaderLink>
+		</div>
 	</nav>
 </header>
 

@@ -44,11 +44,13 @@ import Button from './Button.astro';
 		menuButton?.classList.toggle('dark:bg-gray-900');
 	}
 	if (menuButton && navMenu) {
-		menuButton.addEventListener('click', () => {
+		menuButton.addEventListener('click', event => {
+			event.stopPropagation();
 			toggleMenu();
 		});
 		navMenu.childNodes.forEach(Element => {
-			Element.addEventListener('click', () => {
+			Element.addEventListener('click', event => {
+				event.stopPropagation();
 				toggleMenu();
 			});
 		});

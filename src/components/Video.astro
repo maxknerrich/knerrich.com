@@ -1,0 +1,16 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type Props = HTMLAttributes<'video'>;
+
+const { src, poster } = Astro.props;
+---
+
+<video
+	controls
+	muted
+	preload="none"
+	src={src}
+	width="1920"
+	height="1080"
+	poster={poster}></video>

@@ -1,10 +1,14 @@
 ---
 import { getCollection } from 'astro:content';
-const skills = await getCollection('skills').then((skills) => skills.filter((skill) => process.env.NODE_ENV === "development" ? true : !skill.data.draft));
+const skills = await getCollection('skills').then(skills =>
+	skills.filter(skill =>
+		process.env.NODE_ENV === 'development' ? true : !skill.data.draft,
+	),
+);
 ---
 
 <section class="w-full max-w-[90ch] mx-auto px-4 xl:px-0 lg:py-24">
-	<div class="bg-black dark:bg-gray-950 rounded-xl p-7 sm:p-12 lg:p-16">
+	<div class="bg-black dark:bg-gray-950 rounded-xl p-8 sm:p-12 lg:p-16 py-12">
 		<h2 class="text-6xl mb-16 text-white">Skills</h2>
 		<div class="flex justify-between flex-wrap gap-y-8">
 			{

@@ -2,7 +2,7 @@ import { defineConfig } from 'astro-imagetools/config';
 
 export default defineConfig({
 	placeholder: 'dominantColor',
-	format: ['webp', 'avif', 'jpg'],
+	format: ['webp', 'jpg'],
 	fallbackFormat: 'png',
 	includeSourceFormat: false,
 	formatOptions: {

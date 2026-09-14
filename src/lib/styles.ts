@@ -5,7 +5,18 @@ const enter = stylex.keyframes({
   to: { opacity: 1, transform: "translateY(0)" },
 });
 
+const borderEnter = stylex.keyframes({
+  from: { borderTopColor: "transparent" },
+  to: { borderTopColor: "var(--rule)" },
+});
+
 export const styles = stylex.create({
+  borderReveal: {
+    animationName: {
+      default: "none",
+      "@media (prefers-reduced-motion: no-preference)": borderEnter,
+    },
+  },
   reveal: {
     animationName: {
       default: "none",
@@ -20,7 +31,7 @@ export const styles = stylex.create({
     maxWidth: "43rem",
     marginInline: "auto",
     paddingInline: { default: "2rem", "@media (max-width: 480px)": "1.5rem" },
-    paddingTop: { default: "6rem", "@media (max-width: 600px)": "3rem" },
+    paddingTop: { default: "11rem", "@media (max-width: 600px)": "8rem" },
     paddingBottom: "2.5rem",
   },
   masthead: {
@@ -28,7 +39,42 @@ export const styles = stylex.create({
     alignItems: "center",
     justifyContent: "space-between",
     gap: "1rem",
-    marginBottom: { default: "4rem", "@media (max-width: 600px)": "3rem" },
+
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 5,
+    height: "var(--site-header-height)",
+    margin: 0,
+    paddingInline: { default: "2rem", "@media (max-width: 600px)": "1.5rem" },
+    paddingTop: "env(safe-area-inset-top)",
+    backgroundColor: {
+      default: "transparent",
+      "@media (max-width: 1080px)": "var(--paper)",
+      "@media (max-width: 600px)": "var(--sticky-paper)",
+    },
+    pointerEvents: { default: "none", "@media (max-width: 1080px)": "auto" },
+    backdropFilter: { default: "none", "@media (max-width: 600px)": "blur(12px)" },
+  },
+
+  syncProject: {
+    display: "flex",
+    flexDirection: "column",
+    gridRow: { default: "span 2", "@media (max-width: 600px)": "auto" },
+  },
+  featuredProject: {
+    gridColumn: "1 / -1",
+    backgroundColor: "color-mix(in oklab, var(--accent-ink) 9%, var(--paper))",
+    padding: { default: "2rem", "@media (max-width: 600px)": "1.5rem" },
+  },
+
+  projectKind: {
+    display: "block",
+    fontFamily: "var(--font-sans)",
+    fontSize: "0.75rem",
+    color: "var(--muted)",
+    marginBottom: "0.5rem",
   },
   logoLink: {
     display: "inline-flex",
@@ -93,12 +139,13 @@ export const styles = stylex.create({
     gap: "0.875rem",
   },
   greeting: {
-    fontFamily: "var(--font-serif)",
+    fontFamily: "var(--font-display)",
+    fontStyle: "italic",
     fontSize: "1.5rem",
     color: "var(--muted)",
   },
   headline: {
-    fontFamily: "var(--font-serif)",
+    fontFamily: "var(--font-display)",
     fontSize: "clamp(2.625rem, 6.5vw, 3.625rem)",
     fontWeight: 400,
     letterSpacing: "-0.025em",
@@ -226,6 +273,10 @@ export const styles = stylex.create({
   porscheLogo: { maxWidth: "9rem" },
   projects: {
     display: "grid",
+    gridTemplateColumns: {
+      default: "repeat(2, minmax(0, 1fr))",
+      "@media (max-width: 600px)": "1fr",
+    },
     gap: "0.75rem",
   },
   project: {
@@ -234,21 +285,12 @@ export const styles = stylex.create({
     padding: "1.25rem",
   },
   projectTitle: {
-    fontSize: "1rem",
+    fontFamily: "var(--font-display)",
+    fontSize: "1.25rem",
     fontWeight: 500,
-    lineHeight: 1.5,
+    letterSpacing: "-0.025em",
+    lineHeight: 1.3,
     marginBottom: "0.375rem",
-  },
-  projectHeading: {
-    display: "flex",
-    flexWrap: "wrap",
-    alignItems: "baseline",
-    columnGap: "0.75rem",
-  },
-  note: {
-    fontFamily: "var(--font-mono)",
-    fontSize: "0.6875rem",
-    color: "var(--muted)",
   },
   description: {
     color: "var(--muted)",
@@ -290,13 +332,7 @@ export const styles = stylex.create({
     paddingTop: "var(--contact-space)",
     paddingBottom: "calc(var(--contact-space) - var(--section-space))",
   },
-  connectText: {
-    fontFamily: "var(--font-serif)",
-    fontWeight: 400,
-    fontSize: "2rem",
-    lineHeight: 1.25,
-    marginBottom: "1.25rem",
-  },
+
   links: {
     display: "flex",
     flexWrap: "wrap",
@@ -306,13 +342,12 @@ export const styles = stylex.create({
   },
   footer: {
     marginTop: "var(--section-space)",
-    paddingTop: "var(--section-space)",
     display: "flex",
     flexWrap: "wrap",
     justifyContent: "space-between",
     gap: "0.5rem",
-    fontFamily: "var(--font-mono)",
-    fontSize: "0.6875rem",
+    fontFamily: "var(--font-sans)",
+    fontSize: "0.75rem",
     color: "var(--muted)",
   },
   footerLocation: {
@@ -321,6 +356,7 @@ export const styles = stylex.create({
   },
   skip: {
     position: "absolute",
+    zIndex: 20,
     top: "1rem",
     left: "1rem",
     padding: "0.5rem 1rem",

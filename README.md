@@ -1,6 +1,6 @@
 # knerrich.com
 
-A small, text-first portfolio built with SvelteKit and StyleX.
+Max Knerrich's portfolio, built with SvelteKit and StyleX.
 
 ## Development
 
@@ -20,18 +20,36 @@ vp preview
 
 ## Structure
 
-- `src/routes/+page.svelte`: copy and page markup
-- `src/lib/styles.ts`: StyleX component styles
-- `src/app.css`: CSS layers, theme tokens and global defaults
-- `svelte.config.js`: static adapter and experimental async compiler support
+- `src/routes/+page.svelte`: page metadata and portfolio entry point
+- `src/lib/Portfolio.svelte`: content, native theme controls, and accordions
+- `src/lib/SectionOutline.svelte`: section navigation and animated active indicator
+- `src/lib/SyncDiagram.svelte`: CSS-only, looping synchronization illustration
+- `src/lib/styles.ts`: StyleX styles and entrance animations
+- `src/app.css`: self-hosted font, theme tokens, and global defaults
+- `src/app.html`: document shell and CSS layer order, declared before stylesheets load
 
-The native Light / Dark / Auto radio group sets the color scheme through CSS `:has()` and `light-dark()`. Auto follows the device preference and is the default. No theme preference is stored. The green accent has a darker text variant in light mode for readable contrast. Instrument Serif is self-hosted in `static/fonts/` under the included SIL Open Font License, alongside system sans-serif text. No external font requests, analytics or cookies are added. The page uses a slow staggered entrance on load, with no scroll-linked animation. All motion respects the reduced-motion preference.
+## Behavior
 
-The transparent MK favicon follows the device color scheme: black in light mode, white in dark mode. Feather icons are inlined as SVGs, with the MIT license in `static/licenses/feather.txt`. The theme picker uses CSS transitions to reveal its active label.
+The site uses a narrow layout, green light/dark palette, and Bricolage Grotesque headings. Projects precede the biography in a responsive bento grid. Experience and education use native accordions, open by default.
 
-Brand SVGs in `static/logos/` come from tldraw.dev and lw.works, including the Porsche wordmark used on lw.works. They remain the respective brands' trademarks. All assets are served locally.
+The MK logo and theme control sit at opposite top corners. The desktop header is transparent and lets pointer events through between the controls. The section outline sits at center left, becomes horizontal on tablets, and is hidden on mobile. Mobile section headings stick below the header with blurred backgrounds.
 
-The static adapter writes the site to `build/`. All content is prerendered, and the production page loads no client JavaScript. Client rendering stays enabled in development for hot reload. Async compilation is enabled, but the page doesn't need async data fetching.
+The outline tracks scrolling with `aria-current` and a 360ms Svelte tween. Native anchor scrolling puts section dividers above the desktop viewport or behind the tablet controls where space permits. Final anchors stop at the natural page end; no empty scroll space is added.
+
+Light / Dark / Auto radios use CSS `:has()` and `light-dark()`, with Auto selected initially. Icons are always visible; only the selected option shows its label. No theme preference is stored.
+
+Entrances run on load, with project cards before the bio, experience, education, and contact. The silent sync illustration uses a 3.6-second CSS loop. Dots ease along tracks connected to the node edges; nodes light up after arrival. Both directions share travel and pulse keyframes, offset by half a cycle. Reduced motion disables entrances, smooth scrolling, the moving indicator, and the sync loop.
+
+The static adapter prerenders the site to `build/`. Hydration enables active-section tracking; navigation, themes, accordions, and the sync illustration work without JavaScript. No analytics, cookies, or external font requests are added.
+
+## Assets
+
+All assets are served locally:
+
+- Bricolage Grotesque: SIL Open Font License in `static/fonts/bricolage-grotesque-OFL.txt`.
+- Inlined Feather icons: MIT license in `static/licenses/feather.txt`.
+- Brand SVGs in `static/logos/`: sourced from tldraw.dev and lw.works, including the Porsche wordmark used on lw.works. They remain the respective brands' trademarks.
+- The transparent MK favicon follows the device color scheme.
 
 ## Before publishing
 

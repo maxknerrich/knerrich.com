@@ -1,19 +1,11 @@
 @layer reset, theme, base;
 
 @font-face {
-  font-family: "Instrument Serif";
+  font-family: "Bricolage Grotesque";
   font-style: normal;
-  font-weight: 400;
+  font-weight: 400 700;
   font-display: swap;
-  src: url("/fonts/instrument-serif-latin-regular.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Instrument Serif";
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-  src: url("/fonts/instrument-serif-latin-italic.woff2") format("woff2");
+  src: url("/fonts/bricolage-grotesque-latin-variable.woff2") format("woff2");
 }
 
 @layer reset {
@@ -53,7 +45,7 @@
     --button-hover: color-mix(in oklab, var(--accent) 85%, var(--ink));
     --accent-ink: light-dark(#247719, #3ed42a);
     --selection: light-dark(#d6f5d1, #254820);
-    --font-serif: "Instrument Serif", Georgia, serif;
+    --font-display: "Bricolage Grotesque", "Helvetica Neue", sans-serif;
     --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
     --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   }
@@ -145,12 +137,11 @@
     text-wrap: pretty;
   }
 
-  em {
-    font-family: var(--font-serif);
-    font-weight: 400;
-  }
-
   @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+
     [data-theme-name] {
       transition:
         inline-size 240ms cubic-bezier(0.2, 0, 0, 1),

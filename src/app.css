@@ -1,0 +1,173 @@
+@layer reset, theme, base;
+
+@font-face {
+  font-family: "Instrument Serif";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/instrument-serif-latin-regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Instrument Serif";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/instrument-serif-latin-italic.woff2") format("woff2");
+}
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body,
+  h1,
+  h2,
+  h3,
+  p,
+  dl,
+  dd {
+    margin: 0;
+  }
+}
+
+@layer theme {
+  :root {
+    color-scheme: light dark;
+    --logo-filter: none;
+    --paper: light-dark(#e9ede5, #0c100d);
+    --project-fill: color-mix(in oklab, var(--ink) 3.5%, var(--paper));
+    --theme-active: color-mix(in oklab, var(--ink) 9%, var(--paper));
+    --ink: light-dark(#222920, #e7ece3);
+    --muted: light-dark(#596353, #9ca796);
+    --rule: color-mix(in oklab, var(--ink) 14%, var(--paper));
+    --section-bleed: clamp(0.75rem, 3vw, 1.5rem);
+    --section-space: clamp(3rem, 6vw, 4.5rem);
+    --contact-space: clamp(4.5rem, 9vw, 6rem);
+    --accent: #3ed42a;
+    --button-fill: var(--accent);
+    --button-ink: #0c100d;
+    --button-hover: color-mix(in oklab, var(--accent) 85%, var(--ink));
+    --accent-ink: light-dark(#247719, #3ed42a);
+    --selection: light-dark(#d6f5d1, #254820);
+    --font-serif: "Instrument Serif", Georgia, serif;
+    --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --logo-filter: invert(1);
+    }
+  }
+
+  /* Auto uses the device preference; native radios override it without JS. */
+  :root:has(#theme-light:checked) {
+    color-scheme: light;
+    --logo-filter: none;
+  }
+
+  :root:has(#theme-dark:checked) {
+    color-scheme: dark;
+    --logo-filter: invert(1);
+  }
+}
+
+@layer base {
+  html {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    min-inline-size: 280px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    color: var(--ink);
+    background: var(--selection);
+  }
+
+  a {
+    color: inherit;
+    text-decoration-color: var(--rule);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 5px;
+  }
+
+  a:hover {
+    color: var(--accent-ink);
+    text-decoration-color: currentColor;
+  }
+
+  a:focus-visible {
+    outline: 2px solid var(--accent-ink);
+    outline-offset: 5px;
+    border-radius: 2px;
+  }
+
+  [data-theme-name] {
+    interpolate-size: allow-keywords;
+    inline-size: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 0;
+    margin-inline-start: 0;
+  }
+
+  [data-theme-option]:has(:checked) {
+    --theme-option-ink: var(--ink);
+    --theme-option-fill: var(--theme-active);
+  }
+
+  [data-theme-option]:has(:checked) [data-theme-name] {
+    inline-size: auto;
+    opacity: 1;
+    margin-inline-start: 0.375rem;
+  }
+
+  [data-theme-option]:has(:focus-visible) {
+    outline: 2px solid var(--accent-ink);
+    outline-offset: 2px;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  em {
+    font-family: var(--font-serif);
+    font-weight: 400;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    [data-theme-name] {
+      transition:
+        inline-size 240ms cubic-bezier(0.2, 0, 0, 1),
+        margin-inline-start 240ms cubic-bezier(0.2, 0, 0, 1),
+        opacity 180ms ease;
+    }
+
+    [data-theme-option] {
+      transition:
+        background-color 180ms ease,
+        color 180ms ease;
+    }
+
+    a {
+      transition:
+        color 180ms ease,
+        text-decoration-color 180ms ease;
+    }
+  }
+}

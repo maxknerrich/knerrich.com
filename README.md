@@ -1,69 +1,56 @@
-# Astro Starter Kit: Blog
+# knerrich.com
 
-```
-npm create astro@latest -- --template blog
-```
+Max Knerrich's portfolio, built with SvelteKit and StyleX.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/blog)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/blog)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/blog/devcontainer.json)
+## Development
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Requires Node.js 22.18+ and [Vite+](https://viteplus.dev/).
 
-
-![blog](https://user-images.githubusercontent.com/4677417/186189140-4ef17aac-c3c9-4918-a8c2-ce86ba1bb394.png)
-
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```
-├── public/
-├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+```sh
+vp install
+vp dev
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+```sh
+vp run check   # Svelte and TypeScript checks
+vp lint
+vp build
+vp preview
+```
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Structure
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+- `src/routes/+page.svelte`: page metadata and portfolio entry point
+- `src/lib/Portfolio.svelte`: content, native theme controls, and accordions
+- `src/lib/SectionOutline.svelte`: section navigation and animated active indicator
+- `src/lib/SyncDiagram.svelte`: CSS-only, looping synchronization illustration
+- `src/lib/styles.ts`: StyleX styles and entrance animations
+- `src/app.css`: self-hosted font, theme tokens, and global defaults
+- `src/app.html`: document shell and CSS layer order, declared before stylesheets load
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Behavior
 
-## 🧞 Commands
+The site uses a narrow layout, green light/dark palette, and Bricolage Grotesque headings. Projects precede the biography in a responsive bento grid. Experience and education use native accordions, open by default.
 
-All commands are run from the root of the project, from a terminal:
+The MK logo and theme control sit at opposite top corners. The desktop header is transparent and lets pointer events through between the controls. The section outline sits at center left, becomes horizontal on tablets, and is hidden on mobile. Mobile section headings stick below the header with blurred backgrounds.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:3000`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+The outline tracks scrolling with `aria-current` and a 360ms Svelte tween. Native anchor scrolling puts section dividers above the desktop viewport or behind the tablet controls where space permits. Final anchors stop at the natural page end; no empty scroll space is added.
 
-## 👀 Want to learn more?
+Light / Dark / Auto radios use CSS `:has()` and `light-dark()`, with Auto selected initially. Icons are always visible; only the selected option shows its label. No theme preference is stored.
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Entrances run on load, with project cards before the bio, experience, education, and contact. The silent sync illustration uses a 3.6-second CSS loop. Dots ease along tracks connected to the node edges; nodes light up after arrival. Both directions share travel and pulse keyframes, offset by half a cycle. Reduced motion disables entrances, smooth scrolling, the moving indicator, and the sync loop.
 
-## Credit
+The static adapter prerenders the site to `build/`. Hydration enables active-section tracking; navigation, themes, accordions, and the sync illustration work without JavaScript. No analytics, cookies, or external font requests are added.
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+## Assets
+
+All assets are served locally:
+
+- Bricolage Grotesque: SIL Open Font License in `static/fonts/bricolage-grotesque-OFL.txt`.
+- Inlined Feather icons: MIT license in `static/licenses/feather.txt`.
+- Brand SVGs in `static/logos/`: sourced from tldraw.dev and lw.works, including the Porsche wordmark used on lw.works. They remain the respective brands' trademarks.
+- The transparent MK favicon follows the device color scheme.
+
+## Before publishing
+
+The legal pages are intentionally omitted pending review of current contact details and hosting. Experience uses the supplied LinkedIn export, excluding the entries requested for removal. Collapsed descriptions in that export have not been reconstructed. No deployment configuration or live hosting has been changed.

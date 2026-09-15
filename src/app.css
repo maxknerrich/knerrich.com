@@ -31,11 +31,14 @@
     color-scheme: light dark;
     --logo-filter: none;
     --paper: light-dark(#e9ede5, #0c100d);
+    --image-paper: #fff;
     --project-fill: color-mix(in oklab, var(--ink) 3.5%, var(--paper));
     --theme-active: color-mix(in oklab, var(--ink) 9%, var(--paper));
     --ink: light-dark(#222920, #e7ece3);
     --muted: light-dark(#596353, #9ca796);
     --rule: color-mix(in oklab, var(--ink) 14%, var(--paper));
+    --site-header-height: 6rem;
+    --sticky-paper: color-mix(in srgb, var(--paper) 88%, transparent);
     --section-bleed: clamp(0.75rem, 3vw, 1.5rem);
     --section-space: clamp(3rem, 6vw, 4.5rem);
     --contact-space: clamp(4.5rem, 9vw, 6rem);
@@ -48,6 +51,12 @@
     --font-display: "Bricolage Grotesque", "Helvetica Neue", sans-serif;
     --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
     --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  }
+
+  @media (max-width: 600px) {
+    :root {
+      --site-header-height: 4.75rem;
+    }
   }
 
   @media (prefers-color-scheme: dark) {
@@ -153,6 +162,47 @@
       transition:
         background-color 180ms ease,
         color 180ms ease;
+    }
+
+    html:active-view-transition {
+      scroll-behavior: auto;
+    }
+
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 180ms;
+      animation-timing-function: ease-out;
+    }
+
+    ::view-transition-group(.project-image),
+    ::view-transition-group(.project-title) {
+      animation-duration: 460ms;
+      animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    ::view-transition-image-pair(.project-image) {
+      overflow: clip;
+      border-radius: 0.625rem;
+    }
+
+    ::view-transition-old(.project-image) {
+      display: none;
+    }
+
+    ::view-transition-new(.project-image) {
+      animation: none;
+      inline-size: 100%;
+      block-size: 100%;
+      object-fit: cover;
+    }
+
+    ::view-transition-group(site-header),
+    ::view-transition-new(site-header) {
+      animation: none;
+    }
+
+    ::view-transition-old(site-header) {
+      display: none;
     }
 
     a {

@@ -8,7 +8,7 @@ Infotainment interface design for the Porsche Macan and Cayenne, as part of the 
 
 ![Cayenne interior with its central and passenger infotainment displays](/projects/porsche/cayenne.jpg)
 
-During my two years at Porsche, I worked on a redesign of the infotainment experience. We rebuilt the design in around six months, replacing the previous direction with the new Driver Experience.
+During my time at Porsche, I worked on a redesign of the infotainment experience.
 
 ## Macan
 

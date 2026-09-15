@@ -7,6 +7,8 @@
 
 Product and UX design for a legal tech tool that helps M&A teams create and maintain annex lists.
 
+The screenshots shown here are from the earlier web-product design phase.
+
 I was the only designer on the team, responsible for research, user flows, prototypes, and the design system. The interface brings document status, responsibilities, and related correspondence into one tracker.
 
 I started by looking at competing tools and the structure of existing annex lists, then used early prototypes to explore the user flow. The work covered both the application and the documents people needed to take out of it.

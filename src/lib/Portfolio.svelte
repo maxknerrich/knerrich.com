@@ -1,5 +1,6 @@
 <script lang="ts">
   import * as stylex from "@stylexjs/stylex";
+  import { resolve } from "$app/paths";
   import { styles } from "$lib/styles";
   import SectionOutline from "$lib/SectionOutline.svelte";
   import SyncDiagram from "$lib/SyncDiagram.svelte";
@@ -23,113 +24,7 @@
   </svg>
 {/snippet}
 
-<a {...stylex.attrs(styles.skip)} href="#main">Skip to content</a>
-
 <div data-portfolio {...stylex.attrs(styles.page)}>
-  <header {...stylex.attrs(styles.masthead, styles.reveal)}>
-    <a
-      {...stylex.attrs(styles.logoLink)}
-      href="#main"
-      aria-label="Max Knerrich, back to top"
-    >
-      <svg
-        {...stylex.attrs(styles.mark)}
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path
-          d="M2 18V6H5.54912L7.83397 15.9086H8.07768L10.4082 6H13.9573V18H11.901V7.76571L12.5864 8.53714H10.9871L11.8401 7.8L9.43336 18H6.46306L4.11729 7.78286L4.9703 8.53714H3.35567L4.04113 7.76571V18H2Z"
-        />
-        <path
-          d="M11.901 18V6H13.9421V12.2743L18.8164 6H21.5887L16.7296 12.0171L17.0343 10.8343L22 18H19.4105L15.7852 12.5314L16.2574 12.6171L13.9421 15.4629V18H11.901Z"
-        />
-      </svg>
-    </a>
-    <fieldset aria-label="Color theme" {...stylex.attrs(styles.themeSwitch)}>
-      <label data-theme-option {...stylex.attrs(styles.themeOption)}>
-        <input
-          id="theme-light"
-          type="radio"
-          name="theme"
-          value="light"
-          aria-label="Light theme"
-          {...stylex.attrs(styles.themeInput)}
-        />
-        <svg
-          {...stylex.attrs(styles.themeIcon)}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <circle cx="12" cy="12" r="5" />
-          <line x1="12" y1="1" x2="12" y2="3" />
-          <line x1="12" y1="21" x2="12" y2="23" />
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-          <line x1="1" y1="12" x2="3" y2="12" />
-          <line x1="21" y1="12" x2="23" y2="12" />
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-        </svg>
-        <span data-theme-name aria-hidden="true">Light</span>
-      </label>
-      <label data-theme-option {...stylex.attrs(styles.themeOption)}>
-        <input
-          id="theme-dark"
-          type="radio"
-          name="theme"
-          value="dark"
-          aria-label="Dark theme"
-          {...stylex.attrs(styles.themeInput)}
-        />
-        <svg
-          {...stylex.attrs(styles.themeIcon)}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-        </svg>
-        <span data-theme-name aria-hidden="true">Dark</span>
-      </label>
-      <label data-theme-option {...stylex.attrs(styles.themeOption)}>
-        <input
-          id="theme-auto"
-          type="radio"
-          name="theme"
-          value="auto"
-          aria-label="Automatic device theme"
-          checked
-          {...stylex.attrs(styles.themeInput)}
-        />
-        <svg
-          {...stylex.attrs(styles.themeIcon)}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-          <line x1="8" y1="21" x2="16" y2="21" />
-          <line x1="12" y1="17" x2="12" y2="21" />
-        </svg>
-        <span data-theme-name aria-hidden="true">Auto</span>
-      </label>
-    </fieldset>
-  </header>
-
   <SectionOutline />
 
   <main id="main" tabindex="-1" {...stylex.attrs(styles.main)}>
@@ -223,83 +118,108 @@
         {...stylex.attrs(styles.sectionTitle, styles.reveal)}
         style:--reveal-delay="540ms"
       >
-        Projects
+        Selected work
       </h2>
       <div {...stylex.attrs(styles.projects)}>
-        <article
-          {...stylex.attrs(
-            styles.project,
-            styles.featuredProject,
-            styles.reveal,
-          )}
+        <a
+          data-project-card
+          id="project-tldraw"
+          href={resolve('/projects/[slug]', { slug: 'tldraw' })}
+          aria-labelledby="tldraw-title"
+          {...stylex.attrs(styles.project, styles.featuredProject, styles.reveal)}
           style:--reveal-delay="580ms"
         >
-          <h3 class="featured-lead">
-            One visual language.<br />On the web and beyond.
+          <img style:view-transition-name="project-image-tldraw" class="project-image illustration" src="/projects/tldraw/multiplayer.png" alt="" width="2706" height="1464" loading="lazy" decoding="async" />
+          <p class="featured-lead">A new website.<br />A canvas in three dimensions.</p>
+          <h3 id="tldraw-title" data-card-title {...stylex.attrs(styles.projectTitle)}>
+            <span style:view-transition-name="project-title-tldraw">tldraw</span> {@render arrow()}
           </h3>
-          <div class="featured-identity">
-            <a href="https://tldraw.dev/" {...stylex.attrs(styles.contactLink)}
-              >tldraw {@render arrow()}</a
-            >
-            <p {...stylex.attrs(styles.projectKind)}>
-              Website & visual language
-            </p>
-          </div>
+          <p {...stylex.attrs(styles.projectKind)}>Website & 3D illustration</p>
           <p {...stylex.attrs(styles.description)}>
-            Redesigned the website and created social media and slide templates
-            to give the team a consistent visual language across the web, posts,
-            and presentations.
+            Redesigned tldraw.dev with lw.works and created 3D illustrations
+            to explain the infinite canvas SDK's features.
           </p>
-        </article>
+        </a>
 
-        <article
+        <a
+          data-project-card
+          id="project-local-first-api-sync"
+          href={resolve('/projects/[slug]', { slug: 'local-first-api-sync' })}
+          aria-labelledby="sync-title"
           {...stylex.attrs(styles.project, styles.syncProject, styles.reveal)}
           style:--reveal-delay="620ms"
         >
           <div>
-            <h3 {...stylex.attrs(styles.projectTitle)}>Local-first API sync</h3>
-            <span {...stylex.attrs(styles.projectKind)}
-              >Bachelor thesis, 2025</span
-            >
+            <h3 id="sync-title" data-card-title {...stylex.attrs(styles.projectTitle)}>
+              <span style:view-transition-name="project-title-local-first-api-sync">Local-first API sync</span> {@render arrow()}
+            </h3>
+            <p {...stylex.attrs(styles.projectKind)}>Software engineering · Bachelor thesis, 2025</p>
+            <p {...stylex.attrs(styles.description)}>
+              A two-way synchronization layer connecting local-first apps to
+              existing REST APIs. Built and evaluated with a GitHub issue tracker,
+              exploring offline edits, conflict resolution, and data freshness.
+            </p>
           </div>
-          <p {...stylex.attrs(styles.description)}>
-            A two-way synchronization layer connecting local-first apps to
-            existing REST APIs. Built and evaluated with a GitHub issue tracker,
-            exploring offline edits, conflict resolution, and the trade-offs
-            between responsiveness and data freshness.
-          </p>
           <SyncDiagram />
-        </article>
+        </a>
 
-        <article
+        <a
+          data-project-card
+          id="project-annextracker"
+          href={resolve('/projects/[slug]', { slug: 'annextracker' })}
+          aria-labelledby="annex-title"
           {...stylex.attrs(styles.project, styles.reveal)}
           style:--reveal-delay="660ms"
         >
-          <div>
-            <h3 {...stylex.attrs(styles.projectTitle)}>Annex Tracker</h3>
-            <p {...stylex.attrs(styles.projectKind)}>Product & UX design</p>
-          </div>
+          <img style:view-transition-name="project-image-annextracker" class="project-image" src="/projects/annextracker/tracker.jpg" alt="" width="1920" height="1200" loading="lazy" decoding="async" />
+          <h3 id="annex-title" data-card-title {...stylex.attrs(styles.projectTitle)}>
+            <span style:view-transition-name="project-title-annextracker">Annex Tracker</span> {@render arrow()}
+          </h3>
+          <p {...stylex.attrs(styles.projectKind)}>Product & UX design</p>
           <p {...stylex.attrs(styles.description)}>
             Making M&amp;A annex lists easier to manage. Led the UX design, from
-            research and early prototypes to a design system and clear,
-            client-ready exports.
+            research and early prototypes to a design system and client-ready exports.
           </p>
-        </article>
+        </a>
 
-        <article
+        <a
+          data-project-card
+          id="project-fcsl"
+          href={resolve('/projects/[slug]', { slug: 'fcsl' })}
+          aria-labelledby="fcsl-title"
           {...stylex.attrs(styles.project, styles.reveal)}
           style:--reveal-delay="700ms"
         >
-          <div>
-            <h3 {...stylex.attrs(styles.projectTitle)}>FC Schömberg Luchse</h3>
-            <p {...stylex.attrs(styles.projectKind)}>Visual identity</p>
-          </div>
+          <img style:view-transition-name="project-image-fcsl" class="project-image" src="/projects/fcsl/identity.jpg" alt="" width="1800" height="1350" loading="lazy" decoding="async" />
+          <h3 id="fcsl-title" data-card-title {...stylex.attrs(styles.projectTitle)}>
+            <span style:view-transition-name="project-title-fcsl">FC Schömberg Luchse</span> {@render arrow()}
+          </h3>
+          <p {...stylex.attrs(styles.projectKind)}>Visual identity · Voluntary work</p>
           <p {...stylex.attrs(styles.description)}>
             A visual identity for a football club in the Black Forest. Designed
-            the crest, jerseys, and club merchandise around the team's lynx
-            namesake.
+            the crest, jerseys, and club merchandise around the team's lynx namesake.
           </p>
-        </article>
+        </a>
+
+        <a
+          data-project-card
+          id="project-porsche"
+          href={resolve('/projects/[slug]', { slug: 'porsche' })}
+          aria-labelledby="porsche-title"
+          {...stylex.attrs(styles.project, styles.wideProject, styles.reveal)}
+          style:--reveal-delay="720ms"
+        >
+          <img style:view-transition-name="project-image-porsche" class="project-image" src="/projects/porsche/cayenne.jpg" alt="" width="1935" height="1089" loading="lazy" decoding="async" />
+          <h3 id="porsche-title" data-card-title {...stylex.attrs(styles.projectTitle)}>
+            <span style:view-transition-name="project-title-porsche">Porsche Driver Experience</span> {@render arrow()}
+          </h3>
+          <p {...stylex.attrs(styles.projectKind)}>Infotainment UX</p>
+          <p {...stylex.attrs(styles.description)}>
+            Redesigned infotainment interfaces for the Macan and Cayenne as part
+            of the Driver Experience team. Drive screens, navigation, shared
+            system elements, charging, and widgets.
+          </p>
+        </a>
       </div>
     </section>
 
@@ -461,21 +381,12 @@
 
 <style>
   @layer portfolio {
-    [data-portfolio] {
-      --site-header-height: 6rem;
-    }
-
     section,
     details {
       scroll-margin-block-start: -1rem;
     }
     main {
       scroll-margin-block-start: 1rem;
-    }
-
-    header > a,
-    header > fieldset {
-      pointer-events: auto;
     }
 
     .featured-lead {
@@ -487,12 +398,53 @@
       margin-block-end: 1.5rem;
     }
 
-    .featured-identity {
-      margin-block-end: 0.75rem;
+    [data-project-card] {
+      scroll-margin-block-start: calc(var(--site-header-height) + 2rem);
+      outline: 1px solid transparent;
+      outline-offset: 0;
     }
-    .featured-identity a {
-      font-size: 1rem;
-      margin-block-end: 0.25rem;
+    [data-project-card]:hover {
+      color: var(--ink);
+      outline-color: var(--rule);
+    }
+    [data-project-card]:focus-visible {
+      outline: 2px solid var(--accent-ink);
+      outline-offset: 4px;
+    }
+    [data-project-card]:is(:hover, :focus-visible) [data-card-title] {
+      color: var(--accent-ink);
+    }
+    [data-card-title] {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    [data-card-title] span {
+      view-transition-class: project-title;
+    }
+    .project-image {
+      view-transition-class: project-image;
+      display: block;
+      inline-size: 100%;
+      block-size: auto;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      border-radius: 0.375rem;
+      margin-block-end: 1.5rem;
+    }
+    .illustration {
+      aspect-ratio: 2706 / 1464;
+      object-fit: contain;
+      background: var(--image-paper);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      [data-project-card] {
+        transition: outline-color 180ms ease;
+      }
+      [data-card-title] {
+        transition: color 180ms ease;
+      }
     }
 
     summary {
@@ -590,14 +542,6 @@
     }
 
     @media (max-width: 600px) {
-      [data-portfolio] {
-        --site-header-height: 4.75rem;
-        --sticky-paper: color-mix(in srgb, var(--paper) 88%, transparent);
-      }
-      [data-theme-option] {
-        min-block-size: 2.75rem;
-        min-inline-size: 2.75rem;
-      }
       section,
       main,
       details {

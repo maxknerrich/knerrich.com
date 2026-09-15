@@ -22,13 +22,13 @@ export const styles = stylex.create({
       default: "none",
       "@media (prefers-reduced-motion: no-preference)": enter,
     },
-    animationDuration: "900ms",
-    animationDelay: "var(--reveal-delay, 0ms)",
+    animationDuration: "var(--entrance-duration, 900ms)",
+    animationDelay: "var(--entrance-delay, var(--reveal-delay, 0ms))",
     animationTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
     animationFillMode: "backwards",
   },
   page: {
-    maxWidth: "43rem",
+    maxWidth: "49rem",
     marginInline: "auto",
     paddingInline: { default: "2rem", "@media (max-width: 480px)": "1.5rem" },
     paddingTop: { default: "11rem", "@media (max-width: 600px)": "8rem" },
@@ -58,10 +58,15 @@ export const styles = stylex.create({
     backdropFilter: { default: "none", "@media (max-width: 600px)": "blur(12px)" },
   },
 
+  wideProject: {
+    gridColumn: "1 / -1",
+  },
   syncProject: {
-    display: "flex",
-    flexDirection: "column",
-    gridRow: { default: "span 2", "@media (max-width: 600px)": "auto" },
+    display: "grid",
+    gridColumn: "1 / -1",
+    gridTemplateColumns: { default: "1.2fr 1fr", "@media (max-width: 600px)": "1fr" },
+    alignItems: "center",
+    gap: "1.5rem",
   },
   featuredProject: {
     gridColumn: "1 / -1",
@@ -277,12 +282,14 @@ export const styles = stylex.create({
       default: "repeat(2, minmax(0, 1fr))",
       "@media (max-width: 600px)": "1fr",
     },
-    gap: "0.75rem",
+    gap: "1rem",
   },
   project: {
+    display: "block",
     backgroundColor: "var(--project-fill)",
     borderRadius: "0.625rem",
-    padding: "1.25rem",
+    padding: { default: "1.75rem", "@media (max-width: 600px)": "1.5rem" },
+    textDecoration: "none",
   },
   projectTitle: {
     fontFamily: "var(--font-display)",

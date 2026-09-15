@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://knerrich.com/</loc></url>
+  <url><loc>https://knerrich.com/projects/tldraw</loc></url>
+  <url><loc>https://knerrich.com/projects/local-first-api-sync</loc></url>
+  <url><loc>https://knerrich.com/projects/annextracker</loc></url>
+  <url><loc>https://knerrich.com/projects/fcsl</loc></url>
+  <url><loc>https://knerrich.com/projects/porsche</loc></url>
 </urlset>

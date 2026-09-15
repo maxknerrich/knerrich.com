@@ -3,6 +3,7 @@ import stylex from "@stylexjs/unplugin";
 import { defineConfig } from "vite-plus";
 
 export default defineConfig({
+  server: { host: "0.0.0.0" },
   build: { cssTarget: "esnext" },
   plugins: [
     sveltekit(),

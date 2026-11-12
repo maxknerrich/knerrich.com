@@ -80,7 +80,11 @@ const program = Effect.gen(function* () {
     .split("\n")
     .filter(Boolean)
     .map((line): string[] => line.split("\t"))
-    .filter(([, path]) => path !== undefined && dirname(path) === WRITING);
+    // TEMPLATE.md is copied to start new pieces; it isn't one itself.
+    .filter(
+      ([, path]) =>
+        path !== undefined && dirname(path) === WRITING && basename(path) !== "TEMPLATE.md",
+    );
 
   for (const [status, path] of staged) {
     const markdown = yield* git(["show", `:${path}`]);

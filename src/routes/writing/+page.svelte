@@ -24,7 +24,7 @@
 <main id="main" tabindex="-1" {...stylex.attrs(listPage.page)}>
   <header {...stylex.attrs(listPage.intro)}>
     <h1 {...stylex.attrs(listPage.title)}>Writing</h1>
-    <p {...stylex.attrs(listPage.text)}>A garden of things I keep rewriting. Recently tended pieces come first.</p>
+    <p {...stylex.attrs(listPage.text)}>A garden of things I keep rewriting. Recently tended pieces come first. Follow along with the <a href="/rss.xml">feed</a>.</p>
   </header>
 
   <WritingList entries={data.entries} years />

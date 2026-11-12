@@ -1,6 +1,6 @@
 # Content
 
-Projects and writing are Markdown files in `src/content/`; the filename is the URL. Each starts with a `#` title, an optional bullet list of tags, and an opening paragraph that doubles as the page description.
+Projects and writing are Markdown files in `src/content/`; the filename is the URL. Each starts with a `#` title, an optional bullet list of tags, and an opening paragraph that doubles as the page description. To start one, copy `TEMPLATE.md` in the same folder and rename it; the templates themselves are never published.
 
 **Images** go in `src/lib/assets/projects/<slug>/` and are linked as `/projects/<slug>/image.jpg`, so the build can serve small, modern versions of them.
 

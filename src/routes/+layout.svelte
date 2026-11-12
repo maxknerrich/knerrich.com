@@ -31,6 +31,8 @@
 </script>
 
 <svelte:head>
+  <!-- Lets feed readers find the writing feed from any page. -->
+  <link rel="alternate" type="application/atom+xml" title="Writing · Max Knerrich" href="/rss.xml" />
   {#if import.meta.env.DEV}
     <link rel="stylesheet" href="/virtual:stylex.css" />
   {/if}

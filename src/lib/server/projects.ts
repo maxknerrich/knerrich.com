@@ -3,7 +3,8 @@ import { marked, type Tokens } from "marked";
 import { pictureFor } from "./images.ts";
 import { renderMarkdown } from "./markdown";
 
-const files = import.meta.glob<string>("/src/content/projects/*.md", {
+// TEMPLATE.md is the starting point for new projects, not a project.
+const files = import.meta.glob<string>(["/src/content/projects/*.md", "!**/TEMPLATE.md"], {
   query: "?raw",
   import: "default",
   eager: true,

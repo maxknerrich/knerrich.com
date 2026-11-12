@@ -186,7 +186,7 @@ async function transform({ fileName, content }: TransformParams) {
   const embeds = await embedsIn(root);
   const writing = join(root, "src/content/writing");
   const slugs = (existsSync(writing) ? readdirSync(writing) : [])
-    .filter((name) => name.endsWith(".md"))
+    .filter((name) => name.endsWith(".md") && name !== "TEMPLATE.md")
     .map((name) => JSON.stringify(name.slice(0, -".md".length)));
   const out = new Emitter();
   const diagnostics: MapperDiagnostic[] = [];

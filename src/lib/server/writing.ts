@@ -10,7 +10,8 @@ import { renderMarkdown } from "./markdown";
 // but aren't shown yet.
 
 const ROOT = "/src/content/writing/";
-const files = import.meta.glob<string>("/src/content/writing/*.md", {
+// TEMPLATE.md is the starting point for new pieces, not a piece.
+const files = import.meta.glob<string>(["/src/content/writing/*.md", "!**/TEMPLATE.md"], {
   query: "?raw",
   import: "default",
   eager: true,

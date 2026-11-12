@@ -3,33 +3,56 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "imports": {
+    "#lib": "./src/lib/index.js",
+    "#lib/*": "./src/lib/*"
+  },
   "scripts": {
     "dev": "vp dev",
     "build": "vp build",
     "preview": "vp preview",
-    "prepare": "svelte-kit sync",
+    "prepare": "svelte-kit sync && vp config --no-agent",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "lint": "vp lint",
+    "lint": "TSRS_FAST=1 TSRS_LINT_RUN_EXTERNAL_CODE=1 effect-tsgo --tsrs-lint vp lint",
     "format": "vp fmt"
   },
   "dependencies": {
-    "@stylexjs/stylex": "^0.19.0"
+    "@stylexjs/stylex": "^0.19.1"
   },
   "devDependencies": {
-    "@stylexjs/unplugin": "^0.19.0",
-    "@sveltejs/adapter-static": "^3.0.10",
-    "@sveltejs/kit": "^2.70.3",
-    "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "marked": "^18.0.13",
-    "svelte": "^5.57.0",
-    "svelte-check": "^4.4.0",
-    "typescript": "^5.9.3",
-    "vite-plus": "^0.3.1"
+    "@effect/tsgo": "0.67.7",
+    "@knerrich/markdown-content-mapper": "link:tools/markdown-content-mapper",
+    "@stylexjs/eslint-plugin": "0.19.1",
+    "@stylexjs/unplugin": "^0.19.1",
+    "@sveltejs/adapter-static": "^4.0.0",
+    "@sveltejs/enhanced-img": "^1.0.1",
+    "@sveltejs/kit": "^3.0.0",
+    "@sveltejs/vite-plugin-svelte": "^7.3.1",
+    "@types/hast": "^3.0.5",
+    "@types/node": "^24.19.2",
+    "effect": "4.1.4",
+    "hast-util-from-html": "^2.1.0",
+    "hast-util-to-html": "^9.0.6",
+    "marked": "^18.2.0",
+    "svelte": "^5.57.3",
+    "svelte-check": "^4.7.8",
+    "tsrs": "0.24.0-ts7.1.0-beta",
+    "typescript": "^6.0.3",
+    "vite-plus": "^1.6.0",
+    "yaml": "^2.9.1"
   },
+  "browserslist": [
+    "baseline 2025"
+  ],
   "packageManager": "pnpm@10.33.0",
   "pnpm": {
     "overrides": {
-      "vite": "npm:@voidzero-dev/vite-plus-core@latest"
+      "vite": "npm:@voidzero-dev/vite-plus-core@1.6.0"
+    },
+    "patchedDependencies": {
+      "@stylexjs/stylex@0.19.1": "patches/@stylexjs__stylex@0.19.1.patch",
+      "@stylexjs/eslint-plugin@0.19.1": "patches/@stylexjs__eslint-plugin@0.19.1.patch",
+      "@stylexjs/unplugin@0.19.1": "patches/@stylexjs__unplugin@0.19.1.patch"
     }
   }
 }

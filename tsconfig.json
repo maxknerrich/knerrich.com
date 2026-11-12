@@ -1,14 +1,19 @@
 {
-  "extends": "./.svelte-kit/tsconfig.json",
+  "$schema": "./node_modules/@effect/tsgo/schema.json",
+  "extends": "$app/tsconfig",
   "compilerOptions": {
-    "allowJs": true,
-    "checkJs": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "moduleResolution": "bundler"
-  }
+    "types": ["$app/types", "node"],
+    "plugins": [
+      {
+        "name": "@effect/language-service"
+      }
+    ]
+  },
+  // Type-checks frontmatter, embeds and writing links in src/content/**/*.md
+  // (tsrs/TypeScript 7.1 with --runExternalCode; see tools/markdown-content-mapper).
+  "contentMappers": [{ "package": "@knerrich/markdown-content-mapper", "extensions": [".md"] }],
+  // Also the repo scripts and tools (run by plain `node`), and the Markdown content.
+  "include": ["src", "vite.config.ts", "scripts/**/*.ts", "tools/**/*.ts", "src/content/**/*.md"]
 }

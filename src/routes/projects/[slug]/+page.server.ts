@@ -1,5 +1,5 @@
 import { error } from "@sveltejs/kit";
-import { projects } from "$lib/server/projects";
+import { projects } from "#lib/server/projects.ts";
 import type { EntryGenerator, PageServerLoad } from "./$types";
 
 export const entries: EntryGenerator = () => projects.map(({ slug }) => ({ slug }));

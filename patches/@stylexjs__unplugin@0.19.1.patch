@@ -1,0 +1,28 @@
+diff --git a/lib/es/vite.mjs b/lib/es/vite.mjs
+index 12cea8cda04db57ce92759979e2c072e6c261a9b..aed7ef436cfade3820d37df2f07cd19f79ae4286 100644
+--- a/lib/es/vite.mjs
++++ b/lib/es/vite.mjs
+@@ -68,6 +68,9 @@ function attachViteHooks(plugin) {
+             } catch {}
+           }
+         }, 150);
++        // Patched by knerrich.com: Vitest's Vite servers have no httpServer, so this interval was never
++        // cleared and kept `vp test` from exiting for 10s. unref() lets the process exit without it.
++        interval.unref();
+         server.httpServer?.once('close', () => clearInterval(interval));
+       }
+     },
+diff --git a/lib/vite.js b/lib/vite.js
+index 1c81eb81c9cc4648d3b623454b912adf5592af9c..d86b7d1105f1e9615672039ee671934cf7a8651e 100644
+--- a/lib/vite.js
++++ b/lib/vite.js
+@@ -75,6 +75,9 @@ function attachViteHooks(plugin) {
+             } catch {}
+           }
+         }, 150);
++        // Patched by knerrich.com: Vitest's Vite servers have no httpServer, so this interval was never
++        // cleared and kept `vp test` from exiting for 10s. unref() lets the process exit without it.
++        interval.unref();
+         server.httpServer?.once('close', () => clearInterval(interval));
+       }
+     },

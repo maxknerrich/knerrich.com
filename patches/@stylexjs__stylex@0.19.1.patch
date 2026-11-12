@@ -1,0 +1,30 @@
+diff --git a/lib/cjs/stylex.js b/lib/cjs/stylex.js
+index 66abc96008cfa971bbb48bcb206d217f5f770369..d0a2fd111fbd99fde1b3e70cc586043d5f18c74a 100644
+--- a/lib/cjs/stylex.js
++++ b/lib/cjs/stylex.js
+@@ -184,7 +184,9 @@ function props(...styles) {
+   }
+   return result;
+ }
+-const toKebabCase = str => str.replace(/([A-Z])/g, '-$1').toLowerCase();
++// Patched by knerrich.com (see src/lib/styles/stylex-patch.test.ts): keep custom property names as they are,
++// so dynamic styles for camelCase properties (--x-viewTransitionName) match their CSS.
++const toKebabCase = str => str.startsWith('--') ? str : str.replace(/([A-Z])/g, '-$1').toLowerCase();
+ function attrs(...styles) {
+   const {
+     className,
+diff --git a/lib/es/stylex.mjs b/lib/es/stylex.mjs
+index 5a8fe56a45590b80d2334a3d88fe12bbedb0e7c1..b4a0cab591ec945f96f0c65ec72b8b60c63200b5 100644
+--- a/lib/es/stylex.mjs
++++ b/lib/es/stylex.mjs
+@@ -182,7 +182,9 @@ function props(...styles) {
+   }
+   return result;
+ }
+-const toKebabCase = str => str.replace(/([A-Z])/g, '-$1').toLowerCase();
++// Patched by knerrich.com (see src/lib/styles/stylex-patch.test.ts): keep custom property names as they are,
++// so dynamic styles for camelCase properties (--x-viewTransitionName) match their CSS.
++const toKebabCase = str => str.startsWith('--') ? str : str.replace(/([A-Z])/g, '-$1').toLowerCase();
+ function attrs(...styles) {
+   const {
+     className,

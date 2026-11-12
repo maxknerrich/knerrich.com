@@ -1,10 +1,20 @@
+import { Effect } from "effect";
 import { marked, type Tokens } from "marked";
+import { pictureFor } from "./images.ts";
+import { renderMarkdown } from "./markdown";
 
 const files = import.meta.glob<string>("/src/content/projects/*.md", {
   query: "?raw",
   import: "default",
   eager: true,
 });
+
+/** A lead image must be one of the processed project images (src/lib/assets/projects). */
+function heroPicture(src: string, path: string) {
+  const picture = pictureFor(src);
+  if (!picture) throw new Error(`${path}: lead image ${src} isn't in src/lib/assets/projects`);
+  return picture;
+}
 
 // Only repository-authored Markdown is rendered. The heading and opening
 // paragraph supply page metadata; an optional list after the title supplies tags.
@@ -36,7 +46,13 @@ export const projects = Object.entries(files).map(([path, markdown]) => {
     title: heading.text,
     description: introduction.text,
     tags: tagList?.items.map((item) => item.text) ?? [],
-    hero: hero ? { src: hero.href, alt: hero.text } : undefined,
-    html: marked.parser(tokens.slice(1).filter((token) => token !== tagList && token !== heroParagraph)),
+    hero: hero ? { picture: heroPicture(hero.href, path), alt: hero.text } : undefined,
+    ...Effect.runSync(
+      renderMarkdown(
+        tokens.slice(1).filter((token) => token !== tagList && token !== heroParagraph),
+        path,
+        ["main", "project-title"],
+      ),
+    ),
   };
 });

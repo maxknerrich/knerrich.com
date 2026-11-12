@@ -1,3 +1,9 @@
+/*
+ * Global CSS that StyleX can't express: fonts, the reset, the theme switch
+ * and element defaults. Everything else is
+ * StyleX (src/lib/styles), and the tokens used here come from
+ * src/lib/styles/tokens.stylex.ts.
+ */
 @layer reset, theme, base;
 
 @font-face {
@@ -6,6 +12,15 @@
   font-weight: 400 700;
   font-display: swap;
   src: url("/fonts/bricolage-grotesque-latin-variable.woff2") format("woff2");
+}
+
+/* Pixel face for writing stage labels (SIL OFL, see /licenses/pixelify-sans.txt). */
+@font-face {
+  font-family: "Pixelify Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/pixelify-sans-latin-variable.woff2") format("woff2");
 }
 
 @layer reset {
@@ -21,59 +36,25 @@
   h3,
   p,
   dl,
-  dd {
+  dd,
+  figure {
     margin: 0;
   }
 }
 
+/* Colors are light-dark() pairs, so the theme is just the color scheme. Auto
+   follows the device; the header's radios override it without JavaScript. */
 @layer theme {
   :root {
     color-scheme: light dark;
-    --logo-filter: none;
-    --paper: light-dark(#e9ede5, #0c100d);
-    --image-paper: #fff;
-    --project-fill: color-mix(in oklab, var(--ink) 3.5%, var(--paper));
-    --theme-active: color-mix(in oklab, var(--ink) 9%, var(--paper));
-    --ink: light-dark(#222920, #e7ece3);
-    --muted: light-dark(#596353, #9ca796);
-    --rule: color-mix(in oklab, var(--ink) 14%, var(--paper));
-    --site-header-height: 6rem;
-    --sticky-paper: color-mix(in srgb, var(--paper) 88%, transparent);
-    --section-bleed: clamp(0.75rem, 3vw, 1.5rem);
-    --section-space: clamp(3rem, 6vw, 4.5rem);
-    --contact-space: clamp(4.5rem, 9vw, 6rem);
-    --accent: #3ed42a;
-    --button-fill: var(--accent);
-    --button-ink: #0c100d;
-    --button-hover: color-mix(in oklab, var(--accent) 85%, var(--ink));
-    --accent-ink: light-dark(#247719, #3ed42a);
-    --selection: light-dark(#d6f5d1, #254820);
-    --font-display: "Bricolage Grotesque", "Helvetica Neue", sans-serif;
-    --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   }
 
-  @media (max-width: 600px) {
-    :root {
-      --site-header-height: 4.75rem;
-    }
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --logo-filter: invert(1);
-    }
-  }
-
-  /* Auto uses the device preference; native radios override it without JS. */
   :root:has(#theme-light:checked) {
     color-scheme: light;
-    --logo-filter: none;
   }
 
   :root:has(#theme-dark:checked) {
     color-scheme: dark;
-    --logo-filter: invert(1);
   }
 }
 
@@ -114,32 +95,7 @@
   a:focus-visible {
     outline: 2px solid var(--accent-ink);
     outline-offset: 5px;
-    border-radius: 2px;
-  }
-
-  [data-theme-name] {
-    interpolate-size: allow-keywords;
-    inline-size: 0;
-    overflow: hidden;
-    white-space: nowrap;
-    opacity: 0;
-    margin-inline-start: 0;
-  }
-
-  [data-theme-option]:has(:checked) {
-    --theme-option-ink: var(--ink);
-    --theme-option-fill: var(--theme-active);
-  }
-
-  [data-theme-option]:has(:checked) [data-theme-name] {
-    inline-size: auto;
-    opacity: 1;
-    margin-inline-start: 0.375rem;
-  }
-
-  [data-theme-option]:has(:focus-visible) {
-    outline: 2px solid var(--accent-ink);
-    outline-offset: 2px;
+    border-radius: var(--radius-xs);
   }
 
   p {
@@ -147,68 +103,15 @@
   }
 
   @media (prefers-reduced-motion: no-preference) {
+    /* For jumps within a page; the layout turns it off while changing pages. */
     html {
       scroll-behavior: smooth;
     }
 
-    [data-theme-name] {
-      transition:
-        inline-size 240ms cubic-bezier(0.2, 0, 0, 1),
-        margin-inline-start 240ms cubic-bezier(0.2, 0, 0, 1),
-        opacity 180ms ease;
-    }
-
-    [data-theme-option] {
-      transition:
-        background-color 180ms ease,
-        color 180ms ease;
-    }
-
-    html:active-view-transition {
-      scroll-behavior: auto;
-    }
-
-    ::view-transition-old(root),
-    ::view-transition-new(root) {
-      animation-duration: 180ms;
-      animation-timing-function: ease-out;
-    }
-
-    ::view-transition-group(.project-image),
-    ::view-transition-group(.project-title) {
-      animation-duration: 460ms;
-      animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    ::view-transition-image-pair(.project-image) {
-      overflow: clip;
-      border-radius: 0.625rem;
-    }
-
-    ::view-transition-old(.project-image) {
-      display: none;
-    }
-
-    ::view-transition-new(.project-image) {
-      animation: none;
-      inline-size: 100%;
-      block-size: 100%;
-      object-fit: cover;
-    }
-
-    ::view-transition-group(site-header),
-    ::view-transition-new(site-header) {
-      animation: none;
-    }
-
-    ::view-transition-old(site-header) {
-      display: none;
-    }
-
     a {
       transition:
-        color 180ms ease,
-        text-decoration-color 180ms ease;
+        color var(--duration-base) ease,
+        text-decoration-color var(--duration-base) ease;
     }
   }
 }

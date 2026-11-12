@@ -1,5 +1,8 @@
 <script lang="ts">
-  import Portfolio from "$lib/Portfolio.svelte";
+  import Portfolio from "#lib/Portfolio.svelte";
+  import type { PageProps } from "./$types";
+
+  let { data }: PageProps = $props();
 </script>
 
 <svelte:head>
@@ -40,4 +43,4 @@
   />
 </svelte:head>
 
-<Portfolio />
+<Portfolio recent={data.recent} />

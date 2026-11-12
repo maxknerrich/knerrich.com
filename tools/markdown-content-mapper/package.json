@@ -1,0 +1,17 @@
+{
+  "name": "@knerrich/markdown-content-mapper",
+  "version": "0.0.0",
+  "private": true,
+  "description": "TypeScript 7.1 content mapper that type-checks writing frontmatter, embeds and links in .md files",
+  "type": "module",
+  "typescript": {
+    "contentMapper": {
+      "compilerOptions": [],
+      "dynamicConfig": false,
+      "exec": [
+        "node",
+        "mapper.ts"
+      ]
+    }
+  }
+}

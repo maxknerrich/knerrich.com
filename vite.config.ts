@@ -7,11 +7,12 @@ import { defineConfig } from "vite-plus";
 
 export default defineConfig({
   server: { host: "0.0.0.0" },
-  // `vp run lint` lints and type-checks .ts in one pass, on @effect/tsgo's build of tsrs
-  // (the Rust port of TypeScript 7, with Effect's diagnostics) instead of tsgolint.
+  // `vp run lint` runs on @effect/tsgo's build of tsrs (the Rust port of TypeScript 7, with
+  // Effect's diagnostics): `tsrs --noEmit` type-checks the whole program, Markdown included,
+  // which Oxlint's `typeCheck` would skip, then Oxlint runs the type-aware rules on tsrs.
   // .svelte files are type-checked by `vp run check` (svelte-check).
   lint: {
-    options: { typeAware: true, typeCheck: true },
+    options: { typeAware: true },
     // StyleX's own rules catch styles it would drop (like `border: "1px solid …"`).
     // tools/oxlint-styles.ts keeps design values in src/lib/styles/tokens.stylex.ts.
     jsPlugins: ["@stylexjs/eslint-plugin", "./tools/oxlint-styles.ts"],

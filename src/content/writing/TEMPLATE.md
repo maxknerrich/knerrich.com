@@ -1,5 +1,6 @@
 ---
-stage: seedling # seedling, budding or evergreen
+stage: seedling # seed (unpublished), seedling, budding or evergreen
+# description: One or two sentences for lists and feeds. Defaults to the opening paragraph.
 # planted and tended are filled in on the first commit. Bump tended by hand for real rework, not typos.
 ---
 
@@ -7,7 +8,7 @@ stage: seedling # seedling, budding or evergreen
 
 - topic
 
-The opening paragraph, also used as the description.
+The opening paragraph.
 
 ## A section
 

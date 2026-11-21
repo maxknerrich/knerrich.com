@@ -34,7 +34,8 @@ function writingLinks(tokens: Token[]) {
 }
 
 // Like projects, the first heading is the title, an optional list right after it
-// supplies tags, and the first paragraph doubles as the description.
+// supplies tags, and the first paragraph doubles as the description unless the
+// frontmatter sets one.
 const readPiece = (path: string, markdown: string) =>
   Effect.gen(function* () {
     const { meta, body } = yield* splitFrontmatter(markdown, path);
@@ -54,7 +55,7 @@ const readPiece = (path: string, markdown: string) =>
     return {
       slug: slugOf(path),
       title: heading.text,
-      description: intro.text,
+      description: meta.description ?? intro.text,
       tags: tagList?.items.map((item) => item.text) ?? [],
       stage: meta.stage,
       planted: meta.planted,
@@ -67,9 +68,12 @@ const readPiece = (path: string, markdown: string) =>
   });
 
 const load = Effect.gen(function* () {
-  const all = yield* Effect.forEach(Object.entries(files), ([path, markdown]) =>
+  const read = yield* Effect.forEach(Object.entries(files), ([path, markdown]) =>
     readPiece(path, markdown),
   );
+  // Seeds are still validated, but only `vp dev` shows them. A published piece linking
+  // to a seed fails the build below.
+  const all = import.meta.env.DEV ? read : read.filter(({ stage }) => stage !== "seed");
   const slugs = new Set(all.map(({ slug }) => slug));
   for (const { path, links } of all) {
     const missing = [...links].filter((slug) => !slugs.has(slug));

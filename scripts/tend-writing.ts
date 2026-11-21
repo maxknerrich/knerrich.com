@@ -1,7 +1,8 @@
 // Run by .vite-hooks/pre-commit for every staged writing piece in src/content/writing/:
 //
 // - Every staged piece's frontmatter is validated; a bad one blocks the commit.
-// - New pieces get a missing `planted` set to today, and a missing `tended` set to `planted`.
+// - Pieces get a missing `planted` set to today, and a missing `tended` set to `planted`,
+//   unless they're still a `seed`: a seed is planted by the commit that moves it on.
 // - When a commit changes a piece's `tended` date (bumped by hand for a meaningful
 //   update), the previously committed file is saved to
 //   .versions/<slug>/<previous tended>.md and staged with it. Edits that keep the
@@ -26,10 +27,11 @@ const git = (args: string[], input?: string) =>
     catch: (error) => new GitError({ message: `git ${args.join(" ")} failed: ${String(error)}` }),
   });
 
-/** A new piece's text with missing dates filled in from its own frontmatter: `planted` defaults to today, `tended` to `planted`. */
+/** A piece's text with missing dates filled in from its own frontmatter: `planted` defaults to today, `tended` to `planted`. Seeds stay undated. */
 const withDates = (markdown: string, path: string) =>
   Effect.gen(function* () {
     const { meta } = yield* splitFrontmatter(markdown, path);
+    if (meta.stage === "seed") return markdown;
     const planted = hasField(markdown, "planted")
       ? markdown
       : setField(markdown, "planted", meta.planted);
@@ -37,7 +39,7 @@ const withDates = (markdown: string, path: string) =>
   });
 
 /**
- * Fills in missing dates on a new piece, in the staged blob and in the working
+ * Fills in missing dates on a piece, in the staged blob and in the working
  * copy separately, so a partially staged file keeps its unstaged edits.
  */
 const plant = (path: string, staged: string) =>
@@ -88,7 +90,8 @@ const program = Effect.gen(function* () {
 
   for (const [status, path] of staged) {
     const markdown = yield* git(["show", `:${path}`]);
-    yield* status === "A" ? plant(path, markdown) : tend(path, markdown);
+    if (status === "M") yield* tend(path, markdown);
+    yield* plant(path, markdown);
   }
 });
 

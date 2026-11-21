@@ -4,6 +4,7 @@ import type { Stage } from "./frontmatter";
 export type Sprite = readonly string[];
 
 export const STAGE_NAMES: Record<Stage, string> = {
+  seed: "Seed",
   seedling: "Seedling",
   budding: "Budding",
   evergreen: "Evergreen",
@@ -11,6 +12,7 @@ export const STAGE_NAMES: Record<Stage, string> = {
 
 /** Small icons for lists and legends. */
 export const ICONS: Record<Stage, Sprite> = {
+  seed: [".##.", "####", "####", ".##."],
   seedling: [".#...#.", ".##.##.", "..###..", "...#...", "...+...", "...+..."],
   budding: [
     "...+#+...",

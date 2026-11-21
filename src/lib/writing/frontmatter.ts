@@ -6,7 +6,8 @@ import { parse } from "yaml";
 // what the Markdown content mapper type-checks frontmatter against while editing.
 // Shared with plain `node`, so this module must stay free of relative and SvelteKit imports.
 
-export const STAGES = ["seedling", "budding", "evergreen"] as const;
+// A seed isn't planted (published) yet: only `vp dev` shows it.
+export const STAGES = ["seed", "seedling", "budding", "evergreen"] as const;
 export type Stage = (typeof STAGES)[number];
 
 const isRealDate = (date: string) => {
@@ -37,7 +38,9 @@ export const Frontmatter = Schema.Struct({
   stage: Schema.Literals(STAGES).pipe(
     Schema.withDecodingDefault(Effect.succeed<Stage>("seedling")),
   ),
-  /** First published. Defaults to today; the pre-commit hook writes it into new pieces. */
+  /** For lists, feeds and search results. Defaults to the opening paragraph. */
+  description: Schema.optional(Schema.NonEmptyString),
+  /** First published. Defaults to today; the pre-commit hook writes it in once a piece is past `seed`. */
   planted: IsoDate.pipe(Schema.withDecodingDefault(Effect.sync(today))),
   /** Last meaningful update, set by hand. Changing it saves the previous version. Defaults to `planted`. */
   tended: Schema.optional(IsoDate),

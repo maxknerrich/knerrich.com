@@ -13,6 +13,8 @@ title: What the frame shows
 ```
 ````
 
+**TypeScript code blocks** (` ```ts `) are type-checked like the site's code, with errors shown in the Markdown. Each block has its own scope and can import from the project (`#lib/…`) or its packages. Mark a block ` ```ts nocheck ` for a fragment or pseudo-code.
+
 **Writing is a digital garden**: pieces are published early and grow. The optional frontmatter says how far along a piece is (`stage`: seedling, budding, evergreen) and when it was first published and last reworked (`planted`, `tended`). Bump `tended` by hand only for real changes, not typos, so "last tended" means something to readers. Committing a new `tended` saves the old version in `.versions/`, for a future version history.
 
 **A new project** also needs its card in `src/lib/Portfolio.svelte` and its URL in `static/sitemap.xml` (new pieces need the sitemap too).

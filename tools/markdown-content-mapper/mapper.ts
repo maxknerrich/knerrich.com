@@ -7,10 +7,11 @@
 //   - writing frontmatter must satisfy FrontmatterInput (#lib/writing/frontmatter)
 //   - every embed code block (```iframe …) must satisfy its EmbedInput (#lib/embeds/props)
 //   - links to /writing/<slug> must name a piece that exists
+//   - ```ts code blocks must type-check (```ts nocheck opts a block out)
 //
 // Each emitted value is mapped back to its span in the .md file, so errors point at
-// the YAML value, key, or link that is wrong. Deeper checks (real dates, tended after
-// planted) are Effect Schema's job at build time.
+// the YAML value, key, link, or line of code that is wrong. Deeper checks (real dates,
+// tended after planted) are Effect Schema's job at build time.
 //
 // Protocol: JSON-RPC over stdio, see https://github.com/microsoft/typescript-go/pull/4712
 import { existsSync, readdirSync } from "node:fs";
@@ -19,8 +20,11 @@ import { pathToFileURL } from "node:url";
 import { marked, type Token } from "marked";
 import { isMap, isScalar, isSeq, parseDocument } from "yaml";
 
-/** [virtualStart, virtualLength, originalStart, originalLength, kind]; kind 1 = Atom (text differs). */
-type SpanMapping = [number, number, number, number, 1];
+/**
+ * [virtualStart, virtualLength, originalStart, originalLength, kind]; kind 0 = Verbatim
+ * (same text, so positions inside map 1:1), 1 = Atom (text differs).
+ */
+type SpanMapping = [number, number, number, number, 0 | 1];
 type MapperDiagnostic = { messageText: string; start: number; length: number; code: number };
 type TransformParams = { fileName: string; content: string };
 
@@ -29,6 +33,11 @@ const MISSING_PROP = 9002;
 const FRONTMATTER = /^---\r?\n(?:([\s\S]*?)\r?\n)?---[ \t]*(?:\r?\n|$)/;
 /** A link to another piece, matched like the build does (src/lib/server/writing.ts). */
 const WRITING_HREF = /^\/writing\/([^/#?]+)\/?(?:[#?].*)?$/;
+const TS_LANGS = new Set(["ts", "typescript"]);
+/** Import declarations at the start of a line, single- or multi-line. */
+const IMPORT = /^import\b[^;]*?["'][^"'\n]*["'][ \t]*;?/gm;
+/** `export` keywords at the start of a line, which aren't allowed inside a block. */
+const EXPORT = /^export[ \t]+(?:default[ \t]+)?/gm;
 
 /** Builds the virtual module text while recording which parts map back to the original. */
 class Emitter {
@@ -41,6 +50,37 @@ class Emitter {
     this.mappings.push([this.text.length, text.length, originalStart, originalLength, 1]);
     this.text += text;
   }
+  verbatim(text: string, originalStart: number) {
+    if (!text) return;
+    this.mappings.push([this.text.length, text.length, originalStart, text.length, 0]);
+    this.text += text;
+  }
+}
+
+/**
+ * Emits a code block's TypeScript, `start` being where its code starts in the .md file.
+ * Each block gets its own `{ }` scope, so blocks can reuse names. Imports can't go in a
+ * block, so they're lifted out (once per piece, so blocks can repeat them), and leading
+ * `export`s are dropped.
+ */
+function emitCode(out: Emitter, code: string, start: number, imported: Set<string>) {
+  const lifted = [...code.matchAll(IMPORT), ...code.matchAll(EXPORT)].toSorted(
+    (a, b) => a.index - b.index,
+  );
+  for (const match of lifted) {
+    if (!match[0].startsWith("import") || imported.has(match[0])) continue;
+    imported.add(match[0]);
+    out.verbatim(match[0], start + match.index);
+    out.write("\n");
+  }
+  out.write("{\n");
+  let cursor = 0;
+  for (const match of lifted) {
+    out.verbatim(code.slice(cursor, match.index), start + cursor);
+    cursor = match.index + match[0].length;
+  }
+  out.verbatim(code.slice(cursor), start + cursor);
+  out.write("\n}\n");
 }
 
 /** Emits the `key: value,` pairs of a YAML map (without braces). */
@@ -191,20 +231,24 @@ async function transform({ fileName, content }: TransformParams) {
   const out = new Emitter();
   const diagnostics: MapperDiagnostic[] = [];
 
-  out.write('import type { FrontmatterInput } from "#lib/writing/frontmatter.ts";\n');
-  out.write('import type { EmbedInput } from "#lib/embeds/props.ts";\n');
+  // Top-level names start with $ so code blocks can import anything (their imports are
+  // top-level too). WritingSlug keeps its name for error messages; blocks can only shadow it.
+  out.write(
+    'import type { FrontmatterInput as $FrontmatterInput } from "#lib/writing/frontmatter.ts";\n',
+  );
+  out.write('import type { EmbedInput as $EmbedInput } from "#lib/embeds/props.ts";\n');
   out.write(`type WritingSlug = ${slugs.join(" | ") || "never"};\n`);
-  out.write("declare function link(slug: WritingSlug): void;\n\n");
+  out.write("declare function $link(slug: WritingSlug): void;\n\n");
 
   const frontmatter = FRONTMATTER.exec(content);
   const blocks = blocksOf(content, frontmatter?.[0].length ?? 0);
   if (frontmatter && fileName.includes("/src/content/writing/")) {
     const offset = content.indexOf("\n") + 1;
-    out.write("export const frontmatter = { ");
+    out.write("export const $frontmatter = { ");
     emitPairs(out, parseYaml(frontmatter[1] ?? "", offset, diagnostics), offset);
     // "does not satisfy" errors land on the type, so map it to the opening ---.
     out.write("} satisfies ");
-    out.mapped("FrontmatterInput", 0, 3);
+    out.mapped("$FrontmatterInput", 0, 3);
     out.write(";\n");
   }
 
@@ -221,7 +265,7 @@ async function transform({ fileName, content }: TransformParams) {
     // Wrong values and unknown keys, each mapped to its place in the YAML.
     out.write("void ({ ");
     emitPairs(out, props, bodyStart);
-    out.write(`} satisfies Partial<EmbedInput<${JSON.stringify(name)}> & { wide?: boolean }>);\n`);
+    out.write(`} satisfies Partial<$EmbedInput<${JSON.stringify(name)}> & { wide?: boolean }>);\n`);
     // Missing required props are reported here, on the block's name: TypeScript can't
     // place that error inside the Markdown.
     const keys = new Set(
@@ -240,8 +284,19 @@ async function transform({ fileName, content }: TransformParams) {
     }
   }
 
+  // Like embeds, only top-level blocks. marked's `lang` is the whole info string.
+  const imported = new Set<string>();
+  for (const { token, start } of blocks) {
+    if (token.type !== "code" || typeof token.lang !== "string") continue;
+    const [lang, ...flags] = token.lang.split(/\s+/);
+    if (!lang || !TS_LANGS.has(lang) || flags.includes("nocheck")) continue;
+    const codeStart = start + token.raw.indexOf("\n") + 1;
+    // An indented fence's text has its indentation removed, so it no longer lines up.
+    if (content.startsWith(token.text, codeStart)) emitCode(out, token.text, codeStart, imported);
+  }
+
   for (const { slug, start, length } of writingLinks(content, blocks)) {
-    out.write("link(");
+    out.write("$link(");
     out.mapped(JSON.stringify(slug), start, length);
     out.write(");\n");
   }

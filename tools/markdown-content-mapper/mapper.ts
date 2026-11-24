@@ -1,53 +1,27 @@
-// A TypeScript 7.1 content mapper for the site's Markdown (src/content/**/*.md).
-//
-// TypeScript (tsrs, in the editor and in `vp run lint`) starts this process and asks
-// it to turn each .md file into a small virtual TypeScript module, so mistakes show
-// up in the Markdown itself while editing:
-//
-//   - writing frontmatter must satisfy FrontmatterInput (#lib/writing/frontmatter)
-//   - every embed code block (```iframe …) must satisfy its EmbedInput (#lib/embeds/props)
-//   - links to /writing/<slug> must name a piece that exists
-//   - ```ts code blocks must type-check (```ts nocheck opts a block out)
-//
-// Each emitted value is mapped back to its span in the .md file, so errors point at
-// the YAML value, key, link, or line of code that is wrong. Deeper checks (real dates,
-// tended after planted) are Effect Schema's job at build time.
-//
-// Protocol: JSON-RPC over stdio, see https://github.com/microsoft/typescript-go/pull/4712
 import { existsSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
+import { Result, Schema } from "effect";
 import { marked, type Token } from "marked";
 import { isMap, isScalar, isSeq, parseDocument } from "yaml";
 
-/**
- * [virtualStart, virtualLength, originalStart, originalLength, kind]; kind 0 = Verbatim
- * (same text, so positions inside map 1:1), 1 = Atom (text differs).
- */
 type SpanMapping = [number, number, number, number, 0 | 1];
 type MapperDiagnostic = { messageText: string; start: number; length: number; code: number };
-type TransformParams = { fileName: string; content: string };
+const TransformParams = Schema.Struct({ fileName: Schema.String, content: Schema.String });
 
 const YAML_ERROR = 9001;
 const MISSING_PROP = 9002;
+const CODE_INFO = 9003;
+const STEP_LINK = 9004;
+const FOOTNOTE = 9005;
 const FRONTMATTER = /^---\r?\n(?:([\s\S]*?)\r?\n)?---[ \t]*(?:\r?\n|$)/;
-/** A link to another piece, matched like the build does (src/lib/server/writing.ts). */
-const WRITING_HREF = /^\/writing\/([^/#?]+)\/?(?:[#?].*)?$/;
-const TS_LANGS = new Set(["ts", "typescript"]);
-/** Import declarations at the start of a line, single- or multi-line. */
 const IMPORT = /^import\b[^;]*?["'][^"'\n]*["'][ \t]*;?/gm;
-/** `export` keywords at the start of a line, which aren't allowed inside a block. */
 const EXPORT = /^export[ \t]+(?:default[ \t]+)?/gm;
 
-/** Builds the virtual module text while recording which parts map back to the original. */
 class Emitter {
   text = "";
   mappings: SpanMapping[] = [];
   write(text: string) {
-    this.text += text;
-  }
-  mapped(text: string, originalStart: number, originalLength: number) {
-    this.mappings.push([this.text.length, text.length, originalStart, originalLength, 1]);
     this.text += text;
   }
   verbatim(text: string, originalStart: number) {
@@ -55,14 +29,12 @@ class Emitter {
     this.mappings.push([this.text.length, text.length, originalStart, text.length, 0]);
     this.text += text;
   }
+  mapped(text: string, originalStart: number, originalLength: number) {
+    this.mappings.push([this.text.length, text.length, originalStart, originalLength, 1]);
+    this.text += text;
+  }
 }
 
-/**
- * Emits a code block's TypeScript, `start` being where its code starts in the .md file.
- * Each block gets its own `{ }` scope, so blocks can reuse names. Imports can't go in a
- * block, so they're lifted out (once per piece, so blocks can repeat them), and leading
- * `export`s are dropped.
- */
 function emitCode(out: Emitter, code: string, start: number, imported: Set<string>) {
   const lifted = [...code.matchAll(IMPORT), ...code.matchAll(EXPORT)].toSorted(
     (a, b) => a.index - b.index,
@@ -83,7 +55,6 @@ function emitCode(out: Emitter, code: string, start: number, imported: Set<strin
   out.write("\n}\n");
 }
 
-/** Emits the `key: value,` pairs of a YAML map (without braces). */
 function emitPairs(out: Emitter, node: unknown, offset: number): void {
   if (!isMap(node)) return;
   for (const { key, value } of node.items) {
@@ -99,7 +70,6 @@ function emitPairs(out: Emitter, node: unknown, offset: number): void {
   }
 }
 
-/** Emits a YAML node as a TypeScript literal. `offset` is where the YAML starts in the .md file. */
 function emitYaml(out: Emitter, node: unknown, offset: number): void {
   if (isMap(node)) {
     out.write("{ ");
@@ -124,7 +94,6 @@ function emitYaml(out: Emitter, node: unknown, offset: number): void {
   }
 }
 
-/** Parses YAML at `offset`, reporting syntax errors at their place in the .md file. */
 function parseYaml(source: string, offset: number, diagnostics: MapperDiagnostic[]) {
   const document = parseDocument(source);
   for (const error of document.errors) {
@@ -139,7 +108,6 @@ function parseYaml(source: string, offset: number, diagnostics: MapperDiagnostic
   return document.contents;
 }
 
-/** The repository root: the nearest folder above the file that has the embed registry. */
 function rootOf(fileName: string) {
   let dir = dirname(fileName);
   while (!existsSync(join(dir, "src/lib/embeds/props.ts"))) {
@@ -150,36 +118,24 @@ function rootOf(fileName: string) {
   return dir;
 }
 
-/** The parts of an Effect Schema struct the mapper reads: which fields are optional. */
-type EmbedSchemas = Record<
-  string,
-  { fields: Record<string, { ast: { context?: { isOptional?: boolean } } }> }
->;
-
-// Embed names and their required props come from the registry itself (plain `node`
-// strips its types), so they always match what the build decodes.
-const registries = new Map<string, Promise<Map<string, string[]>>>();
-const embedsIn = (root: string) => {
-  const cached = registries.get(root);
-  if (cached) return cached;
-  const registry = import(pathToFileURL(join(root, "src/lib/embeds/props.ts")).href).then(
-    ({ embedProps }: { embedProps: EmbedSchemas }) =>
-      new Map(
-        Object.entries(embedProps).map(([name, { fields }]) => [
-          name,
-          Object.entries(fields).flatMap(([key, field]) =>
-            field.ast.context?.isOptional ? [] : [key],
-          ),
-        ]),
-      ),
-  );
-  registries.set(root, registry);
-  return registry;
+type Props = typeof import("../../src/lib/embeds/props.ts");
+type Syntax = typeof import("../../src/lib/writing/syntax.ts");
+const loaded = new Map<string, Promise<[Props, Syntax]>>();
+const modulesIn = (root: string) => {
+  const url = (path: string) => pathToFileURL(join(root, path)).href;
+  let modules = loaded.get(root);
+  if (!modules) {
+    modules = Promise.all([
+      import(url("src/lib/embeds/props.ts")) as Promise<Props>,
+      import(url("src/lib/writing/syntax.ts")) as Promise<Syntax>,
+    ]);
+    loaded.set(root, modules);
+  }
+  return modules;
 };
 
 type Block = { token: Token; start: number };
 
-/** The body's top-level Markdown blocks and where each starts; their raw text adds up to the source. */
 function blocksOf(content: string, bodyStart: number) {
   const blocks: Block[] = [];
   let start = bodyStart;
@@ -190,122 +146,214 @@ function blocksOf(content: string, bodyStart: number) {
   return blocks;
 }
 
-/**
- * Links to /writing/<slug>, found the way the build finds them (marked's link
- * tokens, so links in code don't count and reference-style links do), with where
- * each slug sits in `content`. Reference-style links map to their whole `[text][ref]`;
- * a link whose text marked normalized (one spanning lines in a quote) maps to its block.
- */
-function writingLinks(content: string, blocks: Block[]) {
-  const links: { slug: string; start: number; length: number }[] = [];
+function linksOf(content: string, blocks: Block[]) {
+  const links: { href: string; raw: string; block: Block; start?: number }[] = [];
   for (const block of blocks) {
     let cursor = block.start;
-    // walkTokens returns the callback's results; this callback only collects.
     void marked.walkTokens([block.token], (token: Token) => {
-      const slug = token.type === "link" ? WRITING_HREF.exec(token.href)?.[1] : undefined;
-      if (!slug) return;
+      if (token.type !== "link") return;
       const start = content.indexOf(token.raw, cursor);
-      if (start === -1) {
-        links.push({ slug, start: block.start, length: block.token.raw.trimEnd().length });
-        return;
-      }
-      cursor = start + token.raw.length;
-      const inRaw = token.raw.lastIndexOf(`/writing/${slug}`);
-      links.push(
-        inRaw === -1
-          ? { slug, start, length: token.raw.length }
-          : { slug, start: start + inRaw + "/writing/".length, length: slug.length },
-      );
+      if (start !== -1) cursor = start + token.raw.length;
+      links.push({ href: token.href, raw: token.raw, block, ...(start !== -1 && { start }) });
     });
   }
   return links;
 }
 
-async function transform({ fileName, content }: TransformParams) {
+const withoutCode = (content: string, blocks: Block[]) => {
+  let text = content;
+  for (const { token, start } of blocks) {
+    if (token.type !== "code") continue;
+    text =
+      text.slice(0, start) + " ".repeat(token.raw.length) + text.slice(start + token.raw.length);
+  }
+  return text;
+};
+
+async function transform({ fileName, content }: typeof TransformParams.Type) {
   const root = rootOf(fileName);
-  const embeds = await embedsIn(root);
+  const [props, syntax] = await modulesIn(root);
+  const required = new Map(
+    Object.entries(props.embedProps).map(([name, { fields }]) => [
+      name,
+      Object.entries(fields).flatMap(([key, field]) =>
+        field.ast.context?.isOptional ? [] : [key],
+      ),
+    ]),
+  );
   const writing = join(root, "src/content/writing");
-  const slugs = (existsSync(writing) ? readdirSync(writing) : [])
-    .filter((name) => name.endsWith(".md") && name !== "TEMPLATE.md")
-    .map((name) => JSON.stringify(name.slice(0, -".md".length)));
+  const slugs = (existsSync(writing) ? readdirSync(writing, { withFileTypes: true }) : [])
+    .flatMap((entry) => {
+      if (entry.isFile()) return [entry.name];
+      return entry.isDirectory() && existsSync(join(writing, entry.name, "index.md"))
+        ? [`${entry.name}/index.md`]
+        : [];
+    })
+    .flatMap((name) => syntax.PIECE_PATH.exec(`src/content/writing/${name}`)?.[1] ?? [])
+    .map((slug) => JSON.stringify(slug));
   const out = new Emitter();
   const diagnostics: MapperDiagnostic[] = [];
 
-  // Top-level names start with $ so code blocks can import anything (their imports are
-  // top-level too). WritingSlug keeps its name for error messages; blocks can only shadow it.
   out.write(
     'import type { FrontmatterInput as $FrontmatterInput } from "#lib/writing/frontmatter.ts";\n',
   );
+  out.write(
+    'import type { ProjectFrontmatterInput as $ProjectFrontmatterInput } from "#lib/projects/frontmatter.ts";\n',
+  );
   out.write('import type { EmbedInput as $EmbedInput } from "#lib/embeds/props.ts";\n');
+  out.write(
+    'import type { CodeLang as $CodeLang, CodeMetaInput as $CodeMetaInput, NoteKind as $NoteKind } from "#lib/writing/syntax.ts";\n',
+  );
   out.write(`type WritingSlug = ${slugs.join(" | ") || "never"};\n`);
   out.write("declare function $link(slug: WritingSlug): void;\n\n");
 
   const frontmatter = FRONTMATTER.exec(content);
   const blocks = blocksOf(content, frontmatter?.[0].length ?? 0);
-  if (frontmatter && fileName.includes("/src/content/writing/")) {
+  const frontmatterType = fileName.includes("/src/content/writing/")
+    ? "$FrontmatterInput"
+    : fileName.includes("/src/content/projects/")
+      ? "$ProjectFrontmatterInput"
+      : undefined;
+  if (frontmatter && frontmatterType) {
     const offset = content.indexOf("\n") + 1;
     out.write("export const $frontmatter = { ");
     emitPairs(out, parseYaml(frontmatter[1] ?? "", offset, diagnostics), offset);
-    // "does not satisfy" errors land on the type, so map it to the opening ---.
     out.write("} satisfies ");
-    out.mapped("$FrontmatterInput", 0, 3);
+    out.mapped(frontmatterType, 0, 3);
     out.write(";\n");
   }
 
-  // Like the build, only top-level code blocks named after an embed are embeds;
-  // a fence shown inside another fence is just code.
+  const visualizations: string[] = [];
+  const imported = new Set<string>();
   for (const { token, start } of blocks) {
-    if (token.type !== "code" || typeof token.lang !== "string" || !embeds.has(token.lang))
+    if (token.type === "blockquote") {
+      const kind = syntax.NOTE_LINE.exec(token.text.split("\n")[0] ?? "")?.[1];
+      if (kind === undefined) continue;
+      const kindStart = start + token.raw.indexOf(`[!${kind}]`) + 2;
+      out.write("void (");
+      out.mapped(JSON.stringify(kind), kindStart, kind.length);
+      out.write(" ");
+      out.mapped("satisfies", kindStart, kind.length);
+      out.write(" $NoteKind);\n");
       continue;
-    const name = token.lang;
-    const nameStart = start + token.raw.indexOf(name);
+    }
+    if (token.type !== "code" || typeof token.lang !== "string" || !token.lang) continue;
+    const infoStart = start + token.raw.indexOf(token.lang);
     const bodyStart = start + token.raw.indexOf("\n") + 1;
-    const props = parseYaml(token.text, bodyStart, diagnostics);
-    // A missing required prop is reported on the object, so map its brace to the block's name.
-    // Wrong values and unknown keys, each mapped to its place in the YAML.
-    out.write("void ({ ");
-    emitPairs(out, props, bodyStart);
-    out.write(`} satisfies Partial<$EmbedInput<${JSON.stringify(name)}> & { wide?: boolean }>);\n`);
-    // Missing required props are reported here, on the block's name: TypeScript can't
-    // place that error inside the Markdown.
-    const keys = new Set(
-      isMap(props)
-        ? props.items.flatMap(({ key }) => (isScalar(key) ? [String(key.value)] : []))
-        : [],
-    );
-    const missing = (embeds.get(name) ?? []).filter((key) => !keys.has(key));
-    if (missing.length) {
+    const keys = required.get(token.lang);
+    if (keys) {
+      const name = token.lang;
+      const yaml = parseYaml(token.text, bodyStart, diagnostics);
+      out.write("void ({ ");
+      emitPairs(out, yaml, bodyStart);
+      out.write(
+        `} satisfies Partial<$EmbedInput<${JSON.stringify(name)}> & { wide?: boolean }>);\n`,
+      );
+      const given = new Set(
+        isMap(yaml)
+          ? yaml.items.flatMap(({ key }) => (isScalar(key) ? [String(key.value)] : []))
+          : [],
+      );
+      const missing = keys.filter((key) => !given.has(key));
+      if (missing.length) {
+        diagnostics.push({
+          messageText: `The \`${name}\` embed is missing required props: ${missing.join(", ")}.`,
+          start: infoStart,
+          length: name.length,
+          code: MISSING_PROP,
+        });
+      }
+      const id = /^id:[ \t]*["']?([\w-]+)/m.exec(token.text)?.[1];
+      if (id && props.VISUALIZATIONS.some((visualization) => visualization === name))
+        visualizations.push(id);
+      continue;
+    }
+    const { lang, pairs, rest, nocheck } = syntax.parseCodeInfo(token.lang);
+    out.write("void (");
+    out.mapped(JSON.stringify(lang), infoStart, lang.length);
+    out.write(" ");
+    out.mapped("satisfies", infoStart, lang.length);
+    out.write(" $CodeLang);\nvoid ({ ");
+    for (const { key, value, keyStart, valueStart } of pairs) {
+      out.mapped(JSON.stringify(key), infoStart + keyStart, key.length);
+      out.write(": ");
+      out.mapped(JSON.stringify(value), infoStart + valueStart, value.length);
+      out.write(", ");
+    }
+    out.write("} satisfies $CodeMetaInput);\n");
+    if (rest) {
       diagnostics.push({
-        messageText: `The \`${name}\` embed is missing required props: ${missing.join(", ")}.`,
-        start: nameStart,
-        length: name.length,
-        code: MISSING_PROP,
+        messageText: `After the language, a code block only takes key="value" pairs, not \`${rest}\`.`,
+        start: infoStart,
+        length: token.lang.length,
+        code: CODE_INFO,
+      });
+    }
+    if (lang === "ts" && !nocheck && content.startsWith(token.text, bodyStart))
+      emitCode(out, token.text, bodyStart, imported);
+  }
+
+  out.write(
+    `declare function $step(id: ${visualizations.map((id) => JSON.stringify(id)).join(" | ") || "never"}): void;\n`,
+  );
+  for (const { href, raw, block, start } of linksOf(content, blocks)) {
+    const [, section, slug] = syntax.SITE_HREF.exec(href) ?? [];
+    if (section === "writing" && slug) {
+      const inRaw = raw.lastIndexOf(`/writing/${slug}`);
+      out.write("$link(");
+      if (start === undefined)
+        out.mapped(JSON.stringify(slug), block.start, block.token.raw.trimEnd().length);
+      else if (inRaw === -1) out.mapped(JSON.stringify(slug), start, raw.length);
+      else out.mapped(JSON.stringify(slug), start + inRaw + "/writing/".length, slug.length);
+      out.write(");\n");
+      continue;
+    }
+    if (!href.startsWith("step:")) continue;
+    const at = (start ?? block.start) + Math.max(0, raw.indexOf(href));
+    const match = syntax.STEP_HREF.exec(href);
+    if (!match?.[1]) {
+      diagnostics.push({
+        messageText: "A step link is step:<visualization id>/<step, from 1>, e.g. step:sync/2.",
+        start: at,
+        length: href.length,
+        code: STEP_LINK,
+      });
+      continue;
+    }
+    out.write("$step(");
+    out.mapped(JSON.stringify(match[1]), at + "step:".length, match[1].length);
+    out.write(");\n");
+  }
+
+  const text = withoutCode(content, blocks);
+  const notes = new Map(
+    [...text.matchAll(syntax.FOOTNOTE_DEFINITION)].map((m) => [m[1] ?? "", m.index]),
+  );
+  const used = new Set<string>();
+  for (const match of text.matchAll(syntax.FOOTNOTE_REF)) {
+    const id = match[1] ?? "";
+    used.add(id);
+    if (!notes.has(id)) {
+      diagnostics.push({
+        messageText: `Footnote [^${id}] has no note: add a line \`[^${id}]: …\`.`,
+        start: match.index,
+        length: match[0].length,
+        code: FOOTNOTE,
       });
     }
   }
-
-  // Like embeds, only top-level blocks. marked's `lang` is the whole info string.
-  const imported = new Set<string>();
-  for (const { token, start } of blocks) {
-    if (token.type !== "code" || typeof token.lang !== "string") continue;
-    const [lang, ...flags] = token.lang.split(/\s+/);
-    if (!lang || !TS_LANGS.has(lang) || flags.includes("nocheck")) continue;
-    const codeStart = start + token.raw.indexOf("\n") + 1;
-    // An indented fence's text has its indentation removed, so it no longer lines up.
-    if (content.startsWith(token.text, codeStart)) emitCode(out, token.text, codeStart, imported);
-  }
-
-  for (const { slug, start, length } of writingLinks(content, blocks)) {
-    out.write("$link(");
-    out.mapped(JSON.stringify(slug), start, length);
-    out.write(");\n");
+  for (const [id, at] of notes) {
+    if (used.has(id)) continue;
+    diagnostics.push({
+      messageText: `Footnote [^${id}] is never referenced in the text.`,
+      start: at,
+      length: id.length + 4,
+      code: FOOTNOTE,
+    });
   }
 
   return { text: out.text, extension: ".ts", mappings: out.mappings, diagnostics };
 }
-
-// JSON-RPC 2.0 over stdio, framed like LSP: each message is a `Content-Length: <bytes>`
-// header, a blank line, then the JSON. TypeScript sends requests; this answers them.
 
 type Message = { id?: number | string; method?: string; params?: unknown };
 
@@ -315,32 +363,31 @@ function send(message: object) {
   process.stdout.write(body);
 }
 
-function answer(method: string | undefined, params: unknown) {
+const decodeTransformParams = Schema.decodeUnknownResult(TransformParams);
+
+async function answer(method: string | undefined, params: unknown) {
   switch (method) {
     case "initialize":
-      return { positionEncoding: "utf-16", diagnosticSource: "markdown" };
+      return { result: { positionEncoding: "utf-16", diagnosticSource: "markdown" } };
     case "openProject":
-      return {};
+      return { result: {} };
     case "closeProject":
-      return null;
-    case "transform":
-      // The shape TypeScript sends for this request (see the protocol link above).
-      return transform(params as TransformParams);
+      return { result: null };
+    case "transform": {
+      const decoded = decodeTransformParams(params);
+      return Result.isSuccess(decoded)
+        ? { result: await transform(decoded.success) }
+        : { error: { code: -32602, message: decoded.failure.message } };
+    }
     default:
-      return undefined;
+      return { error: { code: -32601, message: `Unknown method: ${method}` } };
   }
 }
 
 async function handle({ id, method, params }: Message) {
-  // Notifications (no id) need no reply; none of them matter here.
   if (id === undefined) return;
   try {
-    const result = await answer(method, params);
-    if (result === undefined) {
-      send({ id, error: { code: -32601, message: `Unknown method: ${method}` } });
-    } else {
-      send({ id, result });
-    }
+    send({ id, ...(await answer(method, params)) });
   } catch (error) {
     send({ id, error: { code: -32603, message: String(error) } });
   }

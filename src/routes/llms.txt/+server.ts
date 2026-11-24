@@ -1,9 +1,5 @@
-import { projects } from "#lib/server/projects.ts";
+import { projects } from "#lib/server/content.ts";
 
-// /llms.txt (https://llmstxt.org): a plain Markdown summary of the site for language
-// models and agents, built from the project write-ups, so it stays current.
-
-// Endpoints don't inherit the layout's `prerender`.
 export const prerender = true;
 
 const SITE = "https://knerrich.com";
@@ -19,8 +15,8 @@ export const GET = () =>
       "",
       "## Projects",
       "",
-      ...projects.map(({ slug, title, description }) =>
-        item(title, `${SITE}/projects/${slug}`, description),
+      ...projects.map(({ slug, title, description, caseStudy, website }) =>
+        item(title, caseStudy ? `${SITE}/projects/${slug}` : (website ?? SITE), description),
       ),
       "",
       "## Contact",

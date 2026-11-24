@@ -14,11 +14,10 @@ vp dev
 ```sh
 vp run lint    # lint and type-check, including the Markdown content
 vp run check   # type-check .svelte files
-vp test
 vp build
 ```
 
-Commits run a hook that formats the staged files, lints the project and checks writing frontmatter.
+Commits run a hook that formats the staged files and lints the project.
 
 ## Docs
 

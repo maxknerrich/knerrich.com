@@ -14,6 +14,6 @@
   // Type-checks frontmatter, embeds and writing links in src/content/**/*.md
   // (tsrs/TypeScript 7.1 with --runExternalCode; see tools/markdown-content-mapper).
   "contentMappers": [{ "package": "@knerrich/markdown-content-mapper", "extensions": [".md"] }],
-  // Also the repo scripts and tools (run by plain `node`), and the Markdown content.
-  "include": ["src", "vite.config.ts", "scripts/**/*.ts", "tools/**/*.ts", "src/content/**/*.md"]
+  // Also the tools (run by plain `node`), and the Markdown content.
+  "include": ["src", "vite.config.ts", "tools/**/*.ts", "src/content/**/*.md"]
 }

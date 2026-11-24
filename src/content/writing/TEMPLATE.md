@@ -1,7 +1,8 @@
 ---
 stage: seedling # seed (unpublished), seedling, budding or evergreen
 # description: One or two sentences for lists and feeds. Defaults to the opening paragraph.
-# planted and tended are filled in on the first commit. Bump tended by hand for real rework, not typos.
+# created: YYYY-MM-DD, the day it's first published. Required unless the stage is seed.
+# updated: YYYY-MM-DD, bumped by hand for real rework, not typos. Defaults to created.
 ---
 
 # Title

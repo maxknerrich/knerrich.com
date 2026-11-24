@@ -1,53 +1,89 @@
-<script lang="ts">
+<script module lang="ts">
   import * as stylex from "@stylexjs/stylex";
-  import { resolve } from "$app/paths";
-  import { rowMarker } from "#lib/styles/markers.stylex.ts";
-  import type { WritingEntry } from "#lib/server/writing.ts";
-  import { STAGE_NAMES } from "#lib/writing/sprites.ts";
-  import { shared } from "#lib/styles/shared.ts";
-  import { list } from "#lib/styles/writing.ts";
-  import PlantIcon from "./PlantIcon.svelte";
+  import { color, font, media, motion, radius, rollMarker, space } from "#lib/styles/tokens.stylex.ts";
 
-  // Rows of writing, newest tending first. With `years`, rows are grouped under
-  // the year they were last tended, shown in the left gutter.
-  let { entries, years = false }: { entries: WritingEntry[]; years?: boolean } = $props();
-
-  const groups = $derived(
-    years ? [...Map.groupBy(entries, ({ tended }) => tended.slice(0, 4))] : [["", entries] as const],
-  );
-  const format = (iso: string, options: Intl.DateTimeFormatOptions) =>
-    new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { ...options, timeZone: "UTC" });
+  const list = stylex.create({
+    firstRow: {
+      borderBlockStartWidth: { default: 1, ":first-child": 0 },
+    },
+    group: {
+      marginBlockStart: { default: space["--space-48"], ":first-child": 0 },
+    },
+    rows: {
+      marginBlockStart: space["--space-8"],
+    },
+    row: {
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "space-between",
+      alignItems: "baseline",
+      columnGap: space["--space-24"],
+      rowGap: space["--space-2"],
+      paddingBlock: { default: space["--space-8"], [media.phone]: space["--space-12"] },
+      color: { default: color["--text"], ":hover": color["--glow"] },
+      textDecoration: "none",
+      borderRadius: radius["--radius-md"],
+      transitionProperty: { default: "none", [media.motion]: "color, box-shadow" },
+      transitionDuration: motion["--duration-base"],
+    },
+    meta: {
+      display: "inline-flex",
+      fontFamily: font["--font-pixel"],
+      alignItems: "end",
+      gap: space["--space-8"],
+      whiteSpace: "nowrap",
+    },
+    roomy: {
+      rowGap: space["--space-4"],
+      paddingBlock: { default: space["--space-32"], [media.phone]: space["--space-24"] },
+    },
+  });
 </script>
 
-<!-- The default marker lets rows dim while the list is hovered (see list.row). -->
-<div {...stylex.attrs(stylex.defaultMarker())}>
-  {#each groups as [year, items], groupIndex (year)}
-    <section {...stylex.attrs(list.group)} aria-label={year || undefined}>
-      {#if year}<h2 {...stylex.attrs(list.year)}>{year}</h2>{/if}
-      <ol {...stylex.attrs(list.items, years && list.withYears)}>
-        {#each items as entry, index (entry.slug)}
-          <li>
-            <a
-              {...stylex.attrs(list.row, groupIndex === 0 && index === 0 && list.firstRow, rowMarker)}
-              href={resolve("/writing/[slug]", { slug: entry.slug })}
-            >
-              <span {...stylex.attrs(list.icon)} title={STAGE_NAMES[entry.stage]}>
-                <PlantIcon stage={entry.stage} />
-              </span>
-              <span {...stylex.attrs(shared.visuallyHidden)}>{STAGE_NAMES[entry.stage]}:</span>
-              <span {...stylex.attrs(list.title)}>{entry.title}</span>
-              {#if entry.planted !== entry.tended}
-                <span {...stylex.attrs(list.date, list.planted)}>
-                  planted {format(entry.planted, { month: "short", year: "numeric" })}
-                </span>
-              {/if}
-              <time {...stylex.attrs(list.date)} datetime={entry.tended}>
-                {format(entry.tended, { day: "numeric", month: "short" })}
-              </time>
-            </a>
-          </li>
-        {/each}
-      </ol>
-    </section>
-  {/each}
-</div>
+<script lang="ts">
+  import { resolve } from "$app/paths";
+  import { playInTurn } from "#lib/in-view.ts";
+  import type { WritingEntry } from "#lib/server/content.ts";
+  import { glass, scroll, site, type } from "#lib/styles/shared.ts";
+  import Roll from "./Roll.svelte";
+  import Stage from "./Stage.svelte";
+
+  let {
+    entries,
+    compact = false,
+    years = false,
+  }: {
+    entries: WritingEntry[];
+    compact?: boolean;
+    years?: boolean;
+  } = $props();
+
+  const playRow = $derived(playInTurn(compact ? 300 : 0));
+  const groups = $derived(
+    years ? [...Map.groupBy(entries, ({ updated }) => updated?.slice(0, 4) ?? "")] : [["", entries] as const],
+  );
+  const format = (iso: string) =>
+    new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
+</script>
+
+{#each groups as [year, items] (year)}
+  <section {...stylex.attrs(list.group)} aria-label={year || undefined}>
+    {#if year}<h2 {@attach playRow} {...stylex.attrs(type.small, type.muted, scroll.reveal)}>{year}</h2>{/if}
+    <ol {...stylex.attrs(site.plainList, compact ? list.rows : site.rows)}>
+      {#each items as entry (entry.slug)}
+        <li {@attach playRow} {...stylex.attrs(!compact && site.row, !compact && list.firstRow, scroll.reveal)}>
+          <a
+            href={resolve("/writing/[slug]", { slug: entry.slug })}
+            {...stylex.attrs(list.row, !compact && list.roomy, glass.focus, !compact && rollMarker)}
+          >
+            <span {...stylex.attrs(compact ? type.body : type.lead)}>{#if compact}{entry.title}{:else}<Roll>{entry.title}</Roll>{/if}</span>
+            <span {...stylex.attrs(list.meta, type.small, compact ? type.muted : type.secondary)}>
+              <Stage stage={entry.stage} /> {#if entry.updated}·
+                <time datetime={entry.updated}>{format(entry.updated)}</time>{/if}
+            </span>
+          </a>
+        </li>
+      {/each}
+    </ol>
+  </section>
+{/each}

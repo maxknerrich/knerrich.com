@@ -1,66 +1,105 @@
-<script lang="ts">
+<script module lang="ts">
   import * as stylex from "@stylexjs/stylex";
+  import { color, font, radius, space } from "#lib/styles/tokens.stylex.ts";
+
+  const piecePage = stylex.create({
+    back: {
+      marginBlockEnd: space["--space-48"],
+    },
+    header: {
+      marginBlockEnd: space["--space-64"],
+    },
+    stage: {
+      display: "flex",
+      fontFamily: font["--font-pixel"],
+      alignItems: "end",
+      gap: space["--space-8"],
+      marginBlockEnd: space["--space-16"],
+    },
+    dates: {
+      display: "flex",
+      fontFamily: font["--font-pixel"],
+      flexWrap: "wrap",
+      rowGap: space["--space-4"],
+      columnGap: space["--space-24"],
+      marginBlockStart: space["--space-24"],
+    },
+    date: {
+      color: color["--text-secondary"],
+    },
+    tags: {
+      display: "flex",
+      flexWrap: "wrap",
+      gap: space["--space-8"],
+      marginBlockStart: space["--space-24"],
+    },
+    tag: {
+      display: "flex",
+      alignItems: "center",
+      blockSize: "2rem",
+      paddingInline: space["--space-12"],
+      borderRadius: radius["--radius-md"],
+    },
+  });
+</script>
+
+<script lang="ts">
   import { resolve } from "$app/paths";
-  import PlantIcon from "#lib/PlantIcon.svelte";
+  import Icon from "#lib/icons/Icon.svelte";
+  import PageHead from "#lib/PageHead.svelte";
+  import Stage from "#lib/Stage.svelte";
   import Prose from "#lib/Prose.svelte";
-  import SectionOutline from "#lib/SectionOutline.svelte";
-  import { tableOfContents } from "#lib/table-of-contents.ts";
-  import { STAGE_NAMES } from "#lib/writing/sprites.ts";
-  import { article } from "#lib/styles/article.ts";
+  import ReadingRail from "#lib/ReadingRail.svelte";
+  import { article, glass, reveal, site, type } from "#lib/styles/shared.ts";
   import type { PageProps } from "./$types";
 
   let { data }: PageProps = $props();
   const piece = $derived(data.piece);
-  const canonical = $derived(`https://knerrich.com/writing/${piece.slug}`);
-  const sections = $derived(tableOfContents(piece.headings));
+  const sections = $derived.by(() => {
+    const all = [
+      { id: "main", label: "Intro", depth: 2 },
+      ...piece.headings.map(({ id, text, depth }) => ({ id, label: text, depth })),
+    ];
+    return all.filter(({ depth }) => depth === 2).length > 2 ? all : [];
+  });
 
   const format = (iso: string) =>
     new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 </script>
 
-<svelte:head>
-  <title>{piece.title} · Max Knerrich</title>
-  <meta name="description" content={piece.description} />
-  <link rel="canonical" href={canonical} />
-  <meta property="og:type" content="article" />
-  <meta property="og:title" content={`${piece.title} · Max Knerrich`} />
-  <meta property="og:description" content={piece.description} />
-  <meta property="og:url" content={canonical} />
-  <meta property="og:image" content="https://knerrich.com/og.jpg" />
-  <meta property="article:modified_time" content={piece.tended} />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:creator" content="@maxknerrich" />
-</svelte:head>
+<PageHead
+  title={piece.title}
+  description={piece.description}
+  path={`writing/${piece.slug}`}
+  type="article"
+  alt={piece.title}
+  modified={piece.updated}
+/>
 
 {#if sections.length}
-  <SectionOutline {sections} article />
+  <ReadingRail {sections} minutes={piece.minutes} />
 {/if}
 
-<main
-  id="main"
-  tabindex="-1"
-  {...stylex.attrs(article.page)}
->
-  <nav
-    aria-label="Back to writing"
-    {...stylex.attrs(article.column, article.backLink)}
-  ><a href={resolve('writing')}>← Writing</a></nav>
+<main id="main" tabindex="-1" {...stylex.attrs(article.page)}>
+  <nav aria-label="Back to writing" {...stylex.attrs(article.column, piecePage.back, type.small, type.secondary)}>
+    <a href={resolve('/writing')} {...stylex.attrs(site.link, site.backLink, glass.focus)}><Icon name="back" style={site.backIcon} />Writing</a>
+  </nav>
 
   <article aria-labelledby="piece-title">
-    <header {...stylex.attrs(article.column, article.header)}>
-      <p {...stylex.attrs(article.stage)}><PlantIcon stage={piece.stage} />{STAGE_NAMES[piece.stage]}</p>
-      <h1 id="piece-title" {...stylex.attrs(article.title)}>
-        {piece.title}
-      </h1>
-      <p {...stylex.attrs(article.dates)}>
-        <span>Planted <time {...stylex.attrs(article.date)} datetime={piece.planted}>{format(piece.planted)}</time></span>
-        {#if piece.tended !== piece.planted}
-          <span>Last tended <time {...stylex.attrs(article.date)} datetime={piece.tended}>{format(piece.tended)}</time></span>
+    <header {...stylex.attrs(article.column, piecePage.header)}>
+      <p {...stylex.attrs(piecePage.stage, type.small, type.secondary)}><Stage stage={piece.stage} now /></p>
+      <h1 id="piece-title" {...stylex.attrs(article.title, type.h2, reveal.focus)}>{piece.title}</h1>
+      <p {...stylex.attrs(piecePage.dates, type.small, type.muted)}>
+        {#if piece.created}
+          <span>Planted <time {...stylex.attrs(piecePage.date)} datetime={piece.created}>{format(piece.created)}</time></span>
+        {/if}
+        {#if piece.updated && piece.updated !== piece.created}
+          <span>Last tended <time {...stylex.attrs(piecePage.date)} datetime={piece.updated}>{format(piece.updated)}</time></span>
         {/if}
       </p>
       {#if piece.tags.length}
-        <ul {...stylex.attrs(article.tags, article.pieceTags)} aria-label="Topics">
-          {#each piece.tags as tag (tag)}<li {...stylex.attrs(article.tag)}>{tag}</li>{/each}
+        <ul {...stylex.attrs(site.plainList, piecePage.tags, type.small, type.secondary)} aria-label="Topics">
+          {#each piece.tags as tag (tag)}<li {...stylex.attrs(glass.edge, glass.card, piecePage.tag)}>{tag}</li>{/each}
         </ul>
       {/if}
     </header>
@@ -68,8 +107,7 @@
     <Prose blocks={piece.blocks} />
   </article>
 
-  <footer {...stylex.attrs(article.column, article.footer)}>
-    <a href={resolve('writing')}>← Writing</a>
-    <a href="mailto:max@knerrich.com">Get in touch ↗</a>
+  <footer {...stylex.attrs(article.column, article.footer, piece.footnotes && article.footerAfterNotes, type.small, type.secondary)}>
+    <a href={resolve('/writing')} {...stylex.attrs(site.link, site.backLink, glass.focus)}><Icon name="back" style={site.backIcon} />All writing</a>
   </footer>
 </main>

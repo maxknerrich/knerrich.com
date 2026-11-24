@@ -1,11 +1,10 @@
 ---
 stage: seedling # seed (unpublished), seedling, budding or evergreen
 description: Software factories promise set-it-and-forget-it. A better model is a garden, software that grows on its own as long as someone keeps tending it. # suggested
-planted: 2026-11-22
-tended: 2026-11-22
+created: 2026-11-21
 ---
 
-# Your Factory is a **Garden**
+# Your Factory is a Garden
 
 Software factories are all the hype right now. Everybody on Twitter posts highly complex architecture diagrams of their factories, while at the same time companies like [Warp](https://warp.dev) shift their whole business model to them.
 

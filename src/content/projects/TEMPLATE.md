@@ -1,12 +1,23 @@
+---
+year: 2026
+industry: The client's industry
+color: "#3ed42a"
+website: https://example.com/
+# Only `vp dev` and previews show a draft. In production its card links to the website.
+draft: true
+---
+
 # Project name
 
-- Work type
-- Another tag
+- The work done
+- Another service
 
 One or two sentences about the project, also used as the description.
 
-![What the lead image shows](/projects/project-name/lead.jpg)
+![What the cover shows](./cover.jpg)
+
+The paragraphs here sit next to the services list.
 
 ## A section
 
-Write here. Images go in src/lib/assets/projects/project-name/.
+Write here. Images go beside this file, linked as ./image.jpg.

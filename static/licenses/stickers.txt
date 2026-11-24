@@ -1,0 +1,29 @@
+The stickers on the home page (src/lib/Stickers.svelte) show these marks and
+drawings. The logos are their owners' trademarks, shown here to name tools and
+places Max works with; no endorsement is implied.
+
+One-colour marks (src/lib/stickers/marks.ts):
+- Svelte, Nix, Effect, Docker, Figma, TypeScript, React, Next.js and the
+  Porsche crest:
+  Simple Icons 16.36.0, https://simpleicons.org, CC0 1.0.
+- OpenAI: "OpenAI logo 2025 (symbol).svg", Wikimedia Commons, public domain.
+- HdM Stuttgart: "HdM Logo.svg", Wikimedia Commons, by Hochschule der Medien
+  Stuttgart, CC0 1.0 (also its colour file, hdm.svg).
+- LW Works: its logo, as on this site (src/lib/logos/LwWorks.svelte).
+- Local-first software: Ink & Switch,
+  https://www.inkandswitch.com/static/logo/local-first-software-small.svg
+
+Colour files (static/stickers), each with its viewBox fitted to the logo:
+- svelte.svg: the Svelte logo, https://github.com/sveltejs/branding (MIT).
+- nixos.svg: the NixOS snowflake, https://github.com/NixOS/nixos-artwork,
+  by Tim Cuthbertson and the NixOS contributors, CC BY 4.0.
+- typescript.svg: the TypeScript logo, https://www.typescriptlang.org/branding/
+- figma.svg: "Figma-logo.svg", Wikimedia Commons, public domain.
+- porsche.svg: "Porsche-seeklogo.svg", Wikimedia Commons, CC BY 4.0 (optimised
+  with SVGO).
+- porsche-911.svg: "Porsche 911 targa profile.svg", Wikimedia Commons, public
+  domain (optimised with SVGO).
+
+The Knerrich symbol is Max's own. The Sydney Opera House and the Claude Code
+mascot (from the block characters Claude Code greets you with) were drawn for
+this site.

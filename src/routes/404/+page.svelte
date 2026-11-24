@@ -1,10 +1,18 @@
-<script lang="ts">
+<script module lang="ts">
   import * as stylex from "@stylexjs/stylex";
-  import { resolve } from "$app/paths";
-  import { article } from "#lib/styles/article.ts";
+  import { rollMarker, space } from "#lib/styles/tokens.stylex.ts";
 
-  // Prerendered to build/404.html, which Cloudflare Pages serves (with status 404)
-  // for any path that doesn't exist. Without it, Pages answers with the homepage.
+  const notFound = stylex.create({
+    message: {
+      marginBlockStart: space["--space-24"],
+    },
+  });
+</script>
+
+<script lang="ts">
+  import { resolve } from "$app/paths";
+  import { article, type } from "#lib/styles/shared.ts";
+  import Roll from "#lib/Roll.svelte";
 </script>
 
 <svelte:head>
@@ -14,10 +22,10 @@
 
 <main id="main" tabindex="-1" {...stylex.attrs(article.page)}>
   <div {...stylex.attrs(article.column)}>
-    <h1 {...stylex.attrs(article.title)}>This page doesn't exist</h1>
-    <p {...stylex.attrs(article.message)}>
-      It may have moved. Try the <a href={resolve("/")}>homepage</a> or the
-      <a href={resolve("/writing")}>writing</a>.
+    <h1 {...stylex.attrs(article.title, type.h2)}>This page doesn't exist</h1>
+    <p {...stylex.attrs(notFound.message, type.lead, type.secondary)}>
+      It may have moved. Try the <a href={resolve("/")} {...stylex.attrs(rollMarker)}><Roll>homepage</Roll></a> or the
+      <a href={resolve("/writing")} {...stylex.attrs(rollMarker)}><Roll>writing</Roll></a>.
     </p>
   </div>
 </main>

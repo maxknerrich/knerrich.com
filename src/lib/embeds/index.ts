@@ -1,24 +1,21 @@
 import type { Component } from "svelte";
-import Iframe from "./Iframe.svelte";
+import SyncLive from "../../content/projects/local-first-api-sync/SyncLive.svelte";
+import SyncSteps from "../../content/projects/local-first-api-sync/SyncSteps.svelte";
+import Chart from "./Chart.svelte";
+import Compare from "./Compare.svelte";
 import type { EmbedName, EmbedProps } from "./props";
-import SyncDiagram from "./SyncDiagram.svelte";
+import Stats from "./Stats.svelte";
+import Tweet from "./Tweet.svelte";
 
-// Svelte components that Markdown can embed, Obsidian style: a fenced code block
-// named after the component, with YAML props inside.
-//
-//   ```iframe
-//   src: https://example.com
-//   title: An example
-//   ```
-//
-// Each component must accept exactly the props its schema in ./props.ts decodes to.
-// Only types come from ./props.ts, so Effect stays out of the browser bundle.
 export const embeds: { [N in EmbedName]: Component<EmbedProps<N>> } = {
-  iframe: Iframe,
-  "sync-diagram": SyncDiagram,
+  compare: Compare,
+  tweet: Tweet,
+  "sync-steps": SyncSteps,
+  "sync-live": SyncLive,
+  stats: Stats,
+  chart: Chart,
 };
 
-/** Pairs an embed's component with its props, for rendering a block of either kind. */
 export const embedFor = <N extends EmbedName>(block: {
   name: N;
   props: EmbedProps<N>;

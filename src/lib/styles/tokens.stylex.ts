@@ -7,6 +7,7 @@ export const media = stylex.defineConsts({
   small: "@media (max-width: 480px)",
   article: "@media (max-width: 1600px)",
   motion: "@media (prefers-reduced-motion: no-preference)",
+  hover: "@media (hover: hover)",
   scrollTimeline: "@supports (animation-timeline: scroll())",
   entrance: "@media (prefers-reduced-motion: no-preference) and (scripting: enabled)",
   noScript: "@media (scripting: none)",
@@ -48,7 +49,7 @@ export const stack = stylex.defineConsts({
 
 export const stickerMotion = stylex.defineConsts({ lift: 1.06, ease: "ease-out" });
 
-export const widths = stylex.defineConsts({ article: "64rem" });
+export const widths = stylex.defineConsts({ article: "64rem", galleryItem: "18rem" });
 
 const glowSurface = "18%";
 
@@ -70,6 +71,7 @@ export const color = stylex.defineVars({
   "--pill": "rgb(0 0 0 / 0.16)",
   "--nav-hover": "rgb(255 255 255 / 0.05)",
   "--brand": green,
+  "--actor-other": "#6ea8fe",
 });
 
 export const effect = stylex.defineVars({
@@ -116,6 +118,11 @@ export const stop = stylex.defineVars({
   "--nav-current-fill-to": "rgb(255 255 255 / 0.04)",
   "--nav-current-edge-from": "rgb(255 255 255 / 0.4)",
   "--nav-current-edge-to": "rgb(67 72 69 / 0.4)",
+});
+
+export const sheet = stylex.defineVars({
+  "--sheet-paper": palette.imagePaper,
+  "--sheet-shadow": "0 1px 2px rgb(0 0 0 / 0.35), 0 16px 40px rgb(0 0 0 / 0.5)",
 });
 
 export const sticker = stylex.defineVars({
@@ -197,6 +204,7 @@ export const text = stylex.defineVars({
   "--type-h3": "clamp(1.375rem, 1.95vw, 1.75rem)",
   "--type-lead": "clamp(1.25rem, 1.67vw, 1.5rem)",
   "--type-body": "clamp(1rem, 1.25vw, 1.125rem)",
+  "--type-reading": "clamp(1.0625rem, 1.45vw, 1.3125rem)",
   "--type-small": "0.875rem",
   "--type-label": "1rem",
   "--type-sticker": { default: "0.75rem", [media.phone]: "0.6rem" },
@@ -240,6 +248,7 @@ export const motion = stylex.defineVars({
   "--switch-delay": `${timing.switchDelayMs}ms`,
   "--duration-roll": "450ms",
   "--duration-zoom": "900ms",
+  "--duration-packet": "1.1s",
   "--duration-entrance": "900ms",
   "--entrance-delay-scale": "1",
   "--reveal-delay": "0ms",
@@ -261,7 +270,7 @@ export const motion = stylex.defineVars({
 });
 
 export const layout = stylex.defineVars({
-  "--measure": "39rem",
+  "--measure": "calc(var(--type-reading) * 31.5)",
   "--box-pad": "1rem",
   "--media-space": "clamp(3rem, 6vw, 5rem)",
   "--outline-bar-height": "2.75rem",
@@ -344,6 +353,10 @@ export const vars = stylex.defineVars({
   "--play": "paused",
 });
 
+export const counter = stylex.defineVars({
+  "--count": stylex.types.integer(0),
+});
+
 export const stickerState = stylex.defineVars({
   "--sticker-x": "0",
   "--sticker-y": "0",
@@ -375,3 +388,7 @@ export const rollMarker = stylex.defineMarker();
 export const headingMarker = stylex.defineMarker();
 
 export const stageMarker = stylex.defineMarker();
+
+export const paperMarker = stylex.defineMarker();
+
+export const tileMarker = stylex.defineMarker();

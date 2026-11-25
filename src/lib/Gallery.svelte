@@ -5,6 +5,7 @@
 
   type Slide = {
     sources: { srcset: string; type: string }[];
+    sizes: string;
     src: string;
     alt: string;
     caption: string;
@@ -19,7 +20,9 @@
       type: source.type,
     }));
     const caption = img.closest("figure")?.querySelector("figcaption")?.textContent?.trim();
-    return { sources, src: img.currentSrc || img.src, alt: img.alt, caption: caption || img.alt };
+    const width = Number(img.getAttribute("width"));
+    const sizes = width > 0 ? `(max-width: ${width}px) 100vw, ${width}px` : "100vw";
+    return { sources, sizes, src: img.currentSrc || img.src, alt: img.alt, caption: caption || img.alt };
   }
 
   export class Gallery {
@@ -115,7 +118,7 @@
       {#key gallery.index}
         <picture {...stylex.attrs(styles.picture)}>
           {#each slide.sources as source (source.type)}
-            <source srcset={source.srcset} type={source.type} sizes="100vw" />
+            <source {...stylex.attrs(styles.source)} srcset={source.srcset} type={source.type} sizes={slide.sizes} />
           {/each}
           <img {...stylex.attrs(styles.image)} src={slide.src} alt={slide.alt} />
         </picture>

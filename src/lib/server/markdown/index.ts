@@ -58,7 +58,7 @@ const toBlocks = (tokens: Token[], options: Options) =>
     for (const token of tokens) {
       if (isEmbed(token)) {
         flush();
-        blocks.push(yield* embedBlock(token.lang, token.text, options.source));
+        blocks.push(yield* embedBlock(token.lang, token.text, options.source, options.figures));
       } else if (token.type === "code") {
         flush();
         blocks.push(yield* codeBlock(token as Tokens.Code, options.source));

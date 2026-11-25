@@ -13,7 +13,7 @@ color: "#d5001c"
 
 Infotainment design for the Porsche Macan and Cayenne, and the tools that helped the team design faster.
 
-![A Porsche infotainment home screen, with apps, time and status in one dock on the left, on a red background](./cover.jpg)
+![Macan GTS interior in red ambient light, its displays in a matching red theme](./cover.jpg)
 
 From August 2023 to March 2025 I worked in Porsche's Driver Experience team in Weissach, first as an intern, then as a working student.
 
@@ -40,17 +40,23 @@ caption: The layout as a diagram. Drag to compare.
 
 I introduced a theming system that connects the interior's ambient light with the background of the interface, so the screens and the cabin share one color.
 
-![Macan GTS interior with red ambient lighting, its displays in a matching red theme](./theme.jpg)
-
-_Macan GTS: the red theme matches the interior light._
+```video
+src: ./theme.mp4
+poster: ./theme.jpg
+alt: A driver picks a theme on the Macan's central display, and the ambient light along the dashboard changes with it, from red to orange to green.
+caption: Picking a theme changes the cabin light with it.
+```
 
 ## Drive and navigation
 
 I helped modernize the Drive screen and the navigation. The Drive screen brings driving modes and vehicle settings together, next to a view of the car.
 
-![Macan infotainment display showing the Drive screen and drive mode selection](./drive.jpg)
-
-_Macan Drive screen._
+```video
+src: ./drive.mp4
+poster: ./drive.jpg
+alt: A driver opens the Drive screen on the Macan's central display and picks a drive mode from a list next to a 3D view of the car.
+caption: The Macan's Drive screen.
+```
 
 I also reworked how development worked with UX inside Porsche. We designed quicker and turned work around much faster, so the concept could land before production.
 
@@ -72,4 +78,4 @@ I ran several Figma workshops to help colleagues build faster.
 
 Presentations used to be made in PowerPoint. I built a system to present straight from Figma: it uses the right components automatically and stays up to date with the designs. That cut a lot of work from every presentation.
 
-_Interior photos courtesy of Porsche, from official press material._
+_Interior photos and videos courtesy of Porsche, from official press material._

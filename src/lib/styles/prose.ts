@@ -15,6 +15,7 @@ import {
   space,
   text,
   vars,
+  widths,
 } from "./tokens.stylex";
 
 const BLOCK_SPACE = space["--space-32"];
@@ -24,8 +25,8 @@ const note = (alpha: number) => `rgb(from ${marks["--note"]} r g b / ${alpha})`;
 export const prose = stylex.create({
   root: {
     color: color["--text-secondary"],
-    fontSize: text["--type-body"],
-    lineHeight: 1.6,
+    fontSize: text["--type-reading"],
+    lineHeight: 1.65,
     letterSpacing: "-0.01em",
     overflowWrap: "anywhere",
   },
@@ -281,6 +282,38 @@ export const parts = stylex.create({
       "[aria-current]": color["--night"],
     },
   },
+
+  galleryList: {
+    display: "flex",
+    gap: space["--space-16"],
+    paddingInlineStart: 0,
+    paddingBlockEnd: space["--space-12"],
+    listStyle: "none",
+    overflowX: "auto",
+    overscrollBehaviorX: "contain",
+    scrollSnapType: "x mandatory",
+    scrollbarWidth: "thin",
+    scrollbarColor: `${color["--hairline"]} transparent`,
+  },
+  galleryItem: {
+    flexShrink: 0,
+    inlineSize: `min(${widths.galleryItem}, 75vw)`,
+    paddingInlineStart: 0,
+    marginBlockStart: 0,
+    scrollSnapAlign: "start",
+  },
+  galleryFigure: {
+    marginBlockStart: 0,
+    marginBlockEnd: 0,
+  },
+  galleryImage: {
+    aspectRatio: "16 / 9",
+    objectFit: "contain",
+  },
+  galleryLabel: {
+    marginBlockStart: space["--space-8"],
+    textAlign: "center",
+  },
 });
 
 export const noteKinds = stylex.create({
@@ -303,6 +336,11 @@ export const roleStyles: Partial<Record<string, StyleXStyles>> = {
   "heading-link": parts.headingLink,
   keys: parts.keys,
   step: parts.step,
+  "gallery-list": parts.galleryList,
+  "gallery-item": parts.galleryItem,
+  "gallery-figure": parts.galleryFigure,
+  "gallery-image": parts.galleryImage,
+  "gallery-label": parts.galleryLabel,
 };
 
 export const tagStyles: Partial<Record<string, StyleXStyles>> = {

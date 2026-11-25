@@ -29,6 +29,20 @@ import pixelPrevious from "./pixel-previous.svg?raw";
 import pixelNext from "./pixel-next.svg?raw";
 import pixelExpand from "./pixel-expand.svg?raw";
 import table from "./table.svg?raw";
+import pixelLaptop from "./pixel-laptop.svg?raw";
+import pixelDatabase from "./pixel-database.svg?raw";
+import pixelSync from "./pixel-sync.svg?raw";
+import pixelGithub from "./pixel-github.svg?raw";
+import pixelCloud from "./pixel-cloud.svg?raw";
+import pixelList from "./pixel-list.svg?raw";
+import pixelUser from "./pixel-user.svg?raw";
+import pixelZap from "./pixel-zap.svg?raw";
+import pixelOffline from "./pixel-offline.svg?raw";
+import pixelHourglass from "./pixel-hourglass.svg?raw";
+import pixelEye from "./pixel-eye.svg?raw";
+import pixelRequests from "./pixel-requests.svg?raw";
+import pixelArchive from "./pixel-archive.svg?raw";
+import pixelSpeed from "./pixel-speed.svg?raw";
 import cross from "./cross.svg?raw";
 import porsche from "../logos/porsche.svg?raw";
 import tldraw from "../logos/tldraw.svg?raw";
@@ -67,6 +81,20 @@ const sources = {
   pixelNext,
   pixelExpand,
   table,
+  pixelLaptop,
+  pixelDatabase,
+  pixelSync,
+  pixelGithub,
+  pixelCloud,
+  pixelList,
+  pixelUser,
+  pixelZap,
+  pixelOffline,
+  pixelHourglass,
+  pixelEye,
+  pixelRequests,
+  pixelArchive,
+  pixelSpeed,
   cross,
   porsche,
   tldraw,
@@ -75,6 +103,8 @@ const sources = {
 };
 
 export type IconName = keyof typeof sources;
+
+export const isIconName = (name: string): name is IconName => Object.hasOwn(sources, name);
 
 const ROOT = /^\s*<svg\b([^>]*)>([\s\S]*)<\/svg>\s*$/;
 const ATTRIBUTE = /([\w:-]+)="([^"]*)"/g;

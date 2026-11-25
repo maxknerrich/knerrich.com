@@ -56,7 +56,6 @@ export const embedProps = {
       Schema.Struct({ label: Schema.NonEmptyString, values: Schema.Array(ChartValue) }),
     ).check(Schema.isMinLength(1)),
     unit: Schema.optional(Schema.NonEmptyString),
-    marker: Schema.optional(Schema.Struct({ value: Schema.Finite, label: Schema.NonEmptyString })),
     caption: Schema.optional(Schema.String),
   }).check(
     Schema.makeFilter(
@@ -71,6 +70,54 @@ export const embedProps = {
         ) || "a range is [low, high]",
     ),
   ),
+  cards: Schema.Struct({
+    items: Schema.Array(
+      Schema.Struct({
+        title: Schema.NonEmptyString,
+        text: Schema.optional(Schema.String),
+        icon: Schema.optional(Schema.NonEmptyString),
+        wide: Schema.optional(Schema.Boolean),
+      }),
+    ).check(Schema.isMinLength(1)),
+  }),
+  timing: Schema.Struct({
+    title: Schema.NonEmptyString,
+    series: Schema.Tuple([Schema.NonEmptyString, Schema.NonEmptyString]),
+    rows: Schema.Array(
+      Schema.Struct({
+        label: Schema.NonEmptyString,
+        values: Schema.Tuple([Schema.Finite, Schema.Finite]),
+        action: Schema.optional(Schema.Literals(["open", "create", "update"])),
+        issues: Schema.optional(Schema.Finite),
+      }),
+    ).check(Schema.isMinLength(1)),
+    marker: Schema.optional(Schema.Struct({ value: Schema.Finite, label: Schema.NonEmptyString })),
+    caption: Schema.optional(Schema.String),
+  }),
+  paper: Schema.Struct({
+    href: Schema.String.check(
+      Schema.isPattern(/^(\/\S+\.pdf|https:\/\/\S+)$/, {
+        message: "must be a /path to a .pdf or an https:// URL",
+      }),
+    ),
+    page: Schema.String.check(
+      Schema.isPattern(/^\.\/\S+\.svg$/, { message: "must be ./<file>.svg beside the piece" }),
+    ),
+    title: Schema.NonEmptyString,
+    pages: Schema.optional(Schema.Finite),
+  }),
+  video: Schema.Struct({
+    src: Schema.String.check(
+      Schema.isPattern(/^\.\/\S+\.mp4$/, { message: "must be ./<file>.mp4 beside the piece" }),
+    ),
+    poster: Schema.String.check(
+      Schema.isPattern(/^\.\/\S+\.(jpg|jpeg|png|webp)$/, {
+        message: "must be ./<image> beside the piece",
+      }),
+    ),
+    alt: Schema.NonEmptyString,
+    caption: Schema.optional(Schema.String),
+  }),
   tweet: Schema.Struct({
     id: Schema.String.check(
       Schema.isPattern(/^\d+$/, { message: "must be the tweet's numeric id" }),
@@ -83,6 +130,16 @@ export const embedProps = {
     id: BlockId,
     autoplay: Schema.optional(Schema.Boolean),
   }),
+  "car-data-live": Schema.Struct({}),
+  "requests-live": Schema.Struct({}),
+  "agent-search-steps": Schema.Struct({
+    id: BlockId,
+    autoplay: Schema.optional(Schema.Boolean),
+  }),
+  "kit-steps": Schema.Struct({
+    id: BlockId,
+    autoplay: Schema.optional(Schema.Boolean),
+  }),
 };
 
 export type EmbedName = keyof typeof embedProps;
@@ -91,4 +148,8 @@ export type EmbedInput<N extends EmbedName> = (typeof embedProps)[N]["Encoded"];
 
 export const isEmbedName = (name: string): name is EmbedName => Object.hasOwn(embedProps, name);
 
-export const VISUALIZATIONS = ["sync-steps"] as const satisfies readonly EmbedName[];
+export const VISUALIZATIONS = [
+  "sync-steps",
+  "agent-search-steps",
+  "kit-steps",
+] as const satisfies readonly EmbedName[];

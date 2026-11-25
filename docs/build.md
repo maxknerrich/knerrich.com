@@ -11,7 +11,7 @@ How the site is built, checked and deployed. For writing content, see [content.m
 - Paths are absolute (`paths.relative: false`). `404.html` is served at whatever URL was missing, so relative asset paths would break there. The site lives at the domain root.
 - A route that isn't prerendered fails the build, except `/writing/[slug]`: the garden may be empty, and then it has nothing to prerender.
 - `enhancedImages()` resizes and converts images (AVIF, WebP) at build. It must come before `sveltekit()` in `plugins`.
-- Article images are made 1920, 1280 and 640 pixels wide: close to the article width (`widths.article`, 64rem) at 2x and 1x, and phones. Vite only reads `import.meta.glob` queries written as literals, so `assets.ts` repeats those numbers instead of deriving them. The `sizes` attribute (`markdown/figures.ts`) is derived from `widths.article`.
+- Article images are made 1920, 1280 and 640 pixels wide: close to the article width (`widths.article`, 64rem) at 2x and 1x, and phones. Vite only reads `import.meta.glob` queries written as literals, so `assets.ts` repeats those numbers instead of deriving them. The `sizes` attribute (`markdown/figures.ts`) is derived from `widths.article`, or `widths.galleryItem` for the images in a gallery row.
 - StyleX adds its CSS after Vite has minified the stylesheet, so it minifies its own rules with Lightning CSS. Its browser targets come from `browserslist` in `package.json`.
 - The StyleX plugin hard-codes `enforce: "pre"` and has no option for it, so it would run its Babel step on raw `.svelte` files and fail to parse them. `vite.config.ts` clears `enforce` so it runs on Svelte's compiled JavaScript instead.
 

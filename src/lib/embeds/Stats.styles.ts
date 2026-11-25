@@ -1,55 +1,46 @@
 import * as stylex from "@stylexjs/stylex";
-import { color, layout, media, radius, reading, space, text } from "#lib/styles/tokens.stylex.ts";
-
-const lit = `color-mix(in oklab, ${color["--brand"]} 22%, ${reading["--viz-surface"]})`;
+import { color, media, space, text } from "#lib/styles/tokens.stylex.ts";
 
 export const stats = stylex.create({
-  card: {
+  list: {
     display: "grid",
-    gap: space["--space-1"],
+    columnGap: space["--space-32"],
+    rowGap: space["--space-40"],
     padding: 0,
     listStyle: "none",
-    overflow: "clip",
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: color["--hairline"],
-    borderRadius: radius["--radius-card"],
-    backgroundColor: color["--hairline"],
   },
-  one: { gridTemplateColumns: "minmax(0, 1fr)" },
   two: { gridTemplateColumns: "repeat(2, minmax(0, 1fr))" },
   three: {
     gridTemplateColumns: { default: "repeat(3, minmax(0, 1fr))", [media.phone]: "minmax(0, 1fr)" },
   },
-  cell: {
+  item: {
+    position: "relative",
+    containerType: "inline-size",
     display: "grid",
-    alignContent: "space-between",
-    gap: { default: space["--space-24"], [media.phone]: space["--space-16"] },
-    minBlockSize: { default: "9rem", [media.phone]: "auto" },
-    padding: layout["--box-pad"],
-    backgroundColor: reading["--viz-surface"],
+    alignContent: "start",
+    gap: space["--space-12"],
+    paddingBlockStart: space["--space-20"],
+    borderBlockStartWidth: 1,
+    borderBlockStartStyle: "solid",
+    borderBlockStartColor: color["--hairline"],
+    "::before": {
+      content: '""',
+      position: "absolute",
+      insetBlockStart: -1,
+      insetInlineStart: 0,
+      inlineSize: space["--space-24"],
+      blockSize: space["--space-2"],
+      backgroundColor: color["--brand"],
+    },
   },
   value: {
     color: color["--text"],
-    fontSize: text["--type-h2"],
+    fontSize: `min(${text["--type-h2"]}, 26cqi)`,
     lineHeight: 1,
     letterSpacing: "-0.04em",
     whiteSpace: "nowrap",
   },
   label: {
-    display: "flex",
-    alignItems: "baseline",
-    gap: space["--space-8"],
-    color: color["--text-secondary"],
-  },
-  dot: {
-    flexShrink: 0,
-    inlineSize: space["--space-8"],
-    blockSize: space["--space-8"],
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: color["--brand"],
-    borderRadius: radius["--radius-xs"],
-    backgroundColor: lit,
+    textWrap: "pretty",
   },
 });

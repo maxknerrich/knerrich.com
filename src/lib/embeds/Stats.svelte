@@ -7,14 +7,14 @@
 
   let { items }: EmbedProps<"stats"> = $props();
 
-  const columns = [stats.one, stats.one, stats.two, stats.three, stats.two];
+  const columns = [undefined, undefined, stats.two, stats.three, stats.two];
 </script>
 
-<ul {...stylex.attrs(stats.card, columns[items.length])}>
+<ul {...stylex.attrs(stats.list, columns[items.length])}>
   {#each items as { value, label } (label)}
-    <li {@attach playInTurn()} {...stylex.attrs(stats.cell, scroll.reveal)}>
+    <li {@attach playInTurn()} {...stylex.attrs(stats.item, scroll.reveal)}>
       <p {...stylex.attrs(stats.value)}>{value}</p>
-      <p {...stylex.attrs(stats.label, type.caps)}><span {...stylex.attrs(stats.dot)}></span>{label}</p>
+      <p {...stylex.attrs(type.small, type.secondary, stats.label)}>{label}</p>
     </li>
   {/each}
 </ul>

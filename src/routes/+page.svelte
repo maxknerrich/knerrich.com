@@ -226,8 +226,8 @@
             {@attach driftOnScroll} {...stylex.attrs(cardMarker, rollMarker, glass.edge, glass.card, landing.project, landing.imageProject)}
           >
             <enhanced:img
-              src={project.hero.picture}
-              alt={project.hero.alt}
+              src={project.card}
+              alt=""
               sizes="(max-width: 600px) 100vw, 50vw"
               loading="lazy"
               decoding="async"

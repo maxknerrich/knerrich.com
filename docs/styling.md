@@ -50,7 +50,7 @@ Where a raw value is right, disable the rule for one line with `// oxlint-disabl
 
 ### Layout
 
-- Text runs at `--measure`. A boxed block (a note, code, an embed, images in writing) is `--measure` plus `--box-pad` each side, and pads itself by `--box-pad`, so its content lines up with the text. A new boxed block needs both.
+- Article text is `--type-reading` (17–21px, larger than the interface's `--type-body`), and runs at `--measure`, 31.5 of it, so lines keep their length as the size changes. A boxed block (a note, code, an embed, images in writing) is `--measure` plus `--box-pad` each side, and pads itself by `--box-pad`, so its content lines up with the text. A new boxed block needs both.
 - Blocks are spaced with margins, not a grid `gap`. Each block kind (`column`, `box`, `wide` in `prose.ts`) has a top margin of `BLOCK_SPACE`; headings, images and embeds ask for more. Neighbouring margins collapse to the larger one, so an image followed by a heading gets the image's space, not both. Gaps would add up.
 - A sticker's frame sets a height from its aspect, not `aspect-ratio`: a tall logo inside would override `aspect-ratio`.
 - The bottom bar is 3.3rem tall from its content and floats `--bar-offset` above the bottom. What opens over it (the contact card, the sticker book) sits at `--above-bar`, 0.45rem above its top. Pages end with `--nav-clearance` of padding so the bar never covers their last line.

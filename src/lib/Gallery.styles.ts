@@ -53,12 +53,17 @@ export const gallery = stylex.create({
   stage: {
     position: "relative",
     display: "grid",
+    gridTemplateRows: "minmax(0, 1fr)",
+    gridTemplateColumns: "minmax(0, 1fr)",
     placeItems: "center",
     minBlockSize: 0,
     paddingInline: { default: space["--space-64"], [media.phone]: 0 },
   },
   picture: {
     display: "contents",
+  },
+  source: {
+    display: "none",
   },
   image: {
     display: "block",

@@ -11,10 +11,13 @@ import {
 } from "#lib/embeds/props.ts";
 import { ContentError } from "#lib/writing/frontmatter.ts";
 import { STEP_HREF } from "#lib/writing/syntax.ts";
-import { steps as syncSteps } from "../../../content/projects/local-first-api-sync/sync-drawing.ts";
-import { pictureFor } from "../assets.ts";
+import { steps as agentSearchSteps } from "../../../content/projects/brunkhorst/agent-search.ts";
+import { steps as kitSteps } from "../../../content/projects/tldraw/kit-steps.ts";
+import { steps as syncSteps } from "../../../content/projects/local-first-api-sync/merge-steps.ts";
+import { isIconName } from "#lib/icons/glyphs.ts";
+import { drawingFor, pictureFor, videoFor } from "../assets.ts";
 import { Tweets } from "../tweets.ts";
-import type { Block } from "./index.ts";
+import type { Block, Figures } from "./index.ts";
 
 type BlockProps<N extends EmbedName> = EmbedProps<N> & {
   data?: TweetData;
@@ -63,6 +66,31 @@ const resolvers = (
           ...(before && { width: before.w, height: before.h }),
         })),
       ),
+    cards: (props) => {
+      const unknown = props.items.find(({ icon }) => icon !== undefined && !isIconName(icon));
+      return unknown
+        ? Effect.fail(fail(`uses icon ${unknown.icon}, which isn't in src/lib/icons/glyphs.ts`))
+        : Effect.succeed(props);
+    },
+    paper: (props) => {
+      const page = drawingFor(props.page, source);
+      return page
+        ? Effect.succeed({ ...props, page })
+        : Effect.fail(fail(`uses ${props.page}, which isn't beside the piece`));
+    },
+    video: (props) => {
+      const src = videoFor(props.src, source);
+      const poster = pictureFor(props.poster, source)?.img;
+      if (!src) return Effect.fail(fail(`uses ${props.src}, which isn't beside the piece`));
+      if (!poster) return Effect.fail(fail(`uses ${props.poster}, which isn't beside the piece`));
+      return Effect.succeed({
+        ...props,
+        src,
+        poster: poster.src,
+        width: poster.w,
+        height: poster.h,
+      });
+    },
     tweet: (props) =>
       Tweets.use((tweets) => tweets.lookup(props.id)).pipe(
         Effect.map((data) => ({ ...props, ...(data && { data }) })),
@@ -70,7 +98,25 @@ const resolvers = (
   };
 };
 
-export const embedBlock = <N extends EmbedName>(name: N, text: string, source: string) =>
+const WIDE_EMBEDS: ReadonlySet<EmbedName> = new Set([
+  "compare",
+  "video",
+  "chart",
+  "timing",
+  "sync-steps",
+  "sync-live",
+  "requests-live",
+  "car-data-live",
+  "agent-search-steps",
+  "kit-steps",
+]);
+
+export const embedBlock = <N extends EmbedName>(
+  name: N,
+  text: string,
+  source: string,
+  figures: Figures,
+) =>
   Effect.gen(function* () {
     const fail = (detail: string) =>
       new ContentError({ message: `${source}: \`${name}\` block ${detail}` });
@@ -82,7 +128,10 @@ export const embedBlock = <N extends EmbedName>(name: N, text: string, source: s
       Schema.decodeUnknownEffect(schema)(input, { onExcessProperty: "error" }).pipe(
         Effect.mapError((error) => fail(error.message)),
       );
-    const { wide = false, ...rest } = yield* decode(EmbedYaml, data ?? {});
+    const { wide = figures === "wide" && WIDE_EMBEDS.has(name), ...rest } = yield* decode(
+      EmbedYaml,
+      data ?? {},
+    );
     const props = yield* decode(embedProps[name], rest);
     const resolve = resolvers(source, fail)[name];
     const block: EmbedBlocks<N>[N] = {
@@ -94,10 +143,11 @@ export const embedBlock = <N extends EmbedName>(name: N, text: string, source: s
     return block;
   });
 
-const STEP_COUNTS = { "sync-steps": syncSteps.length } satisfies Record<
-  (typeof VISUALIZATIONS)[number],
-  number
->;
+const STEP_COUNTS = {
+  "sync-steps": syncSteps.length,
+  "agent-search-steps": agentSearchSteps.length,
+  "kit-steps": kitSteps.length,
+} satisfies Record<(typeof VISUALIZATIONS)[number], number>;
 const isStepped = (name: EmbedName): name is keyof typeof STEP_COUNTS =>
   Object.hasOwn(STEP_COUNTS, name);
 

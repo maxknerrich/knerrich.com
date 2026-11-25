@@ -15,7 +15,7 @@ draft: true
 
 Faster pages, and a car inventory that search engines and AI agents can read, for a dealership with three branches in northern Germany.
 
-![The Autohaus Brunkhorst website on an orange background: the homepage in a desktop browser, and a used Dacia Duster's page on a phone](./cover.jpg)
+![The Autohaus Brunkhorst website on light grey and a block of orange: the homepage in a desktop browser, and a used Dacia Duster's page on a phone](./cover.jpg)
 
 Autohaus Brunkhorst sells and services cars in Zeven, Bremervörde and Hetzwege, with around 1,200 cars in stock. More and more people find a car through a search engine or an AI tool before they ever open the website.
 
@@ -24,18 +24,18 @@ In 2026, with lw.works, I made the site faster and cheaper to run, made the inve
 ```stats
 items:
   - value: 100
-    label: Lighthouse performance on desktop, on all five pages tested
+    label: Lighthouse score on desktop
   - value: 85 s
-    label: per Vercel deploy, from 100–245 s
+    label: per deploy, was up to 245 s
   - value: 22–33%
-    label: smaller pages, with the logo in its own file
+    label: smaller pages
   - value: 1.5 s
-    label: to check formatting, types and lint. A type check alone took 8 s before
+    label: to lint and type-check
 ```
 
 ## Out of the CMS
 
-The site's copy lived in Payload CMS. I moved all of it into the repository, as pages and Markdown files, and removed the CMS. Scheduled entries like job ads and events still go live on their own, without a deploy. The car inventory still comes live from the dealership's inventory system.
+The site's copy lived in Payload CMS. While
 
 Visitors see the same text on all 51 pages I compared, apart from a few fixes to copy that had drifted apart in the CMS. And the pages got faster:
 
@@ -66,9 +66,11 @@ The inventory client cast the system's answers to `any`, and turned every failur
 
 Car pages had a title and not much else. Now each one describes the car as structured data: price, mileage, condition, and the branch it's at, with that branch's address and phone number. Its meta description is written from the same data. The company and the branches say which region they serve.
 
-![A used Dacia Duster's page on the dealership's website, next to the structured data it carries: Car and Product, its mileage of 11,995 km, a price of 21,290 euros, in stock, sold by Autohaus Brunkhorst Bremervörde](./structured-data.jpg)
+```car-data-live
 
-_Google's Rich Results Test finds product snippets, breadcrumbs, local business and organization, all valid._
+```
+
+Google's Rich Results Test finds product snippets, breadcrumbs, local business and organization, all valid.
 
 Google retired its vehicle listing results in 2025, so each car is also typed as a product, which keeps price and stock eligible to show in search results.
 
@@ -80,9 +82,10 @@ AI agents that browse for someone, like Gemini in Chrome or the ChatGPT desktop 
 
 Now the site gives them a WebMCP tool, `search_cars`. The agent asks in plain words and gets the matches back as data.
 
-![Three steps. A visitor asks their browser's agent for "Dacia, Automatik, max. 20.000 €". The agent calls search_cars with brand Dacia, gearbox Automatik and a maximum price of 20,000. The site answers with 19 hits, a link to all results, and the first four cars with their price, mileage, branch and page](./webmcp.jpg)
-
-_A test run: 19 matches, the same 19 the search page shows._
+```agent-search-steps
+id: agent-search
+autoplay: true
+```
 
 The tool uses the endpoints the search page already uses, so an agent's search costs what a visitor's search costs. It returns four cars at most, which keeps the answer within what Chrome passes on to the agent. If a name doesn't match, the error lists the valid ones, so the agent can try again. Browsers without WebMCP skip the tool.
 

@@ -75,20 +75,29 @@
   let {
     title,
     detail,
+    controls,
     children,
-  }: { title: string; detail?: string; children: Snippet } = $props();
+  }: { title: string; detail?: string; controls?: Snippet; children: Snippet } = $props();
 
   const player = new Player();
   const playing = $derived(player.state === "playing");
 </script>
 
-<figure {...stylex.attrs(stepper.card)}>
-  <div {@attach player.attach} {...stylex.attrs(stepper.stage)}>
-    {@render children()}
+<figure {...stylex.attrs(stepper.figure)}>
+  <div {...stylex.attrs(stepper.card, controls && stepper.withControls)}>
+    {#if controls}
+      <aside {...stylex.attrs(stepper.controlPanel)} aria-label="Controls">
+        <p {...stylex.attrs(type.caps, stepper.controlTitle)}>Controls</p>
+        {@render controls()}
+      </aside>
+    {/if}
+    <div {@attach player.attach} {...stylex.attrs(stepper.stage)}>
+      {@render children()}
+    </div>
   </div>
   <figcaption>
     <div {...stylex.attrs(stepper.caption)}>
-      <p {...stylex.attrs(stepper.title, type.caps)}>{title}</p>
+      <p {...stylex.attrs(stepper.title)}>{title}</p>
       {#if detail}<code {...stylex.attrs(stepper.detail)}>{detail}</code>{/if}
     </div>
     <div {...stylex.attrs(stepper.controls, playback.centered)}>

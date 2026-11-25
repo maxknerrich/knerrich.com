@@ -1,0 +1,248 @@
+import * as stylex from "@stylexjs/stylex";
+import {
+  color,
+  font,
+  layout,
+  media,
+  motion,
+  radius,
+  reading,
+  space,
+  text,
+} from "#lib/styles/tokens.stylex.ts";
+
+const narrow = "@container (max-width: 34rem)";
+
+const spin = stylex.keyframes({
+  to: { rotate: "1turn" },
+});
+
+const appear = stylex.keyframes({
+  from: { opacity: 0 },
+});
+
+export const timing = stylex.create({
+  canvas: {
+    position: "relative",
+  },
+  stage: {
+    containerType: "inline-size",
+    display: "grid",
+    paddingBlock: space["--space-48"],
+    paddingInline: { default: space["--space-32"], [media.phone]: layout["--box-pad"] },
+  },
+  layer: {
+    gridRow: 1,
+    gridColumn: 1,
+    alignSelf: "start",
+    minInlineSize: 0,
+  },
+  ghost: {
+    opacity: 0,
+    pointerEvents: "none",
+    overflow: "hidden",
+  },
+  away: {
+    visibility: "hidden",
+  },
+  windows: {
+    display: "grid",
+    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+    gap: { default: space["--space-24"], [narrow]: space["--space-8"] },
+  },
+  window: {
+    minInlineSize: 0,
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: color["--hairline"],
+    borderRadius: radius["--radius-xs"],
+    backgroundColor: color["--nav-hover"],
+  },
+  head: {
+    display: "flex",
+    alignItems: "center",
+    gap: space["--space-8"],
+    blockSize: { default: "3rem", [narrow]: "2.5rem" },
+    paddingInline: { default: space["--space-20"], [narrow]: space["--space-8"] },
+    borderBlockEndWidth: 1,
+    borderBlockEndStyle: "solid",
+    borderBlockEndColor: color["--hairline"],
+    backgroundColor: color["--nav-hover"],
+    color: color["--text-secondary"],
+    whiteSpace: "nowrap",
+  },
+  headIcon: {
+    display: { default: "block", [narrow]: "none" },
+    flexShrink: 0,
+    inlineSize: "1.125rem",
+    blockSize: "1.125rem",
+  },
+  name: {
+    minInlineSize: 0,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  },
+  timer: {
+    flexShrink: 0,
+    marginInlineStart: "auto",
+    fontFamily: font["--font-mono"],
+    fontSize: { default: text["--type-small"], [narrow]: reading["--type-caption"] },
+    fontVariantNumeric: "tabular-nums",
+    color: color["--text-secondary"],
+    textTransform: "none",
+    letterSpacing: 0,
+  },
+  instant: {
+    color: color["--glow"],
+  },
+  body: {
+    position: "relative",
+    display: "grid",
+    alignContent: "start",
+    gap: space["--space-4"],
+    minBlockSize: { default: "15rem", [narrow]: "12rem" },
+    paddingBlock: { default: space["--space-16"], [narrow]: space["--space-8"] },
+    paddingInline: { default: space["--space-12"], [narrow]: space["--space-4"] },
+  },
+  loading: {
+    position: "absolute",
+    inset: 0,
+    display: "grid",
+    placeItems: "center",
+    alignContent: "center",
+    gap: space["--space-12"],
+    color: color["--text-muted"],
+  },
+  spinner: {
+    display: "inline-block",
+    flexShrink: 0,
+    inlineSize: space["--space-16"],
+    blockSize: space["--space-16"],
+    borderWidth: 2,
+    borderStyle: "solid",
+    borderColor: reading["--viz-stroke"],
+    borderBlockStartColor: color["--text"],
+    borderRadius: "50%",
+    animationName: { default: "none", [media.motion]: spin },
+    animationDuration: motion["--duration-zoom"],
+    animationTimingFunction: "linear",
+    animationIterationCount: "infinite",
+  },
+  small: {
+    inlineSize: space["--space-12"],
+    blockSize: space["--space-12"],
+  },
+  issue: {
+    display: "grid",
+    gridTemplateColumns: {
+      default: "2.5rem minmax(0, 1fr) auto",
+      [narrow]: "1.75rem minmax(0, 1fr) auto",
+    },
+    alignItems: "center",
+    gap: { default: space["--space-12"], [narrow]: space["--space-4"] },
+    paddingBlock: { default: space["--space-8"], [narrow]: space["--space-4"] },
+    paddingInline: { default: space["--space-8"], [narrow]: space["--space-4"] },
+    borderRadius: radius["--radius-xs"],
+    fontFamily: font["--font-mono"],
+    fontSize: reading["--type-caption"],
+    transitionProperty: { default: "none", [media.motion]: "background-color" },
+    transitionDuration: motion["--duration-base"],
+  },
+  shown: {
+    animationName: { default: "none", [media.motion]: appear },
+    animationDuration: motion["--duration-base"],
+    animationTimingFunction: motion["--ease-out"],
+  },
+  lit: {
+    backgroundColor: reading["--viz-lit"],
+  },
+  number: {
+    color: color["--text-muted"],
+  },
+  title: {
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+    color: color["--text"],
+  },
+  bar: (size: string) => ({
+    blockSize: space["--space-8"],
+    inlineSize: size,
+    borderRadius: radius["--radius-xs"],
+    backgroundColor: color["--hairline"],
+  }),
+  more: {
+    paddingInline: space["--space-8"],
+    paddingBlockStart: space["--space-4"],
+    fontFamily: font["--font-mono"],
+    fontSize: reading["--type-caption"],
+    color: color["--text-muted"],
+  },
+  panel: {
+    order: { default: 0, [media.phone]: -1 },
+    flexDirection: { default: "column", [media.phone]: "row" },
+    gap: { default: space["--space-12"], [media.phone]: space["--space-8"] },
+    marginBlockEnd: { default: space["--space-16"], [media.phone]: 0 },
+    marginInlineEnd: { default: space["--space-16"], [media.phone]: space["--space-48"] },
+    padding: { default: space["--space-16"], [media.phone]: space["--space-8"] },
+  },
+  panelTitle: {
+    display: { default: "block", [media.phone]: "none" },
+  },
+  choice: {
+    flexGrow: { default: 0, [media.phone]: 1 },
+    flexBasis: { default: "auto", [media.phone]: 0 },
+    display: "flex",
+    alignItems: "center",
+    justifyContent: { default: "flex-start", [media.phone]: "center" },
+    blockSize: { default: "2.75rem", [media.phone]: "2.25rem" },
+    paddingInline: { default: space["--space-16"], [media.phone]: space["--space-8"] },
+    whiteSpace: "nowrap",
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: { default: color["--hairline"], ":hover": color["--text-dim"] },
+    borderRadius: radius["--radius-card"],
+    backgroundColor: color["--nav-hover"],
+    fontSize: { default: text["--type-small"], [media.phone]: reading["--type-caption"] },
+    fontWeight: 500,
+    color: { default: color["--text-secondary"], ":hover": color["--text"] },
+    textAlign: "start",
+    transitionProperty: { default: "none", [media.motion]: "color, border-color" },
+    transitionDuration: motion["--duration-base"],
+  },
+  chosen: {
+    borderColor: { default: color["--glow"], ":hover": color["--glow"] },
+    color: { default: color["--text"], ":hover": color["--text"] },
+  },
+  corner: {
+    position: "absolute",
+    zIndex: 2,
+    insetBlockStart: space["--space-8"],
+    insetInlineEnd: space["--space-8"],
+  },
+  centered: {
+    justifyContent: "center",
+  },
+  table: {
+    inlineSize: "100%",
+    borderCollapse: "collapse",
+    fontVariantNumeric: "tabular-nums",
+    color: color["--text-secondary"],
+  },
+  cell: {
+    paddingBlock: space["--space-12"],
+    paddingInlineEnd: space["--space-16"],
+    borderBlockEndWidth: 1,
+    borderBlockEndStyle: "solid",
+    borderBlockEndColor: color["--hairline"],
+    textAlign: "start",
+    fontWeight: 400,
+  },
+  numeric: {
+    textAlign: "end",
+    fontFamily: font["--font-mono"],
+  },
+  strong: {
+    color: color["--text"],
+  },
+});

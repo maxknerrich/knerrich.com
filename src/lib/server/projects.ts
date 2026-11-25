@@ -57,6 +57,7 @@ const readProject = (path: string, markdown: string, showUnpublished: boolean) =
       website: data.website,
       caseStudy: showUnpublished || !data.draft,
       hero: { src: cover.href, picture, alt: cover.text },
+      card: pictureFor("./card.jpg", path) ?? picture,
       about: about.blocks,
       blocks: story.blocks,
       footnotes: story.footnotes,

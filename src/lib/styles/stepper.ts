@@ -1,15 +1,52 @@
 import * as stylex from "@stylexjs/stylex";
-import { color, font, layout, media, motion, radius, reading, space, text } from "./tokens.stylex";
+import {
+  color,
+  effect,
+  font,
+  layout,
+  media,
+  motion,
+  radius,
+  reading,
+  space,
+  text,
+} from "./tokens.stylex";
+
+const brandLit = `color-mix(in srgb, ${color["--brand"]} 18%, ${reading["--viz-surface"]})`;
 
 export const stepper = stylex.create({
-  card: {
-    paddingBlockStart: layout["--box-pad"],
+  figure: {
+    [color["--glow"]]: color["--brand"],
+    [reading["--viz-lit"]]: brandLit,
+    scrollMarginBlock: layout["--scroll-offset"],
+  },
+  withControls: {
+    display: "grid",
+    gridTemplateColumns: { default: "15rem minmax(0, 1fr)", [media.phone]: "minmax(0, 1fr)" },
+    alignItems: "start",
+  },
+  controlPanel: {
+    order: { default: 0, [media.phone]: 1 },
+    display: "flex",
+    flexDirection: "column",
+    gap: space["--space-12"],
+    margin: space["--space-16"],
+    padding: space["--space-16"],
     borderWidth: 1,
     borderStyle: "solid",
     borderColor: color["--hairline"],
     borderRadius: radius["--radius-card"],
+    backgroundColor: color["--night"],
+    boxShadow: effect["--nav-shadow"],
+  },
+  controlTitle: {
+    paddingBlockEnd: space["--space-4"],
+    color: color["--text-muted"],
+  },
+  card: {
+    paddingBlock: layout["--box-pad"],
+    borderRadius: radius["--radius-card"],
     backgroundColor: reading["--viz-surface"],
-    scrollMarginBlock: layout["--scroll-offset"],
   },
   stage: {
     paddingInline: layout["--box-pad"],
@@ -17,11 +54,17 @@ export const stepper = stylex.create({
   caption: {
     display: "grid",
     gap: space["--space-4"],
-    paddingBlock: space["--space-16"],
-    paddingInline: layout["--box-pad"],
+    paddingBlockStart: space["--space-16"],
+    paddingBlockEnd: space["--space-4"],
+    paddingInline: space["--space-4"],
   },
   title: {
-    color: color["--text-secondary"],
+    fontSize: text["--type-body"],
+    fontWeight: 500,
+    lineHeight: 1.3,
+    letterSpacing: "-0.02em",
+    color: color["--text"],
+    textWrap: "balance",
   },
   detail: {
     fontFamily: font["--font-mono"],
@@ -36,10 +79,7 @@ export const stepper = stylex.create({
     justifyContent: "space-between",
     gap: space["--space-8"],
     paddingBlock: space["--space-8"],
-    paddingInline: `calc(${layout["--box-pad"]} - ${space["--space-8"]})`,
-    borderBlockStartWidth: 1,
-    borderBlockStartStyle: "solid",
-    borderBlockStartColor: color["--hairline"],
+    paddingInline: 0,
     fontSize: text["--type-small"],
     color: color["--text-muted"],
   },

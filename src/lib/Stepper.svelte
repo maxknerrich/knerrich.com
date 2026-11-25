@@ -144,15 +144,17 @@
   }
 </script>
 
-<figure {id} {@attach watch} {@attach tick} {@attach followLinks} {@attach markLinks} {...stylex.attrs(stepper.card)}>
+<figure {id} {@attach watch} {@attach tick} {@attach followLinks} {@attach markLinks} {...stylex.attrs(stepper.figure)}>
+  <div {...stylex.attrs(stepper.card)}>
   <div {...stylex.attrs(stepper.stage)}>
     {@render children(stepping.index)}
+  </div>
   </div>
   <figcaption>
   <div {...stylex.attrs(stepped.captions)}>
     {#each steps as { title, detail }, i (i)}
       <div {...stylex.attrs(stepper.caption, stepped.stacked, i !== stepping.index && stepped.away)}>
-        <p {...stylex.attrs(stepper.title, type.caps)}>{title}</p>
+        <p {...stylex.attrs(stepper.title)}>{title}</p>
         {#if detail}<code {...stylex.attrs(stepper.detail)}>{detail}</code>{/if}
       </div>
     {/each}

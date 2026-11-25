@@ -44,6 +44,10 @@ The case study hero sinks and its cover rises with `animation-timeline` (`src/ro
 - **Contact card.** A popover. Opening is animated in `shootUp`, growing out of the Contact button (its origin is measured from the button). Closing, however it closes, is a CSS transition on `:not(:popover-open)` that shrinks it back. `display` and `overlay` are transitioned with `transition-behavior: allow-discrete`, so it stays shown and in the top layer until the shrink is done.
 - **Buttons** use the plain `ease-out`, not `--ease-out`: that one is nearly done after a frame or two.
 
+## Holo sticker
+
+`HoloSticker.svelte` is the round sticker on each offer card: holo foil (the stickers' `--holo-*` and `--sticker-iris-*` colours) with glitter, and a pixel icon. It slaps onto the card after the card rises in. While the card is hovered or focused (`cardMarker`) the foil runs through its colours, back and forth so the gradient never wraps, a sheen sweeps across and the glitter twinkles.
+
 ## Roll
 
 `Roll.svelte` rolls link text on hover and keyboard focus. The trigger is the link's `:hover`, read through `rollMarker` (`tokens.stylex.ts`), so the link around it must carry `rollMarker`. The rolled-in line is `aria-hidden`.

@@ -1,5 +1,5 @@
 ---
-stage: seedling # seed (unpublished), seedling, budding or evergreen
+stage: seed # seed (unpublished), seedling, budding or evergreen
 description: Software factories promise set-it-and-forget-it. A better model is a garden, software that grows on its own as long as someone keeps tending it. # suggested
 created: 2026-11-21
 ---

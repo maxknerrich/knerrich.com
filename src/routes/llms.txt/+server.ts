@@ -11,7 +11,7 @@ export const GET = () =>
     [
       "# Max Knerrich",
       "",
-      "> Freelance software engineer with a strong UX background, based in Sydney and available worldwide. I build systems and the interfaces that make them useful.",
+      "> I set software teams up to build with agents: feedback loops, environments and validation. I also design and engineer software, from sync engines to car dashboards. Based in Sydney, available worldwide.",
       "",
       "## Projects",
       "",

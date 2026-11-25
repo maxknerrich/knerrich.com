@@ -13,6 +13,7 @@ Everywhere:
 ## Site
 
 - [Landing page](site/landing.md)
+- [Offer cards](site/offers.md)
 - [Header and skip link](site/header.md)
 - [Bottom bar](site/bottom-bar.md)
 - [Contact card](site/contact.md)

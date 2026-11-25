@@ -94,6 +94,7 @@ export const effect = stylex.defineVars({
   "--focus-glow": `0 0 0 1px ${green}, 0 0 10px ${greenAt(0.55)}`,
 
   "--edge-mask": "linear-gradient(#000 0 0), linear-gradient(#000 0 0)",
+  "--glow-mask": "linear-gradient(transparent, #000 45%)",
 });
 
 export const stop = stylex.defineVars({
@@ -256,6 +257,9 @@ export const motion = stylex.defineVars({
   "--focus-blur": "24px",
   "--focus-rise": "0.12em",
   "--duration-reveal": "1.2s",
+  "--duration-holo": "1.4s",
+  "--duration-holo-sweep": "900ms",
+  "--duration-holo-twinkle": "500ms",
   "--reveal-rise": "3rem",
   "--reveal-later": "150ms",
   "--parallax": "6%",

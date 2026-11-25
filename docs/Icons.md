@@ -12,7 +12,7 @@ Shapes that code computes with stay in TypeScript instead: the sticker marks (`s
 ### Which set
 
 - **Phosphor, Regular weight** ([phosphoricons.com](https://phosphoricons.com), MIT) everywhere, brand logos included. Its `viewBox` is `0 0 256 256`.
-- **Pixelarticons** ([pixelarticons.com](https://pixelarticons.com), MIT) wherever the Geist Pixel font is: code block buttons, the visualizations' controls, the reading rail. Their files start with `pixel-` and set `shape-rendering="crispEdges"`, which keeps their edges hard. Their `viewBox` is `0 0 24 24`, drawn in 2-unit pixels, so show them at sizes where each of their pixels lands on whole screen pixels on 2× screens: 12px (the scale of the pixel font, `code.icon`), 18px (the visualizations' controls, `stepper.icon`: each icon pixel is 3 screen pixels) or 24px. Keep those styles on one of these sizes.
+- **Pixelarticons** ([pixelarticons.com](https://pixelarticons.com), MIT) wherever the Geist Pixel font is: code block buttons, the visualizations' controls, the reading rail. The offer cards' holo stickers print one in their middle, at 36px, 24px on phones (`HoloSticker.svelte`). Their files start with `pixel-` and set `shape-rendering="crispEdges"`, which keeps their edges hard. Their `viewBox` is `0 0 24 24`, drawn in 2-unit pixels, so show them at sizes where each of their pixels lands on whole screen pixels on 2× screens: 12px (the scale of the pixel font, `code.icon`), 18px (the visualizations' controls, `stepper.icon`: each icon pixel is 3 screen pixels) or 24px. Keep those styles on one of these sizes.
 
 Licences are in `static/licenses/`.
 

@@ -43,6 +43,8 @@ import pixelEye from "./pixel-eye.svg?raw";
 import pixelRequests from "./pixel-requests.svg?raw";
 import pixelArchive from "./pixel-archive.svg?raw";
 import pixelSpeed from "./pixel-speed.svg?raw";
+import pixelSparkle from "./pixel-sparkle.svg?raw";
+import pixelBrush from "./pixel-brush.svg?raw";
 import cross from "./cross.svg?raw";
 import porsche from "../logos/porsche.svg?raw";
 import tldraw from "../logos/tldraw.svg?raw";
@@ -95,6 +97,8 @@ const sources = {
   pixelRequests,
   pixelArchive,
   pixelSpeed,
+  pixelSparkle,
+  pixelBrush,
   cross,
   porsche,
   tldraw,

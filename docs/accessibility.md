@@ -27,6 +27,10 @@ transitionProperty: { default: "none", [media.motion]: "opacity" },
 - The stepper's counter is `aria-live="polite"` while stepped by hand, and `off` while it plays on its own, so it doesn't talk over the page.
 - Charts hide their drawing and legend (`aria-hidden`) and give screen readers a table of the numbers instead.
 
+### Offer cards
+
+Each offer card is one link, like a project card. It's named by its title and its "Contact me" (`aria-labelledby`), so two links aren't both just "Contact me", and described by its pitch. The holo sticker is `aria-hidden`.
+
 ### Stickers
 
 The stickers (`src/lib/Stickers.svelte`) are an easter egg and decoration only, on purpose:

@@ -18,6 +18,7 @@ const shimmer = stylex.keyframes({
 });
 
 const bleed = `max(100%, 100cqi + 2 * ${layout["--page-margin"]} - 2 * ${layout["--bleed-margin"]})`;
+const full = `calc(100cqi + 2 * ${layout["--page-margin"]})`;
 
 export const landing = stylex.create({
   inline: {
@@ -112,6 +113,92 @@ export const landing = stylex.create({
     blockSize: "0.75rem",
   },
 
+  contact: {
+    position: "relative",
+    isolation: "isolate",
+    paddingBlockStart: layout["--landing-section-space"],
+  },
+  glow: {
+    position: "absolute",
+    insetBlockStart: 0,
+    insetInlineStart: `calc((100% - ${full}) / 2)`,
+    zIndex: -1,
+    inlineSize: full,
+    blockSize: `calc(${layout["--landing-section-space"]} * 3)`,
+    maskImage: effect["--glow-mask"],
+  },
+  offers: {
+    display: "grid",
+    gridTemplateColumns: { default: "repeat(2, minmax(0, 1fr))", [media.phone]: "1fr" },
+    columnGap: space["--space-20"],
+    rowGap: space["--space-64"],
+    marginBlockStart: `calc(${layout["--intro-space"]} + ${space["--space-24"]})`,
+  },
+  offerItem: {
+    display: "grid",
+  },
+  offer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "start",
+    gap: space["--space-16"],
+    padding: { default: space["--space-32"], [media.phone]: space["--space-24"] },
+    color: { default: color["--text"], ":hover": color["--text"] },
+    textDecoration: "none",
+    outlineStyle: "solid",
+    outlineWidth: 1,
+    outlineColor: "transparent",
+    [vars["--edge"]]: {
+      default: effect["--card-edge"],
+      ":hover": effect["--secondary-hover-edge"],
+      ":focus-visible": effect["--secondary-hover-edge"],
+    },
+    boxShadow: {
+      default: "none",
+      ":hover": effect["--secondary-glow"],
+      ":focus-visible": effect["--secondary-glow"],
+    },
+    transitionProperty: { default: "none", [media.motion]: "box-shadow" },
+    transitionDuration: motion["--duration-slow"],
+  },
+  sticker: {
+    position: "absolute",
+    zIndex: 1,
+    insetBlockStart: { default: "-3rem", [media.phone]: "-2.25rem" },
+    insetInlineEnd: { default: space["--space-24"], [media.phone]: space["--space-16"] },
+  },
+  points: {
+    display: "grid",
+    alignSelf: "stretch",
+    gap: space["--space-12"],
+    marginBlockStart: space["--space-8"],
+    paddingBlockStart: space["--space-20"],
+    borderBlockStartWidth: 1,
+    borderBlockStartStyle: "solid",
+    borderBlockStartColor: color["--hairline"],
+  },
+  point: {
+    display: "grid",
+    gridTemplateColumns: "1.125rem minmax(0, 1fr)",
+    columnGap: space["--space-12"],
+  },
+  check: {
+    inlineSize: "1.125rem",
+    blockSize: "1.125rem",
+    marginBlockStart: space["--space-2"],
+    color: color["--glow"],
+  },
+  term: {
+    color: color["--text"],
+  },
+  offerAction: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: space["--space-8"],
+    marginBlockStart: "auto",
+    paddingBlockStart: { default: space["--space-32"], [media.phone]: space["--space-24"] },
+  },
+
   grid: {
     display: "grid",
     gridTemplateColumns: { default: "repeat(2, minmax(0, 1fr))", [media.phone]: "1fr" },
@@ -204,17 +291,6 @@ export const landing = stylex.create({
   },
   education: {
     marginBlockStart: { default: space["--space-160"], [media.phone]: space["--space-96"] },
-  },
-
-  contact: {
-    paddingBlockStart: layout["--landing-section-space"],
-  },
-  contactHeading: {
-    maxInlineSize: "13em",
-    marginBlockStart: space["--space-24"],
-  },
-  contactAction: {
-    marginBlockStart: { default: space["--space-48"], [media.phone]: space["--space-32"] },
   },
 
   grow: {

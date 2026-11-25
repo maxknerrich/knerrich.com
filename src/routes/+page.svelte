@@ -1,6 +1,7 @@
 <script lang="ts">
   import * as stylex from "@stylexjs/stylex";
   import { resolve } from "$app/paths";
+  import BrandGlow from "#lib/BrandGlow.svelte";
   import Button from "#lib/Button.svelte";
   import { EMAIL, MAILTO } from "#lib/contact.ts";
   import OgImage from "#lib/OgImage.svelte";
@@ -9,6 +10,7 @@
   import { playInView } from "#lib/in-view.ts";
   import { easeInOut, followScroll } from "#lib/scroll-follow.ts";
   import Icon from "#lib/icons/Icon.svelte";
+  import HoloSticker from "#lib/HoloSticker.svelte";
   import type { Attachment } from "svelte/attachments";
   import { glass, reveal, scroll, site, type } from "#lib/styles/shared.ts";
   import { cardMarker, rollMarker } from "#lib/styles/tokens.stylex.ts";
@@ -19,6 +21,40 @@
 
   let { data }: PageProps = $props();
   const headline = "I design and engineer software, from sync engines to car dashboards.";
+  const also = headline.replace("I design", "I also design");
+
+  const offers = [
+    {
+      id: "agents",
+      kicker: "Consulting for teams",
+      title: "Building with agents",
+      pitch: "Your team wants to move faster with agents, but isn't sure how to use them well. I work with your developers and your setup until they can.",
+      points: [
+        { term: "Feedback loops", text: "every change is checked as soon as it's written." },
+        { term: "Environments", text: "each agent works in its own copy of the project." },
+        { term: "Validation", text: "types, tests and a real browser before anyone reviews." },
+        { term: "Coaching", text: "what to hand an agent, how to ask, how to check the result." },
+      ],
+      subject: "Consulting: building with agents",
+      icon: "pixelSparkle",
+      tilt: -9,
+    },
+    {
+      id: "design",
+      kicker: "Design and build",
+      title: "Design engineering",
+      pitch: "You have an idea and need someone to make it real. I design it, build it, or both, from first sketch to shipped product.",
+      points: [
+        { term: "", text: "Product and interface design" },
+        { term: "", text: "Design systems and prototypes" },
+        { term: "", text: "Front-end and local-first engineering" },
+        { term: "", text: "Websites and 3D illustration" },
+      ],
+      subject: "Project: design engineering",
+      icon: "pixelBrush",
+      tilt: 8,
+    },
+  ] as const;
 
   const experience = [
     {
@@ -98,15 +134,18 @@
 </script>
 
 <svelte:head>
-  <title>Max Knerrich · Software engineer</title>
+  <title>Max Knerrich · Building with agents, design engineering</title>
   <meta
     name="description"
-    content="{headline} Max Knerrich, freelance software engineer with a strong UX background. Based in Sydney, available worldwide. Ex-Porsche."
+    content="I set software teams up to build with agents: feedback loops, environments and validation. {also} Based in Sydney, available worldwide. Ex-Porsche."
   />
   <link rel="canonical" href="https://knerrich.com/" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Max Knerrich · Software engineer" />
-  <meta property="og:description" content="{headline} Based in Sydney, available worldwide." />
+  <meta property="og:title" content="Max Knerrich · Building with agents, design engineering" />
+  <meta
+    property="og:description"
+    content="I set software teams up to build with agents. {also} Based in Sydney, available worldwide."
+  />
   <meta property="og:url" content="https://knerrich.com/" />
   <OgImage page="index" alt={headline} />
   <meta name="twitter:card" content="summary_large_image" />
@@ -141,7 +180,7 @@
 <main id="main" tabindex="-1" {...stylex.attrs(site.content)}>
   <section aria-labelledby="intro" {...stylex.attrs(landing.hero)}>
     <p {...stylex.attrs(landing.statement, type.h3, scroll.reveal, scroll.now, reveal.delay("500ms"))}>
-      Freelance software engineer with a strong UX background.
+      I set teams up to build with agents. Freelance design engineer.
     </p>
     <div {...stylex.attrs(landing.heroBottom)}>
       <Stickers />
@@ -174,12 +213,8 @@
         />
       </p>
       <p {@attach playInView} {...stylex.attrs(type.body, type.secondary, scroll.reveal, scroll.later)}>
-        Today, I work worldwide on software, interfaces, and prototypes. Outside work, I play and
-        coach American football.
+        Today, I set teams up to build with agents, and I design and build software for clients worldwide.
       </p>
-    </div>
-    <div {@attach playInView} {...stylex.attrs(landing.action, scroll.reveal)}>
-      <Button href={MAILTO}>Let's work together</Button>
     </div>
     <ul
       aria-label="Companies I've worked with"
@@ -256,10 +291,16 @@
     <h2 id="writing-heading" {@attach playInView} {...stylex.attrs(type.h2, scroll.reveal)}>
       Writing. <TypeIn text="Notes I keep tending." />
     </h2>
-    {#if data.recent.length}<WritingList entries={data.recent} />{/if}
-    <div {@attach playInView} {...stylex.attrs(!data.recent.length && landing.action, scroll.reveal)}>
-      <Button href={resolve("/writing")}>All writing</Button>
-    </div>
+    {#if data.recent.length}
+      <WritingList entries={data.recent} />
+      <div {@attach playInView} {...stylex.attrs(scroll.reveal)}>
+        <Button href={resolve("/writing")}>All writing</Button>
+      </div>
+    {:else}
+      <p {@attach playInView} {...stylex.attrs(landing.action, type.lead, type.secondary, scroll.reveal)}>
+        The first pieces are coming soon.
+      </p>
+    {/if}
   </section>
 
   <section
@@ -275,13 +316,39 @@
     {@render rows(education)}
   </section>
 
-  <section id="contact" aria-labelledby="contact-heading" {...stylex.attrs(landing.contact)}>
-    <p {...stylex.attrs(landing.inline, landing.place, type.small, type.secondary)}>Sydney, AU</p>
-    <h2 id="contact-heading" {...stylex.attrs(landing.contactHeading, type.h2)}>
-      Have a project in mind? <span {...stylex.attrs(type.secondary)}>Tell me what you're working on.</span>
+  <section id="contact" aria-labelledby="contact-heading" {...stylex.attrs(landing.contact, landing.column)}>
+    <div {...stylex.attrs(landing.glow)}><BrandGlow /></div>
+    <h2 id="contact-heading" {@attach playInView} {...stylex.attrs(type.h1, scroll.reveal)}>
+      Work with me. <TypeIn text="Two ways to start." />
     </h2>
-    <div {...stylex.attrs(landing.contactAction)}>
-      <Button href={MAILTO} variant="primary">{EMAIL}</Button>
-    </div>
+    <ul {...stylex.attrs(site.plainList, landing.offers)}>
+      {#each offers as offer, i (offer.id)}
+        <li {@attach playInView} {...stylex.attrs(landing.offerItem, scroll.reveal, i % 2 === 1 && scroll.later)}>
+          <a
+            href={`${MAILTO}?subject=${encodeURIComponent(offer.subject)}`}
+            aria-labelledby={`offer-${offer.id} offer-${offer.id}-action`}
+            aria-describedby={`offer-${offer.id}-pitch`}
+            {...stylex.attrs(cardMarker, rollMarker, glass.edge, glass.card, landing.offer)}
+          >
+            <HoloSticker icon={offer.icon} tilt={offer.tilt} style={landing.sticker} />
+            <p {...stylex.attrs(type.caps, type.muted)}>{offer.kicker}</p>
+            <h3 id={`offer-${offer.id}`} {...stylex.attrs(type.h3)}>{offer.title}</h3>
+            <p id={`offer-${offer.id}-pitch`} {...stylex.attrs(type.body, type.secondary)}>{offer.pitch}</p>
+            <ul {...stylex.attrs(site.plainList, landing.points)}>
+              {#each offer.points as point (point.text)}
+                <li {...stylex.attrs(landing.point, type.body, type.secondary)}>
+                  <Icon name="pixelCopied" style={landing.check} />
+                  <span>{#if point.term}<span {...stylex.attrs(landing.term)}>{point.term}:</span>{" "}{/if}{point.text}</span>
+                </li>
+              {/each}
+            </ul>
+            <span id={`offer-${offer.id}-action`} {...stylex.attrs(landing.offerAction, type.body)}>
+              <Icon name="arrow" style={glass.icon} />
+              <Roll hover={EMAIL}>Contact me</Roll>
+            </span>
+          </a>
+        </li>
+      {/each}
+    </ul>
   </section>
 </main>

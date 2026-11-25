@@ -37,7 +37,11 @@
       <a href="/rss.xml">feed</a>.
     </p>
     <div {...stylex.attrs(listPage.list)}>
-      <WritingList entries={data.entries} compact years />
+      {#if data.entries.length}
+        <WritingList entries={data.entries} compact years />
+      {:else}
+        <p {...stylex.attrs(type.lead, type.secondary)}>The first pieces are coming soon.</p>
+      {/if}
     </div>
   </div>
 </main>

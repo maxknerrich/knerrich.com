@@ -11,7 +11,7 @@
     ["home", "Home base"],
     ["work", "Where I've worked"],
     ["tools", "Tools I build with"],
-    ["craft", "How I work"],
+    ["craft", "Building with agents"],
   ] as const;
   type Chapter = (typeof CHAPTERS)[number][0];
   type Sticker = {
@@ -72,7 +72,7 @@
     { label: "Docker", chapter: "tools", mark: marks.docker, ink: p["--brand-docker"] },
     {
       label: "Local-first software",
-      chapter: "craft",
+      chapter: "tools",
       mark: marks.localFirst,
       ink: p["--sticker-ink"],
       at: { pin: "[data-pin=place]", rotate: 10, wide: [18, -10], phone: [14.6, -2.5] },

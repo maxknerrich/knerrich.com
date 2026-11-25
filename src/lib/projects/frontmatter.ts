@@ -14,12 +14,6 @@ export const ProjectFrontmatter = Schema.Struct({
     Schema.String.check(Schema.isPattern(/^https:\/\//, { message: "must be an https:// URL" })),
   ),
   draft: Schema.Boolean.pipe(Schema.withDecodingDefault(Effect.succeed(false))),
-}).check(
-  Schema.makeFilter(
-    ({ draft, website }) =>
-      !draft ||
-      website !== undefined || { path: ["website"], issue: "a draft needs a website to link to" },
-  ),
-);
+});
 
 export type ProjectFrontmatterInput = typeof ProjectFrontmatter.Encoded;

@@ -15,8 +15,8 @@ export const GET = () =>
       "",
       "## Projects",
       "",
-      ...projects.map(({ slug, title, description, caseStudy, website }) =>
-        item(title, caseStudy ? `${SITE}/projects/${slug}` : (website ?? SITE), description),
+      ...projects.map(({ slug, title, description }) =>
+        item(title, `${SITE}/projects/${slug}`, description),
       ),
       "",
       "## Contact",

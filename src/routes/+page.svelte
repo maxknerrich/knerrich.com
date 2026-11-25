@@ -26,7 +26,7 @@
   const offers = [
     {
       id: "agents",
-      kicker: "Consulting for teams",
+      kicker: "Consulting",
       title: "Building with agents",
       pitch: "Your team wants to move faster with agents, but isn't sure how to use them well. I work with your developers and your setup until they can.",
       points: [
@@ -41,7 +41,7 @@
     },
     {
       id: "design",
-      kicker: "Design and build",
+      kicker: "Product",
       title: "Design engineering",
       pitch: "You have an idea and need someone to make it real. I design it, build it, or both, from first sketch to shipped product.",
       points: [
@@ -255,7 +255,7 @@
         <li {@attach playInView} {...stylex.attrs(scroll.reveal, i % 2 === 1 && scroll.later)}>
           <a
             id={`project-${project.slug}`}
-            href={project.caseStudy ? resolve("/projects/[slug]", { slug: project.slug }) : project.website}
+            href={resolve("/projects/[slug]", { slug: project.slug })}
             aria-labelledby={`project-${project.slug}-title`}
             aria-describedby={`project-${project.slug}-meta`}
             {@attach driftOnScroll} {...stylex.attrs(cardMarker, rollMarker, glass.edge, glass.card, landing.project, landing.imageProject)}
@@ -271,7 +271,7 @@
             {@render tagList(project.services)}
             <div {...stylex.attrs(landing.caption)}>
               <h3 id={`project-${project.slug}-title`} {...stylex.attrs(type.h3)}>
-                <Roll hover={project.caseStudy ? "Open case study" : "Visit website"}>{project.title}</Roll>
+                <Roll hover="Open case study">{project.title}</Roll>
               </h3>
               <p id={`project-${project.slug}-meta`} {...stylex.attrs(type.small, type.secondary)}>
                 {project.industry} · {project.year}
@@ -331,7 +331,7 @@
             {...stylex.attrs(cardMarker, rollMarker, glass.edge, glass.card, landing.offer)}
           >
             <HoloSticker icon={offer.icon} tilt={offer.tilt} style={landing.sticker} />
-            <p {...stylex.attrs(type.caps, type.muted)}>{offer.kicker}</p>
+            <p {...stylex.attrs(landing.tag, landing.offerTag, type.small)}>{offer.kicker}</p>
             <h3 id={`offer-${offer.id}`} {...stylex.attrs(type.h3)}>{offer.title}</h3>
             <p id={`offer-${offer.id}-pitch`} {...stylex.attrs(type.body, type.secondary)}>{offer.pitch}</p>
             <ul {...stylex.attrs(site.plainList, landing.points)}>

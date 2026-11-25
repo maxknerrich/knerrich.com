@@ -16,7 +16,7 @@ const PAGE_IDS = ["main", "project-title", "about"];
 const isImageParagraph = (token: Token): token is Tokens.Paragraph =>
   token.type === "paragraph" && token.tokens?.length === 1 && token.tokens[0]?.type === "image";
 
-const readProject = (path: string, markdown: string, showUnpublished: boolean) =>
+const readProject = (path: string, markdown: string) =>
   Effect.gen(function* () {
     const fail = (message: string) => new ContentError({ message: `${path}: ${message}` });
     const { data, body } = yield* readFrontmatter(ProjectFrontmatter, markdown, path);
@@ -55,7 +55,7 @@ const readProject = (path: string, markdown: string, showUnpublished: boolean) =
       industry: data.industry,
       color: data.color,
       website: data.website,
-      caseStudy: showUnpublished || !data.draft,
+      draft: data.draft,
       hero: { src: cover.href, picture, alt: cover.text },
       card: pictureFor("./card.jpg", path) ?? picture,
       about: about.blocks,
@@ -67,14 +67,14 @@ const readProject = (path: string, markdown: string, showUnpublished: boolean) =
 const years = (year: string) => [Number(year.slice(-4)), Number(year.slice(0, 4))] as const;
 
 export const readProjects = (showUnpublished: boolean) =>
-  Effect.forEach(Object.entries(files), ([path, markdown]) =>
-    readProject(path, markdown, showUnpublished),
-  ).pipe(
+  Effect.forEach(Object.entries(files), ([path, markdown]) => readProject(path, markdown)).pipe(
     Effect.map((projects) =>
-      projects.toSorted((a, b) => {
-        const [aLast, aFirst] = years(a.year);
-        const [bLast, bFirst] = years(b.year);
-        return bLast - aLast || bFirst - aFirst;
-      }),
+      projects
+        .filter(({ draft }) => showUnpublished || !draft)
+        .toSorted((a, b) => {
+          const [aLast, aFirst] = years(a.year);
+          const [bLast, bFirst] = years(b.year);
+          return bLast - aLast || bFirst - aFirst;
+        }),
     ),
   );

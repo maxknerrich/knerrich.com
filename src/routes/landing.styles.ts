@@ -161,6 +161,9 @@ export const landing = stylex.create({
     transitionProperty: { default: "none", [media.motion]: "box-shadow" },
     transitionDuration: motion["--duration-slow"],
   },
+  offerTag: {
+    boxShadow: `inset 0 0 0 1px ${color["--hairline"]}`,
+  },
   sticker: {
     position: "absolute",
     zIndex: 1,

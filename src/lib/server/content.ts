@@ -42,8 +42,6 @@ export const entries = pieces.map(
 );
 export type WritingEntry = (typeof entries)[number];
 
-export const caseStudies = projects.filter(({ caseStudy }) => caseStudy);
-
 export const cards = projects.map(
   ({ description: _description, about: _about, blocks: _blocks, footnotes: _footnotes, ...card }) =>
     card,

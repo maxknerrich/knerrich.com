@@ -1,4 +1,4 @@
-import { caseStudies, entries } from "#lib/server/content.ts";
+import { projects, entries } from "#lib/server/content.ts";
 
 export const prerender = true;
 
@@ -7,7 +7,7 @@ const SITE = "https://knerrich.com";
 export const GET = () => {
   const paths = [
     "/",
-    ...caseStudies.map(({ slug }) => `/projects/${slug}`),
+    ...projects.map(({ slug }) => `/projects/${slug}`),
     "/writing",
     ...entries.map(({ slug }) => `/writing/${slug}`),
   ];

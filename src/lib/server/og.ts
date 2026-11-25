@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Renderer } from "@takumi-rs/core";
 import { render } from "svelte/server";
-import { caseStudies, pieces } from "./content.ts";
+import { projects, pieces } from "./content.ts";
 import OgCard from "./OgCard.svelte";
 
 const SIZE = { width: 1200, height: 630 };
@@ -23,7 +23,7 @@ export const cards = new Map<string, Card>([
   ],
   ["writing", { kind: "title", title: "Writing" }],
   ...pieces.map(({ slug, title }): [string, Card] => [`writing/${slug}`, { kind: "title", title }]),
-  ...caseStudies.map(({ slug, hero: cover }): [string, Card] => [
+  ...projects.map(({ slug, hero: cover }): [string, Card] => [
     `projects/${slug}`,
     { kind: "picture", file: join("src/content/projects", slug, cover.src), sticker: true },
   ]),

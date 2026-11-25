@@ -3,7 +3,7 @@ year: 2026
 industry: The client's industry
 color: "#3ed42a"
 website: https://example.com/
-# Only `vp dev` shows a draft. In production its card links to the website.
+# Only `vp dev` shows a draft: every build leaves it out, card and case study.
 draft: true
 ---
 

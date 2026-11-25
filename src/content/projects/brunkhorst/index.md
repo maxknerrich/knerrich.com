@@ -35,7 +35,7 @@ items:
 
 ## Out of the CMS
 
-The site's copy lived in Payload CMS. While
+The site's copy lived in Payload CMS. I moved all of it into the repository, as pages and Markdown files, and removed the CMS. Scheduled entries like job ads and events still go live on their own, without a deploy. The car inventory still comes live from the dealership's inventory system.
 
 Visitors see the same text on all 51 pages I compared, apart from a few fixes to copy that had drifted apart in the CMS. And the pages got faster:
 

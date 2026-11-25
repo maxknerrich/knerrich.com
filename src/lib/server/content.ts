@@ -14,9 +14,7 @@ export class Content extends Context.Service<
   static readonly layer = Layer.effect(
     Content,
     Effect.gen(function* () {
-      const showUnpublished =
-        import.meta.env.DEV ||
-        (process.env.CF_PAGES === "1" && process.env.CF_PAGES_BRANCH !== "main");
+      const showUnpublished = import.meta.env.DEV;
       return Content.of({
         pieces: yield* readPieces(showUnpublished),
         projects: yield* readProjects(showUnpublished),

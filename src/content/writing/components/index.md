@@ -5,7 +5,7 @@ description: Every component a piece of writing can use, in one place, to see th
 
 # The writing toolkit
 
-A test piece for every block and inline component the writing can use. It's a seed, so it only shows in development and on preview deployments.
+A test piece for every block and inline component the writing can use. It's a seed, so it only shows in development.
 
 ## Notes
 

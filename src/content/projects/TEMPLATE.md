@@ -3,7 +3,7 @@ year: 2026
 industry: The client's industry
 color: "#3ed42a"
 website: https://example.com/
-# Only `vp dev` and previews show a draft. In production its card links to the website.
+# Only `vp dev` shows a draft. In production its card links to the website.
 draft: true
 ---
 

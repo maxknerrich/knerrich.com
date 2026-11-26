@@ -74,6 +74,7 @@
   type="article"
   alt={piece.title}
   modified={piece.updated}
+  work={{ kind: "piece", created: piece.created }}
 />
 
 {#if sections.length}

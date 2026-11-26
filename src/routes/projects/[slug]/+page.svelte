@@ -23,6 +23,7 @@
   path={`projects/${project.slug}`}
   type="article"
   alt={project.hero.alt}
+  work={{ kind: "project", year: project.year }}
 />
 
 <main id="main" tabindex="-1" {...stylex.attrs(caseStudy.page, caseStudy.brand(project.color))}>
@@ -45,10 +46,10 @@
 
     <figure {...stylex.attrs(caseStudy.fold)}>
       <enhanced:img
-        {...stylex.attrs(caseStudy.cover)}
+        {...stylex.attrs(caseStudy.cover, caseStudy.ratio(project.hero.picture.img.w, project.hero.picture.img.h))}
         src={project.hero.picture}
         alt={project.hero.alt}
-        sizes="(max-width: 85rem) 100vw, 85rem"
+        sizes={project.hero.sizes}
         fetchpriority="high"
       />
     </figure>

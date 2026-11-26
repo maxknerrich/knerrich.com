@@ -21,6 +21,12 @@ export const compare = stylex.create({
     cursor: "ew-resize",
     touchAction: "pan-y",
   },
+  picture: {
+    display: "contents",
+  },
+  ratio: (width: number, height: number) => ({
+    aspectRatio: `${width} / ${height}`,
+  }),
   before: {
     display: "block",
     inlineSize: "100%",

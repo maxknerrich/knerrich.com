@@ -2,11 +2,11 @@
 
 How authors use them is in [content.md](content.md). This is for changing them.
 
-A block's props are checked against `src/lib/embeds/props.ts` at build, and `index.ts` maps each block name to its component. `index.ts` takes only types from `props.ts`, so Effect stays out of the browser bundle.
+A block's props are checked against `src/lib/embeds/props.ts` at build, and `index.ts` maps each block name to a dynamic import of its component, so a page loads only the embeds it uses. The case study's and piece's universal `load` (`+page.ts`) awaits `loadEmbeds` for the page's blocks, so the components are there before the server renders and before the browser hydrates: nothing flashes or shifts. `embedFor` throws for a component that wasn't loaded. `index.ts` takes only types from `props.ts`, so Effect stays out of the browser bundle.
 
 ## Compare
 
-An invisible native range covers both images: it takes focus and gives screen readers a value, and takes no pointer events, so its thumb maths can't move the divider. The frame takes the pointer instead (`scrub`), setting the divider to wherever the pointer is, so touch isn't limited to a thumb; the images take no pointer events either, so a drag never picks one up. `touch-action: pan-y` keeps vertical swipes scrolling the page. Arrow keys are handled by the component: 2% a press, 10% with Shift. The before image gets its width and height from the build, so the block keeps its size while it loads. It's two images, so it takes the page's image width (`WIDE_EMBEDS` in `src/lib/server/markdown/embeds.ts`): wide on a case study, boxed in writing. So do videos, charts, timings and every visualization, so they all share one width. Other embeds stay boxed unless the block sets `wide: true`.
+An invisible native range covers both images: it takes focus and gives screen readers a value, and takes no pointer events, so its thumb maths can't move the divider. The frame takes the pointer instead (`scrub`), setting the divider to wherever the pointer is, so touch isn't limited to a thumb; the images take no pointer events either, so a drag never picks one up. `touch-action: pan-y` keeps vertical swipes scrolling the page. Arrow keys are handled by the component: 2% a press, 10% with Shift. The before image gets its width and height from the build, so the block keeps its size while it loads. Both images are full `<picture>`s (AVIF, WebP, JPEG) with the article images' `sizes`; the `<picture>` is `display: contents`, so it doesn't change the layout. It's two images, so it takes the page's image width (`WIDE_EMBEDS` in `src/lib/server/markdown/embeds.ts`): wide on a case study, boxed in writing. So do videos, charts, timings and every visualization, so they all share one width. Other embeds stay boxed unless the block sets `wide: true`.
 
 ## Code blocks
 
@@ -47,4 +47,8 @@ Their entrances wait for `playInView` / `playInTurn` (see [motion.md](motion.md)
 
 ## Paper
 
-`page` is an SVG beside the piece, which the build turns into a URL through `drawingFor` (`src/lib/server/assets.ts`): SVGs skip the image pipeline. The sheets behind it fan out on hover and focus through `paperMarker`. The page is drawn with an empty `alt`; the link's label names the paper and the PDF.
+`page` is an SVG beside the piece, which the build turns into a URL through `drawingFor` (`src/lib/server/assets.ts`): SVGs skip the image pipeline.
+
+## Video
+
+`preload="none"`, so a clip downloads nothing while it's far away. A second observer with a viewport of margin sets `preload` to `auto` once the clip is within a screen of the viewport, so it has buffered by the time it's half in view and plays. Pressing play loads it anyway. The `src` stays in the markup, so without JavaScript the browser's controls still play it. The poster is an AVIF of its first frame. The sheets behind it fan out on hover and focus through `paperMarker`. The page is drawn with an empty `alt`; the link's label names the paper and the PDF.

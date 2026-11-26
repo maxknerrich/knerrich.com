@@ -35,6 +35,14 @@
       const sync = () => (this.playing = !node.paused);
       node.addEventListener("play", sync);
       node.addEventListener("pause", sync);
+      const near = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry?.isIntersecting) return;
+          node.preload = "auto";
+          near.disconnect();
+        },
+        { rootMargin: "100% 0px" },
+      );
       const observer = new IntersectionObserver(
         ([entry]) => {
           if (!entry?.isIntersecting) node.pause();
@@ -42,8 +50,10 @@
         },
         { threshold: 0.5 },
       );
+      near.observe(node);
       observer.observe(node);
       return () => {
+        near.disconnect();
         observer.disconnect();
         node.removeEventListener("play", sync);
         node.removeEventListener("pause", sync);
@@ -86,7 +96,7 @@
       muted
       loop
       playsinline
-      preload="metadata"
+      preload="none"
     ></video>
     {#if loop.enhanced}
       <button

@@ -16,6 +16,7 @@ Durations and curves are the `motion` tokens in `src/lib/styles/tokens.stylex.ts
 - `playInTurn(after)` staggers elements that enter together by 70ms. Elements already in view when the page loads also wait `after` ms.
 - `scroll.now` plays at once, `scroll.later` waits `--reveal-later`, `reveal.delay()` sets any delay.
 - The landing page's `h1` uses `reveal.focus` (`shared.ts`), which is behind `media.motion` and never paused: it's the largest paint (LCP), so it comes into focus with the first paint instead of waiting for JavaScript.
+- `focusIn` starts at `opacity: 0.01`, not 0. Chrome doesn't count an element painted at opacity 0 as the LCP until a later frame paints it visible, and on a slow phone that frame waits behind hydration. Under the 24px blur, 0.01 looks the same as 0 (at most one level of difference per pixel); 0.001 didn't count in Chrome.
 
 ## After client-side navigation
 

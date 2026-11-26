@@ -1,6 +1,8 @@
+import * as stylex from "@stylexjs/stylex";
 import type { Element, Root } from "hast";
 import { walkTokens, type Token, type Tokens } from "marked";
-import { widths } from "#lib/styles/tokens.stylex.ts";
+import { gallery as galleryStyles } from "#lib/Gallery.styles.ts";
+import { query, widths } from "#lib/styles/tokens.stylex.ts";
 import { pictureFor } from "../assets.ts";
 import { isElement } from "./html.ts";
 
@@ -91,7 +93,10 @@ export function withFigures(root: Root) {
   return blocks;
 }
 
-const IMAGE_SIZES = `(max-width: ${widths.article}) 100vw, ${widths.article}`;
+export const imageSizes = (width: string, upTo: string) =>
+  `${query.phone} calc(100vw - 2rem), (max-width: ${upTo}) 94.4vw, ${width}`;
+
+export const IMAGE_SIZES = imageSizes(widths.article, "68rem");
 const GALLERY_SIZES = widths.galleryItem;
 
 export function useProcessedImages(node: Element, source: string) {
@@ -114,10 +119,14 @@ function processImages(node: Element, source: string, sizes: string) {
       properties: { srcSet, sizes, type: `image/${format}` },
       children: [],
     }));
+    const ratio = stylex.attrs(galleryStyles.ratio(picture.img.w, picture.img.h));
+    const classes = child.properties.className;
     const img: Element = {
       ...child,
       properties: {
         ...child.properties,
+        className: [...(Array.isArray(classes) ? classes : []), ...(ratio.class?.split(" ") ?? [])],
+        style: ratio.style,
         src: picture.img.src,
         width: picture.img.w,
         height: picture.img.h,

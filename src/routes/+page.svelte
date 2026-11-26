@@ -5,6 +5,7 @@
   import Button from "#lib/Button.svelte";
   import { EMAIL, MAILTO } from "#lib/contact.ts";
   import OgImage from "#lib/OgImage.svelte";
+  import { homeJsonLd, NAME, SITE } from "#lib/site.ts";
   import Stickers from "#lib/Stickers.svelte";
   import TypeIn from "#lib/TypeIn.svelte";
   import { playInView } from "#lib/in-view.ts";
@@ -137,19 +138,21 @@
   <title>Max Knerrich · Building with agents, design engineering</title>
   <meta
     name="description"
-    content="I set software teams up to build with agents: feedback loops, environments and validation. {also} Based in Sydney, available worldwide. Ex-Porsche."
+    content="I set software teams up to build with agents. {also} Sydney, worldwide. Ex-Porsche."
   />
-  <link rel="canonical" href="https://knerrich.com/" />
+  <link rel="canonical" href="{SITE}/" />
+  <meta property="og:site_name" content={NAME} />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Max Knerrich · Building with agents, design engineering" />
   <meta
     property="og:description"
     content="I set software teams up to build with agents. {also} Based in Sydney, available worldwide."
   />
-  <meta property="og:url" content="https://knerrich.com/" />
+  <meta property="og:url" content="{SITE}/" />
   <OgImage page="index" alt={headline} />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:creator" content="@maxknerrich" />
+  {@html homeJsonLd}
 </svelte:head>
 
 {#snippet tagList(tags: readonly string[])}

@@ -226,17 +226,19 @@
     ]);
 </script>
 
-{#snippet slider(name: string, value: number, min: number, max: number, step: number, shown: string, set: (value: number) => void)}
+{#snippet slider(name: string, value: number, min: number, max: number, step: number, shown: string, set: (value: number) => void, spoken?: string)}
   <label {...stylex.attrs(lanes.setting)}>
     <span {...stylex.attrs(lanes.fill(`${((value - min) / (max - min)) * 100}%`))}></span>
     <span {...stylex.attrs(lanes.name)}>{name}</span>
-    <output {...stylex.attrs(lanes.amount)}>{shown}</output>
+    <output aria-hidden="true" {...stylex.attrs(lanes.amount)}>{shown}</output>
     <input
       type="range"
       {min}
       {max}
       {step}
       {value}
+      aria-label={name}
+      aria-valuetext={spoken}
       oninput={(event) => set(Number(event.currentTarget.value))}
       {...stylex.attrs(lanes.range)}
     />
@@ -284,7 +286,7 @@
 >
   {#snippet controls()}
     {@render slider("Edits per minute", editsPerMinute, 1, 12, 1, String(editsPerMinute), (value) => (editsPerMinute = value))}
-    {@render slider("Sync every", syncSeconds, 15, 150, 15, `${syncSeconds} s`, (value) => (syncSeconds = value))}
+    {@render slider("Sync every", syncSeconds, 15, 150, 15, `${syncSeconds} s`, (value) => (syncSeconds = value), `${syncSeconds} seconds`)}
   {/snippet}
   {#key scene}
     <div

@@ -83,11 +83,13 @@
 
   let {
     id,
+    label,
     steps,
     autoplay = false,
     children,
   }: {
     id: string;
+    label: string;
     steps: readonly { title: string; detail?: string }[];
     autoplay?: boolean;
     children: Snippet<[number]>;
@@ -144,14 +146,14 @@
   }
 </script>
 
-<figure {id} {@attach watch} {@attach tick} {@attach followLinks} {@attach markLinks} {...stylex.attrs(stepper.figure)}>
+<figure {id} aria-label={label} aria-describedby="{id}-caption" {@attach watch} {@attach tick} {@attach followLinks} {@attach markLinks} {...stylex.attrs(stepper.figure)}>
   <div {...stylex.attrs(stepper.card)}>
   <div {...stylex.attrs(stepper.stage)}>
     {@render children(stepping.index)}
   </div>
   </div>
   <figcaption>
-  <div {...stylex.attrs(stepped.captions)}>
+  <div id="{id}-caption" {...stylex.attrs(stepped.captions)}>
     {#each steps as { title, detail }, i (i)}
       <div {...stylex.attrs(stepper.caption, stepped.stacked, i !== stepping.index && stepped.away)}>
         <p {...stylex.attrs(stepper.title)}>{title}</p>

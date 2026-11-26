@@ -93,8 +93,8 @@
   <Icon name="arrow" style={glass.icon} />
 {/snippet}
 
-<div {...stylex.attrs(nav.bar)}>
-  <nav aria-label="Main" {...stylex.attrs(nav.panel)}>
+<nav aria-label="Main" {...stylex.attrs(nav.bar)}>
+  <div {...stylex.attrs(nav.panel)}>
     <ul {...stylex.attrs(nav.list)}>
       {#each pages as { href, label } (href)}
         {@const current = href === lit}
@@ -113,7 +113,7 @@
         </li>
       {/each}
     </ul>
-  </nav>
+  </div>
   <button
     type="button"
     popovertarget="contact-card"
@@ -125,7 +125,7 @@
     {...stylex.attrs(glass.button, glass.edge, glass.primary, nav.floating)}>
     Contact
   </button>
-</div>
+</nav>
 
 <section
   id="contact-card"

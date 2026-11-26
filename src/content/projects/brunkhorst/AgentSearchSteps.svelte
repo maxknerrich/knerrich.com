@@ -5,12 +5,12 @@
   import type { EmbedProps } from "#lib/embeds/props.ts";
   import { board } from "#lib/styles/board.ts";
   import { type } from "#lib/styles/shared.ts";
-  import { actors, rows, steps } from "./agent-search";
+  import { actors, label, rows, steps } from "./agent-search";
 
   let { id, autoplay = false }: EmbedProps<"agent-search-steps"> = $props();
 </script>
 
-<Stepper {id} {steps} {autoplay}>
+<Stepper {id} {label} {steps} {autoplay}>
   {#snippet children(index)}
     {@const step = steps[index] ?? steps[0]}
     <div {...stylex.attrs(board.row)}>

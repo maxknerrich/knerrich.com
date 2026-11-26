@@ -15,15 +15,20 @@ import { steps as agentSearchSteps } from "../../../content/projects/brunkhorst/
 import { steps as kitSteps } from "../../../content/projects/tldraw/kit-steps.ts";
 import { steps as syncSteps } from "../../../content/projects/local-first-api-sync/merge-steps.ts";
 import { isIconName } from "#lib/icons/glyphs.ts";
-import { drawingFor, pictureFor, videoFor } from "../assets.ts";
+import { drawingFor, pictureFor, posterFor, videoFor } from "../assets.ts";
 import { Tweets } from "../tweets.ts";
+import { IMAGE_SIZES } from "./figures.ts";
 import type { Block, Figures } from "./index.ts";
 
 type BlockProps<N extends EmbedName> = EmbedProps<N> & {
   data?: TweetData;
   width?: number;
   height?: number;
+  sources?: { before: Sources; after: Sources };
+  sizes?: string;
 };
+
+type Sources = Readonly<Record<string, string>>;
 
 type EmbedBlock<N extends EmbedName> = {
   kind: "embed";
@@ -53,7 +58,7 @@ const resolvers = (
     if (!value.startsWith("./")) return Effect.succeed(undefined);
     const found = pictureFor(value, source);
     return found
-      ? Effect.succeed(found.img)
+      ? Effect.succeed(found)
       : Effect.fail(fail(`uses ${value}, which isn't beside the piece`));
   };
   return {
@@ -61,9 +66,11 @@ const resolvers = (
       Effect.all([picture(props.before), picture(props.after)]).pipe(
         Effect.map(([before, after]) => ({
           ...props,
-          before: before?.src ?? props.before,
-          after: after?.src ?? props.after,
-          ...(before && { width: before.w, height: before.h }),
+          before: before?.img.src ?? props.before,
+          after: after?.img.src ?? props.after,
+          ...(before && { width: before.img.w, height: before.img.h }),
+          sources: { before: before?.sources ?? {}, after: after?.sources ?? {} },
+          sizes: IMAGE_SIZES,
         })),
       ),
     cards: (props) => {
@@ -80,7 +87,7 @@ const resolvers = (
     },
     video: (props) => {
       const src = videoFor(props.src, source);
-      const poster = pictureFor(props.poster, source)?.img;
+      const poster = posterFor(props.poster, source)?.img;
       if (!src) return Effect.fail(fail(`uses ${props.src}, which isn't beside the piece`));
       if (!poster) return Effect.fail(fail(`uses ${props.poster}, which isn't beside the piece`));
       return Effect.succeed({

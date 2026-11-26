@@ -178,6 +178,7 @@
   let layer = $state<HTMLElement>();
   let drawer = $state<HTMLElement>();
   let open = $state(false);
+  let shelved = $state(false);
   let near = $state(false);
   let peeking = $state(false);
   let cover = $state<HTMLElement>();
@@ -265,19 +266,27 @@
         if (item?.placed) measure(item);
       }
     });
-    mounted = true;
     const resized = () => {
       layerRect = undefined;
       for (const item of items) if (!item.moved && item.phase === "flat") place(item);
     };
     const page = new ResizeObserver(resized);
-    void tick()
-      .then(() => document.fonts.ready)
-      .then(() => {
-        scatter();
-        fallIn();
-        if (layer) page.observe(layer);
+    const hydrated = performance.now();
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const painted = requestAnimationFrame(() => {
+      timer = setTimeout(() => {
+        const waited = performance.now() - hydrated;
+        mounted = true;
+        void tick()
+          .then(() => document.fonts.ready)
+          .then(() => {
+            scatter();
+            fallIn(waited);
+            if (layer) page.observe(layer);
+            timer = setTimeout(() => (shelved = true));
+          });
       });
+    });
 
     const scrolled = () => {
       layerRect = undefined;
@@ -299,6 +308,8 @@
       removeEventListener("scroll", scrolled);
       removeEventListener("blur", blurred);
       removeEventListener("wheel", wheeled);
+      cancelAnimationFrame(painted);
+      clearTimeout(timer);
       sizes?.disconnect();
       page.disconnect();
       clearTimeout(stillTimer);
@@ -317,7 +328,7 @@
   };
 
   function sideways(node: HTMLElement) {
-    let target = node.scrollLeft;
+    let target = 0;
     let frame = 0;
     const end = () => node.scrollWidth - node.clientWidth;
     const glide = () => {
@@ -570,7 +581,7 @@
       }
   }
 
-  function fallIn() {
+  function fallIn(waited: number) {
     if (!layer) return;
     const { top } = layer.getBoundingClientRect();
     const onPage = items.filter((item) => !item.inBook);
@@ -578,7 +589,8 @@
     const onScreen = onPage
       .filter((item) => top + item.y < innerHeight)
       .toSorted((a, b) => a.y - b.y || a.x - b.x);
-    for (const [index, item] of onScreen.entries()) item.fall = FALL_AFTER + index * FALL_STAGGER;
+    const after = Math.max(0, FALL_AFTER - waited);
+    for (const [index, item] of onScreen.entries()) item.fall = after + index * FALL_STAGGER;
   }
 
   function freeSpot({ width, height }: Outline, zone: Box, avoid: Box[], hang = 0) {
@@ -1115,32 +1127,34 @@
           <Icon name="cross" style={stickers.bookIcon} />
         </button>
       </header>
-      <div {@attach sideways} {...stylex.attrs(stickers.shelf, dragging && stickers.shelfDragging)}>
-        {#each CHAPTERS as [chapter, title] (chapter)}
-          <section {...stylex.attrs(stickers.chapter)}>
-            <h2 {...stylex.attrs(stickers.chapterTitle)}>{title}</h2>
-            <ul {...stylex.attrs(stickers.chapterRow)}>
-              {#each items.filter((item) => item.chapter === chapter) as item (item.label)}
-              {@const frame = frameOf(item)}
-              <li {...stylex.attrs(stickers.slot)}>
-                <span {...stylex.attrs(stickers.slotFrame, stickers.frame(frame.width, frame.aspect))}>
-                  {#if item.inBook}
-                    {@render sticker(item)}
-                  {:else if item.badge}
-                    <span {...stylex.attrs(stickers.slotEdge)}></span>
-                  {:else}
-                    <svg {...stylex.attrs(stickers.slotOutline)}>
-                      <image href={maskOf(cutOf(item.mark), true)} width="100%" height="100%" preserveAspectRatio="none" filter="url(#sticker-outline)" />
-                    </svg>
-                  {/if}
-                </span>
-                <span {...stylex.attrs(stickers.slotLabel)}>{item.label}</span>
-              </li>
-              {/each}
-            </ul>
-          </section>
-        {/each}
-      </div>
+      {#if shelved}
+        <div {@attach sideways} {...stylex.attrs(stickers.shelf, dragging && stickers.shelfDragging)}>
+          {#each CHAPTERS as [chapter, title] (chapter)}
+            <section {...stylex.attrs(stickers.chapter)}>
+              <h2 {...stylex.attrs(stickers.chapterTitle)}>{title}</h2>
+              <ul {...stylex.attrs(stickers.chapterRow)}>
+                {#each items.filter((item) => item.chapter === chapter) as item (item.label)}
+                {@const frame = frameOf(item)}
+                <li {...stylex.attrs(stickers.slot)}>
+                  <span {...stylex.attrs(stickers.slotFrame, stickers.frame(frame.width, frame.aspect))}>
+                    {#if item.inBook}
+                      {@render sticker(item)}
+                    {:else if item.badge}
+                      <span {...stylex.attrs(stickers.slotEdge)}></span>
+                    {:else}
+                      <svg {...stylex.attrs(stickers.slotOutline)}>
+                        <image href={maskOf(cutOf(item.mark), true)} width="100%" height="100%" preserveAspectRatio="none" filter="url(#sticker-outline)" />
+                      </svg>
+                    {/if}
+                  </span>
+                  <span {...stylex.attrs(stickers.slotLabel)}>{item.label}</span>
+                </li>
+                {/each}
+              </ul>
+            </section>
+          {/each}
+        </div>
+      {/if}
       <svg width="0" height="0" {...stylex.attrs(stickers.defs)}>
         <filter id="sticker-outline">
           <feMorphology in="SourceAlpha" operator="erode" radius="1.25" result="inner" />

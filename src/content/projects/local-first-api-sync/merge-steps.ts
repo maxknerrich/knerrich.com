@@ -18,6 +18,8 @@ const userEdits: Entry[] = [
 ];
 const theirs: Entry = { by: "github", field: "title" };
 
+export const label = "How a sync run merges an issue edited on the device and renamed on GitHub";
+
 export const steps: {
   title: string;
   detail: string;

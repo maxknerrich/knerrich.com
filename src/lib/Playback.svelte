@@ -79,24 +79,25 @@
     children,
   }: { title: string; detail?: string; controls?: Snippet; children: Snippet } = $props();
 
+  const uid = $props.id();
   const player = new Player();
   const playing = $derived(player.state === "playing");
 </script>
 
-<figure {...stylex.attrs(stepper.figure)}>
+<figure aria-labelledby="{uid}-caption" {...stylex.attrs(stepper.figure)}>
   <div {...stylex.attrs(stepper.card, controls && stepper.withControls)}>
     {#if controls}
-      <aside {...stylex.attrs(stepper.controlPanel)} aria-label="Controls">
+      <div {...stylex.attrs(stepper.controlPanel)} role="group" aria-label="Controls">
         <p {...stylex.attrs(type.caps, stepper.controlTitle)}>Controls</p>
         {@render controls()}
-      </aside>
+      </div>
     {/if}
     <div {@attach player.attach} {...stylex.attrs(stepper.stage)}>
       {@render children()}
     </div>
   </div>
   <figcaption>
-    <div {...stylex.attrs(stepper.caption)}>
+    <div id="{uid}-caption" {...stylex.attrs(stepper.caption)}>
       <p {...stylex.attrs(stepper.title)}>{title}</p>
       {#if detail}<code {...stylex.attrs(stepper.detail)}>{detail}</code>{/if}
     </div>

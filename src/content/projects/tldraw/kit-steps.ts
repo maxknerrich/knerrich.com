@@ -1,5 +1,7 @@
 export type Depth = "none" | "copy" | "solid";
 
+export const label = "How a kit part goes from a flat drawing to a soft isometric visual";
+
 export const steps: {
   title: string;
   detail: string;

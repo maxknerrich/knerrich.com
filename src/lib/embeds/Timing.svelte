@@ -51,6 +51,7 @@
   import { timing } from "./Timing.styles";
 
   let { title, series, rows, marker, caption }: EmbedProps<"timing"> = $props();
+  const uid = $props.id();
 
   let selected = $state(0);
   let showTable = $state(false);
@@ -146,9 +147,9 @@
   </section>
 {/snippet}
 
-<figure {@attach startInView} {...stylex.attrs(stepper.figure)}>
+<figure aria-labelledby="{uid}-caption" {@attach startInView} {...stylex.attrs(stepper.figure)}>
   <div {...stylex.attrs(stepper.card, stepper.withControls, timing.canvas)}>
-    <aside {...stylex.attrs(stepper.controlPanel, timing.panel)} aria-label="Controls">
+    <div {...stylex.attrs(stepper.controlPanel, timing.panel)} role="group" aria-label="Controls">
       <p {...stylex.attrs(type.caps, stepper.controlTitle, timing.panelTitle)}>Replay</p>
       {#each rows as option, i (option.label)}
         <button
@@ -160,7 +161,7 @@
           {option.label}
         </button>
       {/each}
-    </aside>
+    </div>
     <div {...stylex.attrs(timing.stage)}>
       <div {...stylex.attrs(timing.layer, !showTable && timing.ghost)}>
         <table {...stylex.attrs(timing.table)}>
@@ -205,7 +206,7 @@
     </div>
   </div>
   <figcaption>
-    <div {...stylex.attrs(stepper.caption)}>
+    <div id="{uid}-caption" {...stylex.attrs(stepper.caption)}>
       <p {...stylex.attrs(stepper.title)}>{title}</p>
       {#if caption}<span {...stylex.attrs(stepper.detail)}>{caption}</span>{/if}
     </div>

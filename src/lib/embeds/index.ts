@@ -1,41 +1,40 @@
 import type { Component } from "svelte";
-import AgentSearchSteps from "../../content/projects/brunkhorst/AgentSearchSteps.svelte";
-import CarDataLive from "../../content/projects/brunkhorst/CarDataLive.svelte";
-import RequestsLive from "../../content/projects/local-first-api-sync/RequestsLive.svelte";
-import SyncLive from "../../content/projects/local-first-api-sync/SyncLive.svelte";
-import SyncSteps from "../../content/projects/local-first-api-sync/SyncSteps.svelte";
-import Cards from "./Cards.svelte";
-import KitSteps from "../../content/projects/tldraw/KitSteps.svelte";
-import Chart from "./Chart.svelte";
-import Compare from "./Compare.svelte";
+import type { Block } from "#lib/server/markdown/index.ts";
 import type { EmbedName, EmbedProps } from "./props";
-import Paper from "./Paper.svelte";
-import Stats from "./Stats.svelte";
-import Timing from "./Timing.svelte";
-import Tweet from "./Tweet.svelte";
-import Video from "./Video.svelte";
 
-export const embeds: { [N in EmbedName]: Component<EmbedProps<N>> } = {
-  compare: Compare,
-  tweet: Tweet,
-  "sync-steps": SyncSteps,
-  "sync-live": SyncLive,
-  "requests-live": RequestsLive,
-  stats: Stats,
-  chart: Chart,
-  cards: Cards,
-  paper: Paper,
-  video: Video,
-  timing: Timing,
-  "car-data-live": CarDataLive,
-  "agent-search-steps": AgentSearchSteps,
-  "kit-steps": KitSteps,
+type Embeds = { [N in EmbedName]: Component<EmbedProps<N>> };
+
+const loaders: { [N in EmbedName]: () => Promise<{ default: Embeds[N] }> } = {
+  compare: () => import("./Compare.svelte"),
+  tweet: () => import("./Tweet.svelte"),
+  "sync-steps": () => import("../../content/projects/local-first-api-sync/SyncSteps.svelte"),
+  "sync-live": () => import("../../content/projects/local-first-api-sync/SyncLive.svelte"),
+  "requests-live": () => import("../../content/projects/local-first-api-sync/RequestsLive.svelte"),
+  stats: () => import("./Stats.svelte"),
+  chart: () => import("./Chart.svelte"),
+  cards: () => import("./Cards.svelte"),
+  paper: () => import("./Paper.svelte"),
+  video: () => import("./Video.svelte"),
+  timing: () => import("./Timing.svelte"),
+  "car-data-live": () => import("../../content/projects/brunkhorst/CarDataLive.svelte"),
+  "agent-search-steps": () => import("../../content/projects/brunkhorst/AgentSearchSteps.svelte"),
+  "kit-steps": () => import("../../content/projects/tldraw/KitSteps.svelte"),
 };
+
+const loaded: Partial<Embeds> = {};
+
+const load = async <N extends EmbedName>(name: N) => {
+  loaded[name] ??= (await loaders[name]()).default;
+};
+
+export const loadEmbeds = (blocks: readonly Block[]) =>
+  Promise.all(blocks.flatMap((block) => (block.kind === "embed" ? [load(block.name)] : [])));
 
 export const embedFor = <N extends EmbedName>(block: {
   name: N;
   props: EmbedProps<N>;
-}): { Embed: Component<EmbedProps<N>>; props: EmbedProps<N> } => ({
-  Embed: embeds[block.name],
-  props: block.props,
-});
+}): { Embed: Component<EmbedProps<N>>; props: EmbedProps<N> } => {
+  const Embed = loaded[block.name];
+  if (!Embed) throw new Error(`The ${block.name} embed wasn't loaded before render`);
+  return { Embed, props: block.props };
+};

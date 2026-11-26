@@ -1,8 +1,8 @@
 import { entries } from "#lib/server/content.ts";
+import { SITE } from "#lib/site.ts";
 
 export const prerender = true;
 
-const SITE = "https://knerrich.com";
 const FEED = `${SITE}/rss.xml`;
 const AUTHOR = "Max Knerrich";
 const FIRST_PIECE = "2026-11-21";

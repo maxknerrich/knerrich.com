@@ -1,14 +1,13 @@
 import { projects, entries } from "#lib/server/content.ts";
+import { SITE } from "#lib/site.ts";
 
 export const prerender = true;
-
-const SITE = "https://knerrich.com";
 
 export const GET = () => {
   const paths = [
     "/",
     ...projects.map(({ slug }) => `/projects/${slug}`),
-    "/writing",
+    ...(entries.length ? ["/writing"] : []),
     ...entries.map(({ slug }) => `/writing/${slug}`),
   ];
   return new Response(

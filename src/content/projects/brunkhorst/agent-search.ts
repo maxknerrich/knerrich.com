@@ -6,6 +6,8 @@ export const actors: { name: string; icon: IconName }[] = [
   { name: "Website", icon: "pixelLaptop" },
 ];
 
+export const label = "How a browser agent searches the cars with the search_cars tool";
+
 export const steps: {
   title: string;
   detail: string;

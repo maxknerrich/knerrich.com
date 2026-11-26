@@ -58,7 +58,7 @@
   import { resolve } from '$app/paths';
   import BottomBar from '#lib/BottomBar.svelte';
   import Mark from '#lib/logos/Mark.svelte';
-  import { symbol } from '#lib/stickers/marks.ts';
+  import { symbol } from '#lib/stickers/symbol.ts';
   import SiteFooter from '#lib/SiteFooter.svelte';
   import { soundSetting, warmOnFirstUse } from '#lib/sound.svelte.ts';
   import { onMount } from 'svelte';
@@ -108,10 +108,10 @@
       </a>
     </header>
 
+    <BottomBar />
+
     {@render children()}
   </div>
 
   <SiteFooter />
-
-  <BottomBar />
 </div>

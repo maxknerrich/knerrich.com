@@ -90,7 +90,7 @@
   import type { StyleXStyles } from "@stylexjs/stylex";
   import type { EmbedProps } from "#lib/embeds/props.ts";
   import { board } from "#lib/styles/board.ts";
-  import { AUTHOR, FIELDS, steps, type Field, type Issue } from "./merge-steps";
+  import { AUTHOR, FIELDS, label, steps, type Field, type Issue } from "./merge-steps";
 
   let { id, autoplay = false }: EmbedProps<"sync-steps"> = $props();
 
@@ -134,7 +134,7 @@
   </span>
 {/snippet}
 
-<Stepper {id} {steps} {autoplay}>
+<Stepper {id} {label} {steps} {autoplay}>
   {#snippet children(index)}
     {@const step = steps[index] ?? steps[0]}
     {@const someone = step.actor === "someone"}

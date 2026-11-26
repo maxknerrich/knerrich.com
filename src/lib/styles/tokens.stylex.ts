@@ -62,7 +62,7 @@ export const color = stylex.defineVars({
   "--overlay": "#151515",
   "--text": palette.text,
   "--text-secondary": "rgb(255 255 255 / 0.6)",
-  "--text-muted": "rgb(255 255 255 / 0.4)",
+  "--text-muted": "rgb(255 255 255 / 0.49)",
   "--text-dim": "rgb(255 255 255 / 0.16)",
   "--glow": green,
   "--glow-surface": `color-mix(in srgb, var(--glow) ${glowSurface}, transparent)`,

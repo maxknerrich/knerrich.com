@@ -18,7 +18,7 @@ export const headingRenderer: RendererObject = {
   heading(token) {
     const id = "id" in token && typeof token.id === "string" ? token.id : slug(token.text);
     const link = `<a href="#${id}" data-role="heading-link" aria-label="Copy link to “${plain(token.text).replaceAll('"', "&quot;")}”" title="Copy link">${iconHtml("link", ' width="16" height="16"')}</a>`;
-    return `<h${token.depth} id="${id}">${this.parser.parseInline(token.tokens)}${link}</h${token.depth}>\n`;
+    return `<h${token.depth} id="${id}" aria-labelledby="${id}--name"><span id="${id}--name">${this.parser.parseInline(token.tokens)}</span>${link}</h${token.depth}>\n`;
   },
 };
 

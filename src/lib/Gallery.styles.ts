@@ -12,6 +12,9 @@ import {
 } from "#lib/styles/tokens.stylex.ts";
 
 export const gallery = stylex.create({
+  ratio: (width: number, height: number) => ({
+    aspectRatio: `${width} / ${height}`,
+  }),
   opener: {
     cursor: "zoom-in",
     outlineStyle: "solid",

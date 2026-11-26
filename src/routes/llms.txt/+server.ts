@@ -1,8 +1,8 @@
 import { projects } from "#lib/server/content.ts";
+import { SITE } from "#lib/site.ts";
 
 export const prerender = true;
 
-const SITE = "https://knerrich.com";
 const item = (title: string, url: string, description: string) =>
   `- [${title}](${url}): ${description}`;
 

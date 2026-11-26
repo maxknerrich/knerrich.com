@@ -28,15 +28,17 @@ let hiss: AudioBuffer | undefined;
 
 export function warm() {
   if (context || soundSetting.quiet || !navigator.userActivation?.hasBeenActive) return;
-  context = new AudioContext();
-  crackleOf(context);
-  hissOf(context);
+  const ctx = (context = new AudioContext());
+  whenIdle(() => crackleOf(ctx));
+  whenIdle(() => hissOf(ctx));
 }
+
+const whenIdle = (task: () => void) => (globalThis.requestIdleCallback ?? setTimeout)(task);
 
 export function warmOnFirstUse() {
   const later = () => {
     stop();
-    (globalThis.requestIdleCallback ?? setTimeout)(warm);
+    whenIdle(warm);
   };
   const stop = () => {
     removeEventListener("pointerdown", later);

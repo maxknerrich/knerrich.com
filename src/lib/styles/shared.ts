@@ -176,7 +176,7 @@ export const glass = stylex.create({
 
 const focusIn = stylex.keyframes({
   from: {
-    opacity: 0,
+    opacity: 0.01,
     filter: `blur(${motion["--focus-blur"]})`,
     translate: `0 ${motion["--focus-rise"]}`,
   },

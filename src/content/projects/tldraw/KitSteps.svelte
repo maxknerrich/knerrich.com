@@ -117,12 +117,12 @@
 <script lang="ts">
   import Stepper from "#lib/Stepper.svelte";
   import type { EmbedProps } from "#lib/embeds/props.ts";
-  import { steps } from "./kit-steps";
+  import { label, steps } from "./kit-steps";
 
   let { id, autoplay = false }: EmbedProps<"kit-steps"> = $props();
 </script>
 
-<Stepper {id} {steps} {autoplay}>
+<Stepper {id} {label} {steps} {autoplay}>
   {#snippet children(index)}
     {@const step = steps[index]}
     <div {...stylex.attrs(kit.stage)} aria-hidden="true">

@@ -4,6 +4,7 @@ import { enhancedImages } from "@sveltejs/enhanced-img";
 import { sveltekit } from "@sveltejs/kit/vite";
 import stylex from "@stylexjs/unplugin";
 import { defineConfig } from "vite-plus";
+import { contentMedia } from "./tools/content-media.ts";
 
 export default defineConfig({
   server: { host: "0.0.0.0" },
@@ -40,11 +41,13 @@ export default defineConfig({
   },
   build: { cssTarget: "esnext" },
   plugins: [
+    contentMedia(),
     enhancedImages(),
     sveltekit({
       preprocess: vitePreprocess(),
       adapter: adapter(),
       paths: { relative: false },
+      version: { name: process.env.CF_PAGES_COMMIT_SHA },
       prerender: {
         handleUnseenRoutes: ({ routes, message }) => {
           if (routes.some((route) => route !== "/writing/[slug]")) throw new Error(message);

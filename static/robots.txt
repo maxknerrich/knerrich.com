@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://knerrich.com/sitemap.xml
+Sitemap: https://www.knerrich.com/sitemap.xml

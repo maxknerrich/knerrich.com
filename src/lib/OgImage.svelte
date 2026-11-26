@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { ogImage } from "./site.ts";
+
   let { page, alt }: { page: string; alt: string } = $props();
-  const src = $derived(`https://knerrich.com/og/${page}.jpg`);
+  const src = $derived(ogImage(page));
 </script>
 
 <meta property="og:image" content={src} />

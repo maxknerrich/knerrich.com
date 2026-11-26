@@ -2,7 +2,8 @@ import { Effect } from "effect";
 import type { Token, Tokens } from "marked";
 import { ProjectFrontmatter } from "#lib/projects/frontmatter.ts";
 import { ContentError, readFrontmatter } from "#lib/writing/frontmatter.ts";
-import { pictureFor } from "./assets.ts";
+import { cardFor, pictureFor } from "./assets.ts";
+import { imageSizes } from "./markdown/figures.ts";
 import { inlineText, markdown as marked, renderMarkdown } from "./markdown/index.ts";
 
 const files = import.meta.glob<string>("/src/content/projects/*/index.md", {
@@ -12,14 +13,16 @@ const files = import.meta.glob<string>("/src/content/projects/*/index.md", {
 });
 
 const PAGE_IDS = ["main", "project-title", "about"];
+const HERO_SIZES = imageSizes("85rem", "90rem");
 
 const isImageParagraph = (token: Token): token is Tokens.Paragraph =>
   token.type === "paragraph" && token.tokens?.length === 1 && token.tokens[0]?.type === "image";
 
-const readProject = (path: string, markdown: string) =>
+const readProject = (path: string, markdown: string, showUnpublished: boolean) =>
   Effect.gen(function* () {
     const fail = (message: string) => new ContentError({ message: `${path}: ${message}` });
     const { data, body } = yield* readFrontmatter(ProjectFrontmatter, markdown, path);
+    if (data.draft && !showUnpublished) return undefined;
     const tokens = marked.lexer(body).filter((token) => token.type !== "space");
     const [heading, second] = tokens;
     const services = second?.type === "list" ? (second as Tokens.List) : undefined;
@@ -56,8 +59,8 @@ const readProject = (path: string, markdown: string) =>
       color: data.color,
       website: data.website,
       draft: data.draft,
-      hero: { src: cover.href, picture, alt: cover.text },
-      card: pictureFor("./card.jpg", path) ?? picture,
+      hero: { src: cover.href, picture, alt: cover.text, sizes: HERO_SIZES },
+      card: cardFor("./card.jpg", path) ?? picture,
       about: about.blocks,
       blocks: story.blocks,
       footnotes: story.footnotes,
@@ -67,10 +70,12 @@ const readProject = (path: string, markdown: string) =>
 const years = (year: string) => [Number(year.slice(-4)), Number(year.slice(0, 4))] as const;
 
 export const readProjects = (showUnpublished: boolean) =>
-  Effect.forEach(Object.entries(files), ([path, markdown]) => readProject(path, markdown)).pipe(
+  Effect.forEach(Object.entries(files), ([path, markdown]) =>
+    readProject(path, markdown, showUnpublished),
+  ).pipe(
     Effect.map((projects) =>
       projects
-        .filter(({ draft }) => showUnpublished || !draft)
+        .filter((project) => project !== undefined)
         .toSorted((a, b) => {
           const [aLast, aFirst] = years(a.year);
           const [bLast, bFirst] = years(b.year);

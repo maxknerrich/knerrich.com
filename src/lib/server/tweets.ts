@@ -1,5 +1,8 @@
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { Cache, Context, Effect, Layer, Option, Schema } from "effect";
-import type { TweetData } from "#lib/embeds/props.ts";
+import { TweetData } from "#lib/embeds/props.ts";
 
 const Entity = Schema.Struct({
   url: Schema.String,
@@ -89,13 +92,33 @@ const fetchTweet = (id: string) =>
     Effect.map(Option.getOrUndefined),
   );
 
+const BUILD_CACHE = join(tmpdir(), `knerrich-tweets-${process.pid}`);
+const Cached = Schema.fromJsonString(Schema.NullOr(TweetData));
+
+const fromBuildCache = (id: string) =>
+  Effect.try(() => readFileSync(join(BUILD_CACHE, `${id}.json`), "utf8")).pipe(
+    Effect.flatMap(Schema.decodeEffect(Cached)),
+    Effect.map((data) => data ?? undefined),
+  );
+
+const toBuildCache = (id: string, data: TweetData | undefined) =>
+  Effect.try(() => {
+    mkdirSync(BUILD_CACHE, { recursive: true });
+    writeFileSync(join(BUILD_CACHE, `${id}.json`), JSON.stringify(data ?? null));
+  }).pipe(Effect.ignore);
+
+const lookupTweet = (id: string) =>
+  fromBuildCache(id).pipe(
+    Effect.catch(() => fetchTweet(id).pipe(Effect.tap((data) => toBuildCache(id, data)))),
+  );
+
 export class Tweets extends Context.Service<
   Tweets,
   { readonly lookup: (id: string) => Effect.Effect<TweetData | undefined> }
 >()("knerrich/server/Tweets") {
   static readonly layer = Layer.effect(
     Tweets,
-    Cache.make({ lookup: fetchTweet, capacity: Number.POSITIVE_INFINITY }).pipe(
+    Cache.make({ lookup: lookupTweet, capacity: Number.POSITIVE_INFINITY }).pipe(
       Effect.map((cache) => Tweets.of({ lookup: (id) => Cache.get(cache, id) })),
     ),
   );

@@ -16,7 +16,14 @@
     caption,
     width,
     height,
-  }: EmbedProps<"compare"> & { width?: number; height?: number } = $props();
+    sources = { before: {}, after: {} },
+    sizes,
+  }: EmbedProps<"compare"> & {
+    width?: number;
+    height?: number;
+    sources?: { before: Record<string, string>; after: Record<string, string> };
+    sizes?: string;
+  } = $props();
 
   let position = $state(50);
 
@@ -49,28 +56,41 @@
     return () => stops.forEach((stop) => stop());
   };
 
+  const ratio = $derived(width && height ? compare.ratio(width, height) : undefined);
   const atEnd = $derived(position <= 0 || position >= 100);
   const valueText = $derived(`${Math.round(position)}% ${beforeLabel}, ${100 - Math.round(position)}% ${afterLabel}`);
 </script>
 
+{#snippet formats(srcsets: Record<string, string>)}
+  {#each Object.entries(srcsets) as [format, srcset] (format)}
+    <source {srcset} {sizes} type={`image/${format}`} />
+  {/each}
+{/snippet}
+
 <figure>
   <div {@attach scrub} {...stylex.attrs(compare.frame)}>
-    <img
-      {...stylex.attrs(compare.before, compare.revealBefore(position))}
-      src={before}
-      {alt}
-      {width}
-      {height}
-      loading="lazy"
-      decoding="async"
-    />
-    <img
-      {...stylex.attrs(compare.after, compare.reveal(position))}
-      src={after}
-      alt=""
-      loading="lazy"
-      decoding="async"
-    />
+    <picture {...stylex.attrs(compare.picture)}>
+      {@render formats(sources.before)}
+      <img
+        {...stylex.attrs(compare.before, ratio, compare.revealBefore(position))}
+        src={before}
+        {alt}
+        {width}
+        {height}
+        loading="lazy"
+        decoding="async"
+      />
+    </picture>
+    <picture {...stylex.attrs(compare.picture)}>
+      {@render formats(sources.after)}
+      <img
+        {...stylex.attrs(compare.after, compare.reveal(position))}
+        src={after}
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+    </picture>
     <span {...stylex.attrs(mediaBlock.frosted, compare.label, compare.labelBefore)} aria-hidden="true">{beforeLabel}</span>
     <span {...stylex.attrs(mediaBlock.frosted, compare.label, compare.labelAfter)} aria-hidden="true">{afterLabel}</span>
     <input

@@ -14,7 +14,7 @@ website: https://annex-tracker.de/
 
 Product design for a legal tech tool that helps M&A teams create and keep track of annex lists.
 
-![The Annex Tracker tracker on a dark, grainy background, with a mail and a file version floating beside it](./cover.jpg)
+![The Annex Tracker on a dark, grainy background, with a mail and a file version floating beside it](./cover.jpg)
 
 A share purchase agreement comes with a long list of annexes. Each one goes back and forth between buyer, seller and notary until everyone agrees on it. Annex Tracker keeps that list, and who has which annex, in one place.
 

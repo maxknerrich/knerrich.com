@@ -83,6 +83,9 @@ export const caseStudy = stylex.create({
     animationTimingFunction: "linear",
     animationFillMode: "both",
   },
+  ratio: (width: number, height: number) => ({
+    aspectRatio: `${width} / ${height}`,
+  }),
   cover: {
     display: "block",
     inlineSize: "100%",

@@ -16,9 +16,10 @@ const files = import.meta.glob<string>(
 const PAGE_IDS = ["main", "piece-title"];
 const slugOf = (path: string) => PIECE_PATH.exec(path)?.[1] ?? path;
 
-const readPiece = (path: string, markdown: string) =>
+const readPiece = (path: string, markdown: string, showUnpublished: boolean) =>
   Effect.gen(function* () {
     const { meta, body } = yield* splitFrontmatter(markdown, path);
+    if (meta.stage === "seed" && !showUnpublished) return undefined;
     const tokens = marked.lexer(body).filter((token) => token.type !== "space");
     const [heading] = tokens;
     const tagList = tokens.find(
@@ -47,24 +48,23 @@ const readPiece = (path: string, markdown: string) =>
       headings,
       footnotes,
       minutes,
-      path,
     };
   });
 
 export const readPieces = Effect.fnUntraced(function* (showUnpublished: boolean) {
-  const read = yield* Effect.forEach(Object.entries(files), ([path, markdown]) =>
-    readPiece(path, markdown),
-  );
-  const all = showUnpublished ? read : read.filter(({ stage }) => stage !== "seed");
-  const twice = read.find(({ slug, path }) =>
-    read.some((other) => other.slug === slug && other.path !== path),
+  const paths = Object.keys(files);
+  const twice = paths.find((path) =>
+    paths.some((other) => other !== path && slugOf(other) === slugOf(path)),
   );
   if (twice) {
     return yield* new ContentError({
-      message: `${twice.path}: another piece has the slug "${twice.slug}" (<slug>.md and <slug>/index.md)`,
+      message: `${twice}: another piece has the slug "${slugOf(twice)}" (<slug>.md and <slug>/index.md)`,
     });
   }
-  return all
-    .map(({ path: _path, ...piece }) => piece)
+  const read = yield* Effect.forEach(Object.entries(files), ([path, markdown]) =>
+    readPiece(path, markdown, showUnpublished),
+  );
+  return read
+    .filter((piece) => piece !== undefined)
     .toSorted((a, b) => (b.updated ?? "").localeCompare(a.updated ?? ""));
 });
